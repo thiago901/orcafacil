@@ -1,0 +1,14 @@
+import { User } from '@core/modules/user/entities/user';
+
+export class UserMapping {
+  static toView({ id, created_at, email, name, phone, updated_at }: User) {
+    return {
+      id: id.toString(),
+      created_at,
+      email,
+      name,
+      phone,
+      updated_at,
+    };
+  }
+}

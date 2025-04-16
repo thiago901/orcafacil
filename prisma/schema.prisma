@@ -1,0 +1,151 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int       @id
+  name       String?
+  email      String?
+  phone      String?
+  password   String?
+  createdAt  DateTime? @map("created_at")
+  updatedAt  DateTime? @map("updated_at")
+
+  posts             Post[]
+  estimateRequests  EstimateRequest[]
+  company           Company?
+
+  @@map("users")
+}
+
+model EstimateRequest {
+  id          Int                      @id
+  footage     Int?
+  name        String?
+  phone       String?
+  email       String?
+  description String?
+  userId      Int?                     @map("user_id")
+
+  user        User?                    @relation(fields: [userId], references: [id])
+  files       EstimateRequestFile[]
+  proposals   Proposal[]
+
+  @@map("estimate_request")
+}
+
+model EstimateRequestFile {
+  id                Int       @id
+  estimateRequestId Int?      @map("estimate_request_id")
+  filesId           Int?      @map("files_id")
+  reason            String?
+
+  estimateRequest   EstimateRequest? @relation(fields: [estimateRequestId], references: [id])
+  file              File?            @relation(fields: [filesId], references: [id])
+
+  @@map("estimate_request_files")
+}
+
+model File {
+  id         Int       @id
+  name       String?
+  type       String?
+  createdAt  DateTime? @map("created_at")
+
+  estimateRequestFiles EstimateRequestFile[]
+  postFiles            PostFile[]
+
+  @@map("files")
+}
+
+model Post {
+  id         Int       @id
+  title      String?
+  body       String?   @db.Text
+  userId     Int       @map("user_id")
+  status     String?
+  createdAt  DateTime? @map("created_at")
+  updatedAt  DateTime? @map("updated_at")
+
+  user       User      @relation(fields: [userId], references: [id])
+  postFiles  PostFile[]
+  tags       Tag[]
+
+  @@map("posts")
+}
+
+model PostFile {
+  id      Int   @id
+  postId  Int?  @map("post_id")
+  filesId Int?  @map("files_id")
+
+  post    Post? @relation(fields: [postId], references: [id])
+  file    File? @relation(fields: [filesId], references: [id])
+
+  @@map("post_files")
+}
+
+model Proposal {
+  id                 Int       @id
+  amount             Int?
+  description        String?
+  estimateRequestId  Int?      @map("estimate_request_id")
+  companyId          Int?      @map("company_id")
+  createdAt          DateTime? @map("created_at")
+  updatedAt          DateTime? @map("updated_at")
+  aprovedAt          DateTime? @map("aproved_at")
+
+  estimateRequest    EstimateRequest? @relation(fields: [estimateRequestId], references: [id])
+  company            Company?         @relation(fields: [companyId], references: [id])
+  job                Job?
+
+  @@map("proposals")
+}
+
+model Tag {
+  id      Int    @id
+  name    String?
+  postId  Int?   @map("post_id")
+
+  post    Post?  @relation(fields: [postId], references: [id])
+
+  @@map("tags")
+}
+
+model Company {
+  id       Int      @id
+  name     String?
+  avatar   String?
+  ratting  Int?
+  ownerId  Int?     @map("owner_id") @unique
+
+  owner    User?    @relation(fields: [ownerId], references: [id])
+  proposals Proposal[]
+  jobs      Job[]
+
+  @@map("company")
+}
+
+model Job {
+  id         Int      @id
+  companyId  Int?     @map("company_id")
+  proposalId Int?     @map("proposal_id") @unique
+
+  company    Company? @relation(fields: [companyId], references: [id])
+  proposal   Proposal?@relation(fields: [proposalId], references: [id])
+
+  @@map("jobs")
+}
+
+
