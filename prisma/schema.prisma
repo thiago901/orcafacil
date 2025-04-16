@@ -14,13 +14,13 @@ datasource db {
 }
 
 model User {
-  id         Int       @id
-  name       String?
-  email      String?
-  phone      String?
-  password   String?
-  createdAt  DateTime? @map("created_at")
-  updatedAt  DateTime? @map("updated_at")
+  id         String       @id @default(uuid())
+  name       String
+  email      String
+  phone      String
+  password   String
+  created_at  DateTime @map("created_at")
+  updated_at  DateTime? @map("updated_at")
 
   posts             Post[]
   estimateRequests  EstimateRequest[]
@@ -30,13 +30,13 @@ model User {
 }
 
 model EstimateRequest {
-  id          Int                      @id
+  id         String       @id @default(uuid())
   footage     Int?
   name        String?
   phone       String?
   email       String?
   description String?
-  userId      Int?                     @map("user_id")
+  userId      String?                     @map("user_id")
 
   user        User?                    @relation(fields: [userId], references: [id])
   files       EstimateRequestFile[]
@@ -46,9 +46,9 @@ model EstimateRequest {
 }
 
 model EstimateRequestFile {
-  id                Int       @id
-  estimateRequestId Int?      @map("estimate_request_id")
-  filesId           Int?      @map("files_id")
+  id         String       @id @default(uuid())
+  estimateRequestId String?      @map("estimate_request_id")
+  filesId           String?      @map("files_id")
   reason            String?
 
   estimateRequest   EstimateRequest? @relation(fields: [estimateRequestId], references: [id])
@@ -58,10 +58,10 @@ model EstimateRequestFile {
 }
 
 model File {
-  id         Int       @id
+  id         String       @id @default(uuid())
   name       String?
   type       String?
-  createdAt  DateTime? @map("created_at")
+  created_at  DateTime? @map("created_at")
 
   estimateRequestFiles EstimateRequestFile[]
   postFiles            PostFile[]
@@ -70,13 +70,13 @@ model File {
 }
 
 model Post {
-  id         Int       @id
+  id         String       @id @default(uuid())
   title      String?
   body       String?   @db.Text
-  userId     Int       @map("user_id")
+  userId     String       @map("user_id")
   status     String?
-  createdAt  DateTime? @map("created_at")
-  updatedAt  DateTime? @map("updated_at")
+  created_at  DateTime? @map("created_at")
+  updated_at  DateTime? @map("updated_at")
 
   user       User      @relation(fields: [userId], references: [id])
   postFiles  PostFile[]
@@ -86,9 +86,9 @@ model Post {
 }
 
 model PostFile {
-  id      Int   @id
-  postId  Int?  @map("post_id")
-  filesId Int?  @map("files_id")
+  id         String       @id @default(uuid())
+  postId  String?  @map("post_id")
+  filesId String?  @map("files_id")
 
   post    Post? @relation(fields: [postId], references: [id])
   file    File? @relation(fields: [filesId], references: [id])
@@ -97,14 +97,14 @@ model PostFile {
 }
 
 model Proposal {
-  id                 Int       @id
+  id         String       @id @default(uuid())
   amount             Int?
   description        String?
-  estimateRequestId  Int?      @map("estimate_request_id")
-  companyId          Int?      @map("company_id")
-  createdAt          DateTime? @map("created_at")
-  updatedAt          DateTime? @map("updated_at")
-  aprovedAt          DateTime? @map("aproved_at")
+  estimateRequestId  String?      @map("estimate_request_id")
+  companyId          String?      @map("company_id")
+  created_at          DateTime? @map("created_at")
+  updated_at          DateTime? @map("updated_at")
+  aproved_at          DateTime? @map("aproved_at")
 
   estimateRequest    EstimateRequest? @relation(fields: [estimateRequestId], references: [id])
   company            Company?         @relation(fields: [companyId], references: [id])
@@ -114,9 +114,9 @@ model Proposal {
 }
 
 model Tag {
-  id      Int    @id
+  id         String       @id @default(uuid())
   name    String?
-  postId  Int?   @map("post_id")
+  postId  String?   @map("post_id")
 
   post    Post?  @relation(fields: [postId], references: [id])
 
@@ -124,13 +124,13 @@ model Tag {
 }
 
 model Company {
-  id       Int      @id
-  name     String?
+  id         String       @id @default(uuid())
+  name     String
   avatar   String?
-  ratting  Int?
-  ownerId  Int?     @map("owner_id") @unique
+  ratting  Int @default(0)
+  owner_id  String     @map("owner_id") @unique
 
-  owner    User?    @relation(fields: [ownerId], references: [id])
+  owner    User    @relation(fields: [owner_id], references: [id])
   proposals Proposal[]
   jobs      Job[]
 
@@ -138,9 +138,9 @@ model Company {
 }
 
 model Job {
-  id         Int      @id
-  companyId  Int?     @map("company_id")
-  proposalId Int?     @map("proposal_id") @unique
+  id         String       @id @default(uuid())
+  companyId  String?     @map("company_id")
+  proposalId String?     @map("proposal_id") @unique
 
   company    Company? @relation(fields: [companyId], references: [id])
   proposal   Proposal?@relation(fields: [proposalId], references: [id])

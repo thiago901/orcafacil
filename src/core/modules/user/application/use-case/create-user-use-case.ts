@@ -38,6 +38,8 @@ export class CreateUserUseCase {
       await this.userRepository.save(user);
       return right({ user });
     } catch (error: any) {
+      console.log('error', error);
+
       return left(new ResourceNotCreatedError());
     }
   }

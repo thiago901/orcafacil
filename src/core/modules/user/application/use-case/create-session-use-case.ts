@@ -38,7 +38,11 @@ export class CreateSessionUseCase {
       return left(new InvalidCredentialsError());
     }
 
-    const token = await this.tokenProvider.sign(user);
+    const token = await this.tokenProvider.sign({
+      sub: user.id.toString(),
+      email: user.email,
+      name: user.name,
+    });
 
     return right({ token });
   }

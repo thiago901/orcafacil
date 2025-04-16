@@ -21,23 +21,16 @@ import { LoggingInterceptor } from '../Interceptors/custom-logger-routes';
 import {
   createUserSchema,
   CreateUserProps,
-  AuthenticateUserProps,
-  ListUsersFiltersProps,
-  RecoverPasswordProps,
   UpdateUserProps,
-  authenticateUserSchema,
-  listUsersFiltersSchema,
-  recoverPasswordSchema,
   updateUserSchema,
 } from './validations';
 import { CreateUserUseCase } from '@core/modules/user/application/use-case/create-user-use-case';
 import { UpdateUserUseCase } from '@core/modules/user/application/use-case/update-user-use-case';
 import { DeleteUserUseCase } from '@core/modules/user/application/use-case/delete-user-use-case';
 import { ListAllUsersUseCase } from '@core/modules/user/application/use-case/list-all-users-use-case';
-import { CreateSessionUseCase } from '@core/modules/user/application/use-case/create-session-use-case';
-import { RecoverPasswordUseCase } from '@core/modules/user/application/use-case/recover-password-use-case';
 import { UserMapping } from '../mapping/user-mapping';
 import { FindUserByIdUseCase } from '@core/modules/user/application/use-case/find-user-by-id-use-case';
+import { Public } from '@adapters/drivens/infra/auth/public';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -50,11 +43,10 @@ export class UserController {
     private readonly deleteUserUseCase: DeleteUserUseCase,
     private readonly findUserByIdUseCase: FindUserByIdUseCase,
     private readonly listAllUsersUseCase: ListAllUsersUseCase,
-    private readonly createSessionUseCase: CreateSessionUseCase,
-    private readonly forgotPasswordUseCase: RecoverPasswordUseCase,
   ) {}
 
-  @Post()
+  @Post('')
+  @Public()
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createUserSchema))
   async create(@Body() body: CreateUserProps) {
@@ -62,7 +54,7 @@ export class UserController {
     if (result.isLeft()) {
       throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
     }
-    return { user: UserMapping.toView(result.value.user) };
+    return { result: UserMapping.toView(result.value.user) };
   }
 
   @Put('/:id')
@@ -73,7 +65,7 @@ export class UserController {
     if (result.isLeft()) {
       throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
     }
-    return { user: UserMapping.toView(result.value.user) };
+    return { result: UserMapping.toView(result.value.user) };
   }
 
   @Delete('/:id')
@@ -93,10 +85,10 @@ export class UserController {
     if (result.isLeft()) {
       throw new HttpException(result.value.message, HttpStatus.NOT_FOUND);
     }
-    return { user: UserMapping.toView(result.value.user) };
+    return { result: UserMapping.toView(result.value.user) };
   }
 
-  @Get()
+  @Get('')
   @HttpCode(200)
   async listAll() {
     const result = await this.listAllUsersUseCase.execute();
@@ -106,28 +98,6 @@ export class UserController {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    return { users: result.value.users.map(UserMapping.toView) };
-  }
-
-  @Post('/sessions')
-  @HttpCode(200)
-  @UsePipes(new ZodValidationPipe(authenticateUserSchema))
-  async createSession(@Body() body: AuthenticateUserProps) {
-    const result = await this.createSessionUseCase.execute(body);
-    if (result.isLeft()) {
-      throw new HttpException(result.value.message, HttpStatus.UNAUTHORIZED);
-    }
-    return { token: result.value.token };
-  }
-
-  @Post('/forgot-password')
-  @HttpCode(200)
-  @UsePipes(new ZodValidationPipe(recoverPasswordSchema))
-  async forgotPassword(@Body() body: RecoverPasswordProps) {
-    const result = await this.forgotPasswordUseCase.execute(body);
-    if (result.isLeft()) {
-      throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
-    }
-    return { message: 'Recovery instructions sent' };
+    return { result: result.value.users.map(UserMapping.toView) };
   }
 }

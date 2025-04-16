@@ -9,12 +9,13 @@ import { EnvModule } from '@adapters/drivens/infra/envs/env.module';
 import DatabaseModule from '@adapters/drivens/infra/database/prisma/database.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ProviderModule } from '@adapters/drivens/providers/provider.module';
+import { AuthModule } from '@adapters/drivens/infra/auth/auth.module';
 
 @Module({
   imports: [
     EnvModule,
     HTTPModule,
-
+    AuthModule,
     ConfigModule.forRoot({
       validate: (env) => schemaEnv.parse(env),
       isGlobal: true,

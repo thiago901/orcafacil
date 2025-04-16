@@ -3,7 +3,7 @@ import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 
 export interface CompanyProps {
   name: string;
-  avatar: string;
+  avatar: string | null;
   ratting: number;
   owner_id: string;
 }
