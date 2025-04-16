@@ -1,6 +1,5 @@
 import { Entity } from '@core/common/entities/entity';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
-import { Optional } from '@core/common/entities/optional';
 
 export interface EstimateRequestProps {
   footage: number;
@@ -8,14 +7,11 @@ export interface EstimateRequestProps {
   phone: string;
   email: string;
   description: string;
-  user_id: string;
+  user_id: string | null;
 }
 
 export class EstimateRequest extends Entity<EstimateRequestProps> {
-  static create(
-    props: EstimateRequestProps,
-    id?: UniqueEntityID,
-  ) {
+  static create(props: EstimateRequestProps, id?: UniqueEntityID) {
     return new EstimateRequest(props, id);
   }
 

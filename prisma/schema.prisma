@@ -31,14 +31,14 @@ model User {
 
 model EstimateRequest {
   id         String       @id @default(uuid())
-  footage     Int?
-  name        String?
-  phone       String?
-  email       String?
-  description String?
-  userId      String?                     @map("user_id")
+  footage     Int
+  name        String
+  phone       String
+  email       String
+  description String
+  user_id      String?                     @map("user_id")
 
-  user        User?                    @relation(fields: [userId], references: [id])
+  user        User?                    @relation(fields: [user_id], references: [id])
   files       EstimateRequestFile[]
   proposals   Proposal[]
 
@@ -73,12 +73,12 @@ model Post {
   id         String       @id @default(uuid())
   title      String?
   body       String?   @db.Text
-  userId     String       @map("user_id")
+  user_id     String       @map("user_id")
   status     String?
   created_at  DateTime? @map("created_at")
   updated_at  DateTime? @map("updated_at")
 
-  user       User      @relation(fields: [userId], references: [id])
+  user       User      @relation(fields: [user_id], references: [id])
   postFiles  PostFile[]
   tags       Tag[]
 

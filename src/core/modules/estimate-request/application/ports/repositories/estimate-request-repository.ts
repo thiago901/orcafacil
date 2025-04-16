@@ -2,5 +2,6 @@ import { EstimateRequest } from '@core/modules/estimate-request/entities/estimat
 
 export abstract class EstimateRequestRepository {
   abstract save(user: EstimateRequest): Promise<void>;
-  abstract findByUserId(user_id: number): Promise<EstimateRequest[]>;
+  abstract findByUserId(user_id: string): Promise<EstimateRequest[]>;
+  abstract getAll(): Promise<EstimateRequest[]>;
 }
