@@ -2,7 +2,9 @@ import { Proposal } from '@core/modules/proposal/entities/proposal';
 
 export abstract class ProposalRepository {
   abstract findByEstimateRequestId(
-    estimateRequestId: number,
+    estimateRequestId: string,
   ): Promise<Proposal[]>;
+  abstract findByCompanyId(company_id: string): Promise<Proposal[]>;
+  abstract findById(id: string): Promise<Proposal | null>;
   abstract save(user: Proposal): Promise<void>;
 }

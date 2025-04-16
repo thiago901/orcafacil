@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { Either, right } from '@core/common/entities/either';
 
 interface RequestProps {
-  estimate_requestid: string;
+  company_id: string;
 }
 
 type ResponseProps = Either<
@@ -16,12 +16,11 @@ type ResponseProps = Either<
 >;
 
 @Injectable()
-export class ListProposalsByEstimateUseCase {
+export class ListProposalsByCompanyUseCase {
   constructor(private readonly proposalRepository: ProposalRepository) {}
 
-  async execute({ estimate_requestid }: RequestProps): Promise<ResponseProps> {
-    const proposals =
-      await this.proposalRepository.findByEstimateRequestId(estimate_requestid);
+  async execute({ company_id }: RequestProps): Promise<ResponseProps> {
+    const proposals = await this.proposalRepository.findByCompanyId(company_id);
 
     return right({ proposals });
   }

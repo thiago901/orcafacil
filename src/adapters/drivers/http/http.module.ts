@@ -14,6 +14,10 @@ import { EstimateRequestModule } from '@core/modules/estimate-request/estimate-r
 import { EstimateRequestRepository } from '@core/modules/estimate-request/application/ports/repositories/estimate-request-repository';
 import { PrismaEstimateRequestRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-estimate-request-repository';
 import { EstimateRequestController } from './controllers/estimate-request-controller';
+import { ProposalModule } from '@core/modules/proposal/proposal.module';
+import { PrismaProposalRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-proposal-repository ';
+import { ProposalRepository } from '@core/modules/proposal/application/ports/repositories/proposal-repository';
+import { ProposalController } from './controllers/proposal-controller';
 
 @Module({
   imports: [
@@ -37,10 +41,20 @@ import { EstimateRequestController } from './controllers/estimate-request-contro
         },
       ],
     },
+    {
+      module: ProposalModule,
+      providers: [
+        {
+          provide: ProposalRepository,
+          useClass: PrismaProposalRepository,
+        },
+      ],
+    },
   ],
 
   controllers: [
     InfoController,
+    ProposalController,
     UserController,
     CompanyController,
     SessionController,

@@ -47,11 +47,11 @@ model EstimateRequest {
 
 model EstimateRequestFile {
   id         String       @id @default(uuid())
-  estimateRequestId String?      @map("estimate_request_id")
+  estimate_request_id String?      @map("estimate_request_id")
   filesId           String?      @map("files_id")
   reason            String?
 
-  estimateRequest   EstimateRequest? @relation(fields: [estimateRequestId], references: [id])
+  estimateRequest   EstimateRequest? @relation(fields: [estimate_request_id], references: [id])
   file              File?            @relation(fields: [filesId], references: [id])
 
   @@map("estimate_request_files")
@@ -98,16 +98,16 @@ model PostFile {
 
 model Proposal {
   id         String       @id @default(uuid())
-  amount             Int?
-  description        String?
-  estimateRequestId  String?      @map("estimate_request_id")
-  companyId          String?      @map("company_id")
-  created_at          DateTime? @map("created_at")
+  amount             Int
+  description        String
+  estimate_request_id  String      @map("estimate_request_id")
+  company_id          String      @map("company_id")
+  created_at          DateTime @map("created_at")
   updated_at          DateTime? @map("updated_at")
   aproved_at          DateTime? @map("aproved_at")
 
-  estimateRequest    EstimateRequest? @relation(fields: [estimateRequestId], references: [id])
-  company            Company?         @relation(fields: [companyId], references: [id])
+  estimateRequest    EstimateRequest? @relation(fields: [estimate_request_id], references: [id])
+  company            Company?         @relation(fields: [company_id], references: [id])
   job                Job?
 
   @@map("proposals")
@@ -139,10 +139,10 @@ model Company {
 
 model Job {
   id         String       @id @default(uuid())
-  companyId  String?     @map("company_id")
+  company_id  String?     @map("company_id")
   proposalId String?     @map("proposal_id") @unique
 
-  company    Company? @relation(fields: [companyId], references: [id])
+  company    Company? @relation(fields: [company_id], references: [id])
   proposal   Proposal?@relation(fields: [proposalId], references: [id])
 
   @@map("jobs")
