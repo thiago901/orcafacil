@@ -19,6 +19,7 @@ model User {
   email      String
   phone      String
   password   String
+  avatar   String?
   created_at  DateTime @map("created_at")
   updated_at  DateTime? @map("updated_at")
 

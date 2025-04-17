@@ -9,6 +9,7 @@ interface RequestProps {
   name: string;
   email: string;
   phone: string;
+  avatar?: string;
   password: string;
 }
 
@@ -26,11 +27,13 @@ export class CreateUserUseCase {
     email,
     phone,
     password,
+    avatar,
   }: RequestProps): Promise<ResponseProps> {
     const user = User.create({
       name,
       email,
       phone,
+      avatar: avatar ? avatar : null,
       password: await this.hashProvider.hash(password),
     });
 

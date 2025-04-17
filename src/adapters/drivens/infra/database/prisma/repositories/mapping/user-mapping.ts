@@ -11,6 +11,7 @@ export class UserMapping {
     name,
     password,
     phone,
+    avatar,
     updated_at,
   }: UserPrisma) {
     return User.create(
@@ -20,6 +21,7 @@ export class UserMapping {
         updated_at: updated_at ? updated_at : undefined,
         name,
         password,
+        avatar,
         phone,
       },
       new UniqueEntityID(id),

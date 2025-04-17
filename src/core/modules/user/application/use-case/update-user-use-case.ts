@@ -10,6 +10,7 @@ interface RequestProps {
   email?: string;
   phone?: string;
   password?: string;
+  avatar?: string;
 }
 
 type ResponseProps = Either<Error, { user: User }>;
@@ -24,6 +25,7 @@ export class UpdateUserUseCase {
     email,
     phone,
     password,
+    avatar,
   }: RequestProps): Promise<ResponseProps> {
     const user = await this.userRepository.findById(id);
 
@@ -31,7 +33,8 @@ export class UpdateUserUseCase {
       return left(new ResourceNotFoundError());
     }
 
-    // user.name = name;
+    user.name = name ? name : user.name;
+    user.avatar = avatar ? avatar : user.avatar;
 
     await this.userRepository.save(user);
     return right({ user });

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { CreateCompanyUseCase } from './application/use-case/create-company-use-case';
 import { FindCompanyByIdUseCase } from './application/use-case/find-company-by-id-use-case';
 import { ListAllCompaniesUseCase } from './application/use-case/list-all-companies-use-case';
+import { ListAllCompaniesByOwnerUseCase } from './application/use-case/list-all-companies-by-owneruse-case';
 
 @Module({
   imports: [],
@@ -10,11 +11,13 @@ import { ListAllCompaniesUseCase } from './application/use-case/list-all-compani
     CreateCompanyUseCase,
     FindCompanyByIdUseCase,
     ListAllCompaniesUseCase,
+    ListAllCompaniesByOwnerUseCase,
   ],
   exports: [
     CreateCompanyUseCase,
     FindCompanyByIdUseCase,
     ListAllCompaniesUseCase,
+    ListAllCompaniesByOwnerUseCase,
   ],
 })
 export class CompanyModule {}

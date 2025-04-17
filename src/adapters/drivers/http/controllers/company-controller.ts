@@ -25,6 +25,7 @@ import {
   createCompanySchema,
 } from './validations/create-company.validate';
 import { CompanyMapping } from '../mapping/company-mapping';
+import { ListAllCompaniesByOwnerUseCase } from '@core/modules/company/application/use-case/list-all-companies-by-owneruse-case';
 
 @ApiTags('Company')
 @ApiBearerAuth()
@@ -35,6 +36,7 @@ export class CompanyController {
     private readonly createCompanyUseCase: CreateCompanyUseCase,
     private readonly findCompanyByIdUseCase: FindCompanyByIdUseCase,
     private readonly listAllCompaniesUseCase: ListAllCompaniesUseCase,
+    private readonly listAllCompaniesByOwnerUseCase: ListAllCompaniesByOwnerUseCase,
   ) {}
 
   @Post('')
@@ -63,6 +65,20 @@ export class CompanyController {
   @HttpCode(200)
   async listAll() {
     const result = await this.listAllCompaniesUseCase.execute();
+    if (result.isLeft()) {
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return { result: result.value.companies.map(CompanyMapping.toView) };
+  }
+  @Get('/owner/:owner_id')
+  @HttpCode(200)
+  async listAllByOwnerId(@Param('owner_id') owner_id: string) {
+    const result = await this.listAllCompaniesByOwnerUseCase.execute({
+      owner_id,
+    });
     if (result.isLeft()) {
       throw new HttpException(
         'Internal Server Error',

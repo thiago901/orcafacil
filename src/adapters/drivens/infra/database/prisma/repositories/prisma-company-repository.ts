@@ -21,6 +21,15 @@ export class PrismaCompanyRepository implements CompanyRepository {
 
     return users.map((company) => CompanyMapping.toDomain(company));
   }
+  async getAllByOwner(owner_id: string): Promise<Company[]> {
+    const users = await this.prisma.company.findMany({
+      where: {
+        owner_id,
+      },
+    });
+
+    return users.map((company) => CompanyMapping.toDomain(company));
+  }
   async findById(id: string): Promise<Company | null> {
     const company = await this.prisma.company.findUnique({
       where: { id },
