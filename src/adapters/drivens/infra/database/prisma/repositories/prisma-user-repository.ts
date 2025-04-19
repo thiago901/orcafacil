@@ -3,7 +3,10 @@ import { UserMapping } from './mapping/user-mapping';
 
 import { Injectable } from '@nestjs/common';
 
-import { UserRepository } from '@core/modules/user/application/ports/repositories/user-repository';
+import {
+  UserRepository,
+  UserRepositoryOptions,
+} from '@core/modules/user/application/ports/repositories/user-repository';
 import { User } from '@core/modules/user/entities/user';
 
 @Injectable()
@@ -33,9 +36,17 @@ export class PrismaUserRepository implements UserRepository {
 
     return UserMapping.toDomain(user);
   }
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(
+    email: string,
+    options?: UserRepositoryOptions,
+  ): Promise<User | null> {
     const user = await this.prisma.user.findFirst({
       where: { email },
+      include: options?.relations
+        ? {
+            ...options.relations,
+          }
+        : {},
     });
 
     if (!user) {

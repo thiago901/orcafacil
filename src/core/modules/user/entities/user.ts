@@ -1,6 +1,7 @@
 import { Entity } from '@core/common/entities/entity';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { Optional } from '@core/common/entities/optional';
+import { Company } from '@core/modules/company/entities/company';
 
 export interface UserProps {
   name: string;
@@ -10,6 +11,7 @@ export interface UserProps {
   password: string;
   created_at: Date;
   updated_at: Date;
+  company?: Company | null;
 }
 
 export class User extends Entity<UserProps> {
@@ -76,5 +78,9 @@ export class User extends Entity<UserProps> {
   }
   private touch() {
     this.props.updated_at = new Date();
+  }
+
+  get company() {
+    return this.props.company;
   }
 }

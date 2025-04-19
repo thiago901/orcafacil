@@ -40,7 +40,7 @@ export class ProposalController {
     private readonly createProposalUseCase: CreateProposalUseCase,
   ) {}
 
-  @Post('')
+  @Post()
   @Public()
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createProposalSchema))

@@ -15,6 +15,9 @@ export class PrismaEstimateRequestRepository
       where: {
         user_id,
       },
+      include: {
+        proposals: true,
+      },
     });
 
     return estimaterequests.map((estimaterequest) =>
@@ -30,15 +33,22 @@ export class PrismaEstimateRequestRepository
     });
   }
   async getAll(): Promise<EstimateRequest[]> {
-    const users = await this.prisma.estimateRequest.findMany();
+    const estimate_requests = await this.prisma.estimateRequest.findMany({
+      include: {
+        proposals: true,
+      },
+    });
 
-    return users.map((estimaterequest) =>
+    return estimate_requests.map((estimaterequest) =>
       EstimateRequestMapping.toDomain(estimaterequest),
     );
   }
   async findById(id: string): Promise<EstimateRequest | null> {
     const estimaterequest = await this.prisma.estimateRequest.findUnique({
       where: { id },
+      include: {
+        proposals: true,
+      },
     });
 
     if (!estimaterequest) {

@@ -23,7 +23,11 @@ export class CreateSessionUseCase {
   ) {}
 
   async execute({ email, password }: RequestProps): Promise<ResponseProps> {
-    const user = await this.userRepository.findByEmail(email);
+    const user = await this.userRepository.findByEmail(email, {
+      relations: {
+        company: true,
+      },
+    });
 
     if (!user) {
       return left(new InvalidCredentialsError());
@@ -42,6 +46,7 @@ export class CreateSessionUseCase {
       sub: user.id.toString(),
       email: user.email,
       name: user.name,
+      company_id: user.company?.id.toString(),
     });
 
     return right({ token });

@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Either, right } from '@core/common/entities/either';
 
 interface RequestProps {
-  user_id: string;
+  user_id?: string;
   description: string;
   email: string;
   footage: number;
@@ -39,7 +39,7 @@ export class CreateEstimateRequestUseCase {
       footage,
       name,
       phone,
-      user_id,
+      user_id: user_id || null,
     });
 
     await this.estimateRequestRepository.save(estimateRequest);

@@ -1,8 +1,12 @@
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
+import { Company } from '@core/modules/company/entities/company';
 import { User } from '@core/modules/user/entities/user';
 
-import { User as UserPrisma } from '@prisma/client';
+import { User as UserPrisma, Company as CompanyPrisma } from '@prisma/client';
 
+type UserComplete = UserPrisma & {
+  company?: CompanyPrisma;
+};
 export class UserMapping {
   static toDomain({
     created_at,
@@ -13,7 +17,8 @@ export class UserMapping {
     phone,
     avatar,
     updated_at,
-  }: UserPrisma) {
+    company,
+  }: UserComplete) {
     return User.create(
       {
         email,
@@ -23,6 +28,17 @@ export class UserMapping {
         password,
         avatar,
         phone,
+        company: company
+          ? Company.create(
+              {
+                avatar: company.avatar,
+                name: company.name,
+                owner_id: company.owner_id,
+                ratting: company.ratting,
+              },
+              new UniqueEntityID(company.id),
+            )
+          : null,
       },
       new UniqueEntityID(id),
     );

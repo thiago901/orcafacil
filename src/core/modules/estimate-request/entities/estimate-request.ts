@@ -1,5 +1,6 @@
 import { Entity } from '@core/common/entities/entity';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
+import { Proposal } from '@core/modules/proposal/entities/proposal';
 
 export interface EstimateRequestProps {
   footage: number;
@@ -8,6 +9,7 @@ export interface EstimateRequestProps {
   email: string;
   description: string;
   user_id: string | null;
+  proposals?: Proposal[];
 }
 
 export class EstimateRequest extends Entity<EstimateRequestProps> {
@@ -37,5 +39,8 @@ export class EstimateRequest extends Entity<EstimateRequestProps> {
 
   get user_id() {
     return this.props.user_id;
+  }
+  get proposals() {
+    return this.props.proposals;
   }
 }
