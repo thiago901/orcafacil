@@ -105,7 +105,8 @@ model Proposal {
   company_id          String      @map("company_id")
   created_at          DateTime @map("created_at")
   updated_at          DateTime? @map("updated_at")
-  aproved_at          DateTime? @map("aproved_at")
+  approved_at          DateTime? @map("approved_at")
+  reject_at          DateTime? @map("reject_at")
 
   estimateRequest    EstimateRequest? @relation(fields: [estimate_request_id], references: [id])
   company            Company?         @relation(fields: [company_id], references: [id])

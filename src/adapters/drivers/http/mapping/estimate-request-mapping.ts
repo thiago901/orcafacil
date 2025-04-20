@@ -26,6 +26,8 @@ export class EstimateRequestMapping {
         created_at: proposal.created_at,
         updated_at: proposal.updated_at,
         amount: proposal.amount,
+        approved_at: proposal.approved_at,
+        reject_at: proposal.reject_at,
       })),
     };
   }

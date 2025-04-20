@@ -15,9 +15,10 @@ export class PrismaUserRepository implements UserRepository {
   async save(user: User): Promise<void> {
     const data = UserMapping.toPrisma(user);
 
-    await this.prisma.user.update({
-      where: { id: data.id },
-      data,
+    await this.prisma.user.upsert({
+      create: data,
+      update: data,
+      where: { id: user.id.toString() },
     });
   }
   async getAll(): Promise<User[]> {

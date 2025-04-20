@@ -9,12 +9,16 @@ export interface ProposalProps {
   company_id: string;
   created_at: Date;
   updated_at: Date | null;
-  aproved_at: Date | null;
+  approved_at: Date | null;
+  reject_at: Date | null;
 }
 
 export class Proposal extends Entity<ProposalProps> {
   static create(
-    props: Optional<ProposalProps, 'aproved_at' | 'updated_at' | 'created_at'>,
+    props: Optional<
+      ProposalProps,
+      'approved_at' | 'updated_at' | 'created_at' | 'reject_at'
+    >,
     id?: UniqueEntityID,
   ) {
     return new Proposal(
@@ -22,7 +26,8 @@ export class Proposal extends Entity<ProposalProps> {
         ...props,
         created_at: props.created_at ?? new Date(),
         updated_at: props.updated_at ?? null,
-        aproved_at: props.aproved_at ?? null,
+        approved_at: props.approved_at ?? null,
+        reject_at: props.reject_at ?? null,
       },
       id,
     );
@@ -52,7 +57,22 @@ export class Proposal extends Entity<ProposalProps> {
     return this.props.updated_at;
   }
 
-  get aproved_at() {
-    return this.props.aproved_at;
+  get approved_at() {
+    return this.props.approved_at;
+  }
+  set approved_at(value: Date | null) {
+    this.props.approved_at = value;
+    this.touch();
+  }
+  get reject_at() {
+    return this.props.reject_at;
+  }
+  set reject_at(value: Date | null) {
+    this.props.reject_at = value;
+    this.touch();
+  }
+
+  private touch() {
+    this.props.updated_at = new Date();
   }
 }

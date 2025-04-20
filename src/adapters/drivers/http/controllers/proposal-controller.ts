@@ -6,6 +6,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  Patch,
   Post,
   UseInterceptors,
   UsePipes,
@@ -27,6 +28,8 @@ import {
   createProposalSchema,
 } from './validations/create-proposal.validate';
 import { ProposalMapping } from '../mapping/proposal-mapping';
+import { RejectProposalUseCase } from '@core/modules/proposal/application/use-case/reject-proposal-use-case';
+import { ApproveProposalUseCase } from '@core/modules/proposal/application/use-case/approve-proposal-use-case ';
 
 @ApiTags('Proposal')
 @ApiBearerAuth()
@@ -38,6 +41,8 @@ export class ProposalController {
     private readonly listProposalsByCompanyUseCase: ListProposalsByCompanyUseCase,
     private readonly findProposalsByIdUseCase: FindProposalsByIdUseCase,
     private readonly createProposalUseCase: CreateProposalUseCase,
+    private readonly rejectProposalUseCase: RejectProposalUseCase,
+    private readonly approveProposalUseCase: ApproveProposalUseCase,
   ) {}
 
   @Post()
@@ -89,5 +94,33 @@ export class ProposalController {
       );
     }
     return { result: result.value.proposals.map(ProposalMapping.toView) };
+  }
+  @Patch('/:id/reject')
+  @HttpCode(200)
+  async rejectProposal(@Param('id') id: string) {
+    const result = await this.rejectProposalUseCase.execute({
+      id,
+    });
+    if (result.isLeft()) {
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return;
+  }
+  @Patch('/:id/approve')
+  @HttpCode(200)
+  async aproveProposal(@Param('id') id: string) {
+    const result = await this.approveProposalUseCase.execute({
+      id,
+    });
+    if (result.isLeft()) {
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return;
   }
 }

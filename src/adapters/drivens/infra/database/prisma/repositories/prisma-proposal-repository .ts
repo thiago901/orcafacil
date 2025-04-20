@@ -28,7 +28,8 @@ export class PrismaProposalRepository implements ProposalRepository {
   async save(proposal: Proposal): Promise<void> {
     const data = ProposalMapping.toPrisma(proposal);
 
-    await this.prisma.proposal.create({
+    await this.prisma.proposal.update({
+      where: { id: proposal.id.toString() },
       data,
     });
   }

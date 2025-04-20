@@ -36,7 +36,7 @@ export class EstimateRequestMapping {
               company_id: proposal.company_id,
               description: proposal.description,
               estimate_request_id: proposal.estimate_request_id,
-              aproved_at: proposal.aproved_at,
+              approved_at: proposal.approved_at,
               created_at: proposal.created_at,
               updated_at: proposal.updated_at,
             },
