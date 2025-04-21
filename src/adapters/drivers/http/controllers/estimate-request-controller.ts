@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -7,6 +8,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  UploadedFiles,
   UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
@@ -26,6 +28,10 @@ import {
   createEstimateRequestSchema,
 } from './validations/create-estimate-request.validate';
 import { EstimateRequestMapping } from '../mapping/estimate-request-mapping';
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { CurrentUser } from '@adapters/drivens/infra/auth/current-user-decorator';
+import { TokenPayload } from '@adapters/drivens/infra/auth/jwt.strategy';
+import { UploadEstimateRequestFilesUseCase } from '@core/modules/estimate-request/application/use-case/upload-estimate-requests-files-use-case';
 
 @ApiTags('Estimate Request')
 @ApiBearerAuth()
@@ -36,6 +42,7 @@ export class EstimateRequestController {
     private readonly createEstimateRequestUseCase: CreateEstimateRequestUseCase,
     private readonly listEstimateRequestsByUserUseCase: ListEstimateRequestsByUserUseCase,
     private readonly listEstimateRequestsUseCase: ListEstimateRequestsUseCase,
+    private readonly uploadEstimateRequestFilesUseCase: UploadEstimateRequestFilesUseCase,
   ) {}
 
   @Post()
@@ -78,6 +85,26 @@ export class EstimateRequestController {
     }
     return {
       result: result.value.estimateRequests.map(EstimateRequestMapping.toView),
+    };
+  }
+
+  @Post('/files')
+  @HttpCode(201)
+  @UseInterceptors(FilesInterceptor('files'))
+  @Public()
+  async uploadFiles(@UploadedFiles() files: Express.Multer.File[]) {
+    if (!files) {
+      throw new BadRequestException('Nenhum arquivo enviado!');
+    }
+
+    await this.uploadEstimateRequestFilesUseCase.execute({
+      files,
+    });
+
+    return {
+      status: 201,
+      message:
+        'The video is being uploaded and we will inform you of the next statuses!',
     };
   }
 }

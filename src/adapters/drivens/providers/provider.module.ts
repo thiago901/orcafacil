@@ -4,7 +4,9 @@ import { BcryptCryptoProvider } from './bcrypt-crypto-provider';
 import { HashProvider } from '@core/modules/user/application/ports/providers/hash-provider';
 import { JwtProvider } from './jwt-provider';
 import { TokenProvider } from '@core/modules/user/application/ports/providers/token-provider';
-import { JwtService } from '@nestjs/jwt';
+
+import { UploadFileProvider } from '@core/modules/estimate-request/application/ports/provider/upload-file';
+import { LocalUploadFileProvider } from './local-upload-file';
 
 @Module({
   providers: [
@@ -16,9 +18,13 @@ import { JwtService } from '@nestjs/jwt';
       provide: TokenProvider,
       useClass: JwtProvider,
     },
+    {
+      provide: UploadFileProvider,
+      useClass: LocalUploadFileProvider,
+    },
     EnvService,
   ],
 
-  exports: [TokenProvider, HashProvider],
+  exports: [TokenProvider, HashProvider, UploadFileProvider],
 })
 export class ProviderModule {}
