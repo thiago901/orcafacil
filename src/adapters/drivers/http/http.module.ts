@@ -18,6 +18,8 @@ import { ProposalModule } from '@core/modules/proposal/proposal.module';
 import { PrismaProposalRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-proposal-repository ';
 import { ProposalRepository } from '@core/modules/proposal/application/ports/repositories/proposal-repository';
 import { ProposalController } from './controllers/proposal-controller';
+import { EstimateRequestFileRepository } from '@core/modules/estimate-request/application/ports/repositories/estimate-request-repository-file';
+import { PrismaEstimateRequestFileRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-estimate-request-file-repository';
 
 @Module({
   imports: [
@@ -38,6 +40,10 @@ import { ProposalController } from './controllers/proposal-controller';
         {
           provide: EstimateRequestRepository,
           useClass: PrismaEstimateRequestRepository,
+        },
+        {
+          provide: EstimateRequestFileRepository,
+          useClass: PrismaEstimateRequestFileRepository,
         },
       ],
     },

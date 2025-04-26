@@ -1,4 +1,5 @@
 import { Entity } from '@core/common/entities/entity';
+import { Optional } from '@core/common/entities/optional';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 
 export interface FileProps {
@@ -8,8 +9,11 @@ export interface FileProps {
 }
 
 export class File extends Entity<FileProps> {
-  static create(props: FileProps, id?: UniqueEntityID) {
-    return new File({ ...props, created_at: props.created_at ?? new Date() }, id);
+  static create(props: Optional<FileProps, 'created_at'>, id?: UniqueEntityID) {
+    return new File(
+      { ...props, created_at: props.created_at ?? new Date() },
+      id,
+    );
   }
 
   get name() {

@@ -10,6 +10,7 @@ export class EstimateRequestMapping {
     phone,
     user_id,
     proposals,
+    estimate_request_files,
   }: EstimateRequest) {
     return {
       id: id.toString(),
@@ -28,6 +29,12 @@ export class EstimateRequestMapping {
         amount: proposal.amount,
         approved_at: proposal.approved_at,
         reject_at: proposal.reject_at,
+      })),
+      estimate_request_files: estimate_request_files?.map((file) => ({
+        id: file.id.toString(),
+        estimate_request_id: file.estimate_request_id.toString(),
+        url: file.url,
+        created_at: file.created_at,
       })),
     };
   }

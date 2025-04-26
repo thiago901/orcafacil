@@ -48,12 +48,11 @@ model EstimateRequest {
 
 model EstimateRequestFile {
   id         String       @id @default(uuid())
-  estimate_request_id String?      @map("estimate_request_id")
-  filesId           String?      @map("files_id")
-  reason            String?
+  url            String
+  estimate_request_id String      @map("estimate_request_id")
+  created_at  DateTime @map("created_at")
 
-  estimateRequest   EstimateRequest? @relation(fields: [estimate_request_id], references: [id])
-  file              File?            @relation(fields: [filesId], references: [id])
+  estimateRequest   EstimateRequest @relation(fields: [estimate_request_id], references: [id])
 
   @@map("estimate_request_files")
 }
@@ -62,9 +61,9 @@ model File {
   id         String       @id @default(uuid())
   name       String?
   type       String?
-  created_at  DateTime? @map("created_at")
+  created_at  DateTime @map("created_at")
 
-  estimateRequestFiles EstimateRequestFile[]
+  
   postFiles            PostFile[]
 
   @@map("files")

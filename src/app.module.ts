@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { HTTPModule } from '@adapters/drivers/http/http.module';
 
 import { ConfigModule } from '@nestjs/config';
@@ -10,9 +10,17 @@ import DatabaseModule from '@adapters/drivens/infra/database/prisma/database.mod
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ProviderModule } from '@adapters/drivens/providers/provider.module';
 import { AuthModule } from '@adapters/drivens/infra/auth/auth.module';
+import { join } from 'node:path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(process.cwd(), 'temp'),
+      serveRoot: '/temp',
+      serveStaticOptions: {
+        index: false,
+      },
+    }),
     EnvModule,
     HTTPModule,
     AuthModule,

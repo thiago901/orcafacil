@@ -48,6 +48,7 @@ export class PrismaEstimateRequestRepository
       where: { id },
       include: {
         proposals: true,
+        files: true,
       },
     });
 
