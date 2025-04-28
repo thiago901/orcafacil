@@ -9,6 +9,8 @@ export interface EstimateRequestProps {
   phone: string;
   email: string;
   description: string;
+  latitude: number;
+  longitude: number;
   user_id: string | null;
   proposals?: Proposal[];
   estimate_request_files?: EstimateRequestFile[];
@@ -47,5 +49,11 @@ export class EstimateRequest extends Entity<EstimateRequestProps> {
   }
   get estimate_request_files() {
     return this.props.estimate_request_files;
+  }
+  get latitude() {
+    return this.props.latitude;
+  }
+  get longitude() {
+    return this.props.longitude;
   }
 }

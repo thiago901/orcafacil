@@ -36,6 +36,7 @@ export class UserMapping {
                 owner_id: company.owner_id,
                 ratting: Number(company.ratting),
                 about: company.about,
+                address: null,
               },
               new UniqueEntityID(company.id),
             )

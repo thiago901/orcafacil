@@ -2,11 +2,22 @@ import { Company } from '@core/modules/company/entities/company';
 import { CompanyRepository } from '../ports/repositories/company-repository';
 import { Injectable } from '@nestjs/common';
 import { Either, right } from '@core/common/entities/either';
+import { CompanyAddress } from '../../entities/company-address';
 
 type RequestProps = {
   name: string;
   owner_id: string;
   about: string | null;
+  address: {
+    name: string;
+    city: string;
+    country: string;
+    state: string;
+    zip: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+  };
 };
 type ResponseProps = Either<
   null,
@@ -23,6 +34,7 @@ export class CreateCompanyUseCase {
     name,
     owner_id,
     about,
+    address,
   }: RequestProps): Promise<ResponseProps> {
     const company = Company.create({
       avatar: null,
@@ -30,7 +42,18 @@ export class CreateCompanyUseCase {
       owner_id,
       ratting: 0,
       about,
+      address: CompanyAddress.create({
+        address: address.address,
+        city: address.city,
+        country: address.country,
+        state: address.state,
+        zip: address.zip,
+        latitude: address.latitude,
+        longitude: address.longitude,
+        name: address.name,
+      }),
     });
+
     await this.companyRepository.save(company);
 
     return right({ company });

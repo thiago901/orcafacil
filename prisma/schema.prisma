@@ -14,140 +14,160 @@ datasource db {
 }
 
 model User {
-  id         String       @id @default(uuid())
+  id         String    @id @default(uuid())
   name       String
   email      String
   phone      String
   password   String
-  avatar   String?
-  created_at  DateTime @map("created_at")
-  updated_at  DateTime? @map("updated_at")
+  avatar     String?
+  created_at DateTime  @map("created_at")
+  updated_at DateTime? @map("updated_at")
 
-  posts             Post[]
-  estimateRequests  EstimateRequest[]
-  company           Company?
+  posts            Post[]
+  estimateRequests EstimateRequest[]
+  company          Company?
 
   @@map("users")
 }
 
 model EstimateRequest {
-  id         String       @id @default(uuid())
+  id          String  @id @default(uuid())
   footage     Int
   name        String
   phone       String
   email       String
   description String
-  user_id      String?                     @map("user_id")
+  latitude    Float
+  longitude   Float
+  user_id     String? @map("user_id")
 
-  user        User?                    @relation(fields: [user_id], references: [id])
-  files       EstimateRequestFile[]
-  proposals   Proposal[]
+  user      User?                 @relation(fields: [user_id], references: [id])
+  files     EstimateRequestFile[]
+  proposals Proposal[]
 
   @@map("estimate_request")
 }
 
 model EstimateRequestFile {
-  id         String       @id @default(uuid())
-  url            String
-  estimate_request_id String      @map("estimate_request_id")
-  created_at  DateTime @map("created_at")
+  id                  String   @id @default(uuid())
+  url                 String
+  estimate_request_id String   @map("estimate_request_id")
+  created_at          DateTime @map("created_at")
 
-  estimateRequest   EstimateRequest @relation(fields: [estimate_request_id], references: [id])
+  estimateRequest EstimateRequest @relation(fields: [estimate_request_id], references: [id])
 
   @@map("estimate_request_files")
 }
 
 model File {
-  id         String       @id @default(uuid())
+  id         String   @id @default(uuid())
   name       String?
   type       String?
-  created_at  DateTime @map("created_at")
+  created_at DateTime @map("created_at")
 
-  
-  postFiles            PostFile[]
+  postFiles PostFile[]
 
   @@map("files")
 }
 
 model Post {
-  id         String       @id @default(uuid())
+  id         String    @id @default(uuid())
   title      String?
   body       String?   @db.Text
-  user_id     String       @map("user_id")
+  user_id    String    @map("user_id")
   status     String?
-  created_at  DateTime? @map("created_at")
-  updated_at  DateTime? @map("updated_at")
+  created_at DateTime? @map("created_at")
+  updated_at DateTime? @map("updated_at")
 
-  user       User      @relation(fields: [user_id], references: [id])
-  postFiles  PostFile[]
-  tags       Tag[]
+  user      User       @relation(fields: [user_id], references: [id])
+  postFiles PostFile[]
+  tags      Tag[]
 
   @@map("posts")
 }
 
 model PostFile {
-  id         String       @id @default(uuid())
-  postId  String?  @map("post_id")
-  filesId String?  @map("files_id")
+  id      String  @id @default(uuid())
+  postId  String? @map("post_id")
+  filesId String? @map("files_id")
 
-  post    Post? @relation(fields: [postId], references: [id])
-  file    File? @relation(fields: [filesId], references: [id])
+  post Post? @relation(fields: [postId], references: [id])
+  file File? @relation(fields: [filesId], references: [id])
 
   @@map("post_files")
 }
 
 model Proposal {
-  id         String       @id @default(uuid())
-  amount             Int
-  description        String
-  estimate_request_id  String      @map("estimate_request_id")
-  company_id          String      @map("company_id")
-  created_at          DateTime @map("created_at")
+  id                  String    @id @default(uuid())
+  amount              Int
+  description         String
+  estimate_request_id String    @map("estimate_request_id")
+  company_id          String    @map("company_id")
+  created_at          DateTime  @map("created_at")
   updated_at          DateTime? @map("updated_at")
-  approved_at          DateTime? @map("approved_at")
-  reject_at          DateTime? @map("reject_at")
+  approved_at         DateTime? @map("approved_at")
+  reject_at           DateTime? @map("reject_at")
 
-  estimateRequest    EstimateRequest? @relation(fields: [estimate_request_id], references: [id])
-  company            Company?         @relation(fields: [company_id], references: [id])
-  job                Job?
+  estimateRequest EstimateRequest? @relation(fields: [estimate_request_id], references: [id])
+  company         Company?         @relation(fields: [company_id], references: [id])
+  job             Job?
 
   @@map("proposals")
 }
 
 model Tag {
-  id         String       @id @default(uuid())
-  name    String?
-  postId  String?   @map("post_id")
+  id     String  @id @default(uuid())
+  name   String?
+  postId String? @map("post_id")
 
-  post    Post?  @relation(fields: [postId], references: [id])
+  post Post? @relation(fields: [postId], references: [id])
 
   @@map("tags")
 }
 
-model Company {
-  id         String       @id @default(uuid())
-  name     String
-  avatar   String?
-  ratting  Float @default(0)
-  about String?
-  owner_id  String     @map("owner_id") @unique
+model CompanyAddress {
+  id         String    @id @default(uuid())
+  name       String
+  address    String
+  city       String
+  state      String
+  country    String
+  zip        String
+  latitude   Float
+  longitude  Float
+  created_at DateTime  @map("created_at")
+  updated_at DateTime? @map("updated_at")
 
-  owner    User    @relation(fields: [owner_id], references: [id])
+  company Company?
+
+  @@map("company_address")
+}
+
+model Company {
+  id         String  @id @default(uuid())
+  name       String
+  avatar     String?
+  ratting    Float   @default(0)
+  about      String?
+  owner_id   String  @unique @map("owner_id")
+  address_id String  @unique
+
+  owner     User       @relation(fields: [owner_id], references: [id])
   proposals Proposal[]
   jobs      Job[]
+
+  address CompanyAddress @relation(fields: [address_id], references: [id])
 
   @@map("company")
 }
 
 model Job {
-  id         String       @id @default(uuid())
-  company_id  String?     @map("company_id")
-  proposalId String?     @map("proposal_id") @unique
+  id         String  @id @default(uuid())
+  company_id String? @map("company_id")
+  proposalId String? @unique @map("proposal_id")
 
-  company    Company? @relation(fields: [company_id], references: [id])
-  proposal   Proposal?@relation(fields: [proposalId], references: [id])
+  company  Company?  @relation(fields: [company_id], references: [id])
+  proposal Proposal? @relation(fields: [proposalId], references: [id])
 
   @@map("jobs")
 }
-
-

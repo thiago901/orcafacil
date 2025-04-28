@@ -3,6 +3,10 @@ import { EstimateRequestRepository } from '../ports/repositories/estimate-reques
 import { Injectable } from '@nestjs/common';
 import { Either, right } from '@core/common/entities/either';
 
+type EstimateRequestProps = {
+  longitude: number;
+  latitude: number;
+};
 type ResponseProps = Either<
   null,
   {
@@ -16,7 +20,10 @@ export class ListEstimateRequestsUseCase {
     private readonly estimateRequestRepository: EstimateRequestRepository,
   ) {}
 
-  async execute(): Promise<ResponseProps> {
+  async execute({
+    latitude,
+    longitude,
+  }: EstimateRequestProps): Promise<ResponseProps> {
     const estimateRequests = await this.estimateRequestRepository.getAll();
 
     return right({ estimateRequests });

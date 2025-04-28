@@ -11,9 +11,31 @@ export class PrismaCompanyRepository implements CompanyRepository {
   constructor(private readonly prisma: PrismaService) {}
   async save(company: Company): Promise<void> {
     const data = CompanyMapping.toPrisma(company);
-
-    await this.prisma.company.create({
-      data,
+    const { about, avatar, id, name, owner_id, ratting, address } = data;
+    this.prisma.companyAddress.create({
+      data: {
+        city: address.city,
+        country: address.country,
+        created_at: address.created_at,
+        id: address.id,
+        latitude: address.latitude,
+        longitude: address.longitude,
+        name: address.name,
+        zip: address.zip,
+        address: address.address,
+        updated_at: address.updated_at,
+        state: address.state,
+        company: {
+          create: {
+            about,
+            avatar,
+            id,
+            name,
+            owner_id,
+            ratting,
+          },
+        },
+      },
     });
   }
   async getAll(): Promise<Company[]> {

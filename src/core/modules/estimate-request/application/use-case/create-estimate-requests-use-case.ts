@@ -10,6 +10,8 @@ interface RequestProps {
   footage: number;
   name: string;
   phone: string;
+  latitude: number;
+  longitude: number;
 }
 
 type ResponseProps = Either<
@@ -32,6 +34,8 @@ export class CreateEstimateRequestUseCase {
     footage,
     name,
     phone,
+    latitude,
+    longitude
   }: RequestProps): Promise<ResponseProps> {
     const estimateRequest = EstimateRequest.create({
       description,
@@ -40,6 +44,8 @@ export class CreateEstimateRequestUseCase {
       name,
       phone,
       user_id: user_id || null,
+      latitude,
+      longitude,
     });
 
     await this.estimateRequestRepository.save(estimateRequest);

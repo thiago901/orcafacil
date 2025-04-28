@@ -8,6 +8,8 @@ export const createEstimateRequestSchema = z.object({
   email: z.string().email(),
   phone: z.string().min(10).max(15),
   user_id: z.string().optional(),
+  latitude: z.number(),
+  longitude: z.number(),
 });
 
 export class CreateEstimateRequestProps extends createZodDto(

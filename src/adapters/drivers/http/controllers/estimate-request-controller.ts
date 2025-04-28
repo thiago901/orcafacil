@@ -8,6 +8,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   UploadedFiles,
   UseInterceptors,
   UsePipes,
@@ -95,8 +96,14 @@ export class EstimateRequestController {
 
   @Get()
   @HttpCode(200)
-  async listAll() {
-    const result = await this.listEstimateRequestsUseCase.execute();
+  async listAll(
+    @Query('latitude') latitude: number,
+    @Query('longitude') longitude: number,
+  ) {
+    const result = await this.listEstimateRequestsUseCase.execute({
+      latitude,
+      longitude,
+    });
     if (result.isLeft()) {
       throw new HttpException(
         'Internal Server Error',

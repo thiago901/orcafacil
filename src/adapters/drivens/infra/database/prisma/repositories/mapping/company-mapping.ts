@@ -1,8 +1,16 @@
+import { RequiredProps } from '@core/common/entities/required';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { Company } from '@core/modules/company/entities/company';
+import { CompanyAddress } from '@core/modules/company/entities/company-address';
 
-import { Company as CompanyPrisma } from '@prisma/client';
+import {
+  Company as CompanyPrisma,
+  CompanyAddress as CompanyAddressPrisma,
+} from '@prisma/client';
 
+type CompanyCompletePrisma = CompanyPrisma & {
+  address?: CompanyAddressPrisma;
+};
 export class CompanyMapping {
   static toDomain({
     avatar,
@@ -11,7 +19,9 @@ export class CompanyMapping {
     ratting,
     owner_id,
     about,
-  }: CompanyPrisma) {
+    address_id,
+    address,
+  }: CompanyCompletePrisma) {
     return Company.create(
       {
         avatar,
@@ -19,19 +29,51 @@ export class CompanyMapping {
         owner_id,
         ratting: Number(ratting),
         about,
+        address: !address
+          ? null
+          : CompanyAddress.create(
+              {
+                name: address.name,
+                address: address.address,
+                city: address.city,
+                state: address.state,
+                country: address.country,
+                zip: address.zip,
+                latitude: Number(address.latitude),
+                longitude: Number(address.longitude),
+                created_at: address.created_at,
+                updated_at: address.updated_at,
+              },
+              new UniqueEntityID(address_id),
+            ),
       },
       new UniqueEntityID(id),
     );
   }
 
   static toPrisma(company: Company) {
+    const companyPrisma = company as RequiredProps<Company, 'address'>;
     return {
-      id: company.id.toString(),
-      avatar: company.avatar,
-      name: company.name,
-      owner_id: company.owner_id,
-      ratting: company.ratting,
-      about: company.about,
+      id: companyPrisma.id.toString(),
+      avatar: companyPrisma.avatar,
+      name: companyPrisma.name,
+      owner_id: companyPrisma.owner_id,
+      ratting: companyPrisma.ratting,
+      about: companyPrisma.about,
+      address_id: companyPrisma.address.id.toString(),
+      address: {
+        id: companyPrisma.address.id.toString(),
+        name: companyPrisma.address.name,
+        address: companyPrisma.address.address,
+        city: companyPrisma.address.city,
+        state: companyPrisma.address.state,
+        country: companyPrisma.address.country,
+        zip: companyPrisma.address.zip,
+        latitude: companyPrisma.address.latitude,
+        longitude: companyPrisma.address.longitude,
+        created_at: companyPrisma.address.created_at,
+        updated_at: companyPrisma.address.updated_at,
+      },
     };
   }
 }

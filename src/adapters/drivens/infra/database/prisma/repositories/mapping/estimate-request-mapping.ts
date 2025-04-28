@@ -22,6 +22,8 @@ export class EstimateRequestMapping {
     name,
     phone,
     user_id,
+    latitude,
+    longitude,
     proposals,
     files,
   }: EstimateRequestComplete) {
@@ -33,6 +35,8 @@ export class EstimateRequestMapping {
         name,
         phone,
         user_id,
+        latitude,
+        longitude,
         proposals: proposals?.map((proposal) =>
           Proposal.create(
             {
@@ -69,6 +73,8 @@ export class EstimateRequestMapping {
       footage: estimateRequest.footage,
       name: estimateRequest.name,
       phone: estimateRequest.phone,
+      latitude: estimateRequest.latitude,
+      longitude: estimateRequest.longitude,
       user_id: estimateRequest.user_id,
       id: estimateRequest.id.toString(),
     };
