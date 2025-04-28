@@ -128,7 +128,8 @@ model Company {
   id         String       @id @default(uuid())
   name     String
   avatar   String?
-  ratting  Int @default(0)
+  ratting  Float @default(0)
+  about String?
   owner_id  String     @map("owner_id") @unique
 
   owner    User    @relation(fields: [owner_id], references: [id])

@@ -5,6 +5,7 @@ export const createCompanySchema = z.object({
   name: z.string().min(2),
   owner_id: z.string(),
   avatar: z.string().optional(),
+  about: z.string().nullable(),
 });
 
 export class CreateCompanyProps extends createZodDto(createCompanySchema) {}

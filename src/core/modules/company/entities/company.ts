@@ -6,6 +6,7 @@ export interface CompanyProps {
   avatar: string | null;
   ratting: number;
   owner_id: string;
+  about: string | null;
 }
 
 export class Company extends Entity<CompanyProps> {
@@ -27,5 +28,8 @@ export class Company extends Entity<CompanyProps> {
 
   get owner_id() {
     return this.props.owner_id;
+  }
+  get about() {
+    return this.props.about;
   }
 }
