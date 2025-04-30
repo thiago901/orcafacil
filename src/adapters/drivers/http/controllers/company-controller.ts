@@ -39,7 +39,7 @@ export class CompanyController {
     private readonly listAllCompaniesByOwnerUseCase: ListAllCompaniesByOwnerUseCase,
   ) {}
 
-  @Post('')
+  @Post('/')
   @Public()
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createCompanySchema))
