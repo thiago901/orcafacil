@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "company" ALTER COLUMN "ratting" SET DEFAULT 0,
-ALTER COLUMN "ratting" SET DATA TYPE DECIMAL(65,30);

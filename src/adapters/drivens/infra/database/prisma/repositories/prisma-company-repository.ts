@@ -12,7 +12,7 @@ export class PrismaCompanyRepository implements CompanyRepository {
   async save(company: Company): Promise<void> {
     const data = CompanyMapping.toPrisma(company);
     const { about, avatar, id, name, owner_id, ratting, address } = data;
-    this.prisma.companyAddress.create({
+    await this.prisma.companyAddress.create({
       data: {
         city: address.city,
         country: address.country,
@@ -55,6 +55,9 @@ export class PrismaCompanyRepository implements CompanyRepository {
   async findById(id: string): Promise<Company | null> {
     const company = await this.prisma.company.findUnique({
       where: { id },
+      include: {
+        address: true,
+      },
     });
 
     if (!company) {
