@@ -20,6 +20,12 @@ import { ProposalRepository } from '@core/modules/proposal/application/ports/rep
 import { ProposalController } from './controllers/proposal-controller';
 import { EstimateRequestFileRepository } from '@core/modules/estimate-request/application/ports/repositories/estimate-request-repository-file';
 import { PrismaEstimateRequestFileRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-estimate-request-file-repository';
+import { CompanyServiceRepository } from '@core/modules/company/application/ports/repositories/company-service-repository';
+import { PrismaCompanyServiceRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-company-service-repository';
+import { CompanyServicesController } from './controllers/company-services-controller';
+import { PrismaCompanyCategoryRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-company-category-repository';
+import { CompanyCategoryRepository } from '@core/modules/company/application/ports/repositories/company-catagories-repository';
+import { CompanyCategoryController } from './controllers/company-categories-controller';
 
 @Module({
   imports: [
@@ -31,6 +37,14 @@ import { PrismaEstimateRequestFileRepository } from '@adapters/drivens/infra/dat
         {
           provide: CompanyRepository,
           useClass: PrismaCompanyRepository,
+        },
+        {
+          provide: CompanyServiceRepository,
+          useClass: PrismaCompanyServiceRepository,
+        },
+        {
+          provide: CompanyCategoryRepository,
+          useClass: PrismaCompanyCategoryRepository,
         },
       ],
     },
@@ -65,6 +79,9 @@ import { PrismaEstimateRequestFileRepository } from '@adapters/drivens/infra/dat
     CompanyController,
     SessionController,
     EstimateRequestController,
+    CompanyServicesController,
+
+    CompanyCategoryController,
   ],
 })
 export class HTTPModule {}

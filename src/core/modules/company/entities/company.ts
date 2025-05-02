@@ -1,6 +1,7 @@
 import { Entity } from '@core/common/entities/entity';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { CompanyAddress } from './company-address';
+import { CompanyService } from './company-service';
 
 export interface CompanyProps {
   name: string;
@@ -9,6 +10,7 @@ export interface CompanyProps {
   owner_id: string;
   about: string | null;
   address: CompanyAddress | null;
+  services?: CompanyService[];
 }
 
 export class Company extends Entity<CompanyProps> {
@@ -36,5 +38,8 @@ export class Company extends Entity<CompanyProps> {
   }
   get address() {
     return this.props.address;
+  }
+  get services() {
+    return this.props.services;
   }
 }

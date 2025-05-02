@@ -155,7 +155,7 @@ model Company {
   owner     User       @relation(fields: [owner_id], references: [id])
   proposals Proposal[]
   jobs      Job[]
-  categories CompanyCategory[]
+  services CompanyService[]
 
   address CompanyAddress @relation(fields: [address_id], references: [id])
 
@@ -173,9 +173,9 @@ model Job {
   @@map("jobs")
 }
 
-model CompanyCategory {
+model CompanyService {
   id         String    @id @default(uuid())
-  service String
+  name String
   company_id String    
   category_id String   
   created_at DateTime  
@@ -184,14 +184,14 @@ model CompanyCategory {
   company  Company  @relation(fields: [company_id], references: [id])
   category Category @relation(fields: [category_id], references: [id])
 
-  @@map("company_category")
+  @@map("company_services")
 }
 model Category {
   id         String    @id @default(uuid())
   name       String
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
-  companies CompanyCategory[]
+  companies CompanyService[]
 
 
   @@map("categories")

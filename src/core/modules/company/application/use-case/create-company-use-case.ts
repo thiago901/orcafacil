@@ -52,6 +52,7 @@ export class CreateCompanyUseCase {
         longitude: address.longitude,
         name: address.name,
       }),
+      services: [],
     });
 
     await this.companyRepository.save(company);

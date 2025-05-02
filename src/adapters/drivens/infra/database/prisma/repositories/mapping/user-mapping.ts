@@ -37,6 +37,7 @@ export class UserMapping {
                 ratting: Number(company.ratting),
                 about: company.about,
                 address: null,
+                services: [],
               },
               new UniqueEntityID(company.id),
             )
