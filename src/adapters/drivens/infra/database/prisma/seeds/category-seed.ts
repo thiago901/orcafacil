@@ -27,6 +27,10 @@ export async function categorySeed() {
   ];
 
   const prisma = new PrismaService();
+  const category = await prisma.category.findFirst();
+  if (!!category) {
+    return;
+  }
   const prismaCategories = categories.map((item) => ({
     id: randomUUID(),
     created_at: new Date(),

@@ -35,7 +35,7 @@ export class CreateProposalUseCase {
       description,
       estimate_request_id,
     });
-    await this.proposalRepository.save(proposal);
+    await this.proposalRepository.create(proposal);
 
     return right({ proposal });
   }

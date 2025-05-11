@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { EnvService } from '@adapters/drivens/infra/envs/env.service';
 import { patchNestJsSwagger } from 'nestjs-zod';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { writeFileSync } from 'node:fs';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +20,8 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, {});
+  // Exporta para JSON
+  writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
 
   await app.listen(envService.get('PORT'));
 }

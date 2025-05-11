@@ -48,7 +48,7 @@ export class CompanyServiceMapping {
       category_id: company.category_id,
       company_id: company.company_id,
       created_at: company.created_at,
-      id: company.id,
+      id: company.id.toString(),
       name: company.name,
       updated_at: company.updated_at,
     };

@@ -99,10 +99,12 @@ export class EstimateRequestController {
   async listAll(
     @Query('latitude') latitude: number,
     @Query('longitude') longitude: number,
+    @Query('radiusInMeters') radiusInMeters: number,
   ) {
     const result = await this.listEstimateRequestsUseCase.execute({
       latitude,
       longitude,
+      radius_in_meters: radiusInMeters,
     });
     if (result.isLeft()) {
       throw new HttpException(

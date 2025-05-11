@@ -6,6 +6,7 @@ import { Either, right } from '@core/common/entities/either';
 type EstimateRequestProps = {
   longitude: number;
   latitude: number;
+  radius_in_meters: number;
 };
 type ResponseProps = Either<
   null,
@@ -23,8 +24,14 @@ export class ListEstimateRequestsUseCase {
   async execute({
     latitude,
     longitude,
+    radius_in_meters,
   }: EstimateRequestProps): Promise<ResponseProps> {
-    const estimateRequests = await this.estimateRequestRepository.getAll();
+    const estimateRequests =
+      await this.estimateRequestRepository.getAllByGeoLocation({
+        lat: latitude,
+        long: longitude,
+        radius_in_meters,
+      });
 
     return right({ estimateRequests });
   }

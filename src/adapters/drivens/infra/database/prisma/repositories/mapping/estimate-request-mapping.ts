@@ -24,6 +24,13 @@ export class EstimateRequestMapping {
     user_id,
     latitude,
     longitude,
+    address_city,
+    address_neighborhood,
+    address_number,
+    address_postal_code,
+    address_state,
+    address_street,
+
     proposals,
     files,
   }: EstimateRequestComplete) {
@@ -35,8 +42,16 @@ export class EstimateRequestMapping {
         name,
         phone,
         user_id,
-        latitude,
-        longitude,
+        address: {
+          latitude,
+          longitude,
+          city: address_city,
+          neighborhood: address_neighborhood,
+          number: address_number,
+          postal_code: address_postal_code,
+          state: address_state,
+          street: address_street,
+        },
         proposals: proposals?.map((proposal) =>
           Proposal.create(
             {
@@ -73,8 +88,14 @@ export class EstimateRequestMapping {
       footage: estimateRequest.footage,
       name: estimateRequest.name,
       phone: estimateRequest.phone,
-      latitude: estimateRequest.latitude,
-      longitude: estimateRequest.longitude,
+      latitude: estimateRequest.address.latitude,
+      longitude: estimateRequest.address.longitude,
+      address_city: estimateRequest.address.city,
+      address_neighborhood: estimateRequest.address.neighborhood,
+      address_number: estimateRequest.address.number,
+      address_postal_code: estimateRequest.address.postal_code,
+      address_state: estimateRequest.address.state,
+      address_street: estimateRequest.address.street,
       user_id: estimateRequest.user_id,
       id: estimateRequest.id.toString(),
     };

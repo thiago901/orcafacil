@@ -7,4 +7,5 @@ export abstract class ProposalRepository {
   abstract findByCompanyId(company_id: string): Promise<Proposal[]>;
   abstract findById(id: string): Promise<Proposal | null>;
   abstract save(user: Proposal): Promise<void>;
+  abstract create(user: Proposal): Promise<void>;
 }

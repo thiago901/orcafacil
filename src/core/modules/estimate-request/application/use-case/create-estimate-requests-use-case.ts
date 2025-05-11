@@ -10,8 +10,14 @@ interface RequestProps {
   footage: number;
   name: string;
   phone: string;
-  latitude: number;
-  longitude: number;
+  address_street: string;
+  address_number: string;
+  address_postal_code: string;
+  address_neighborhood: string;
+  address_state: string;
+  address_city: string;
+  lat: string;
+  long: string;
 }
 
 type ResponseProps = Either<
@@ -34,9 +40,17 @@ export class CreateEstimateRequestUseCase {
     footage,
     name,
     phone,
-    latitude,
-    longitude
+    address_city,
+    address_neighborhood,
+    address_number,
+    address_postal_code,
+    address_state,
+    address_street,
+    lat,
+    long,
   }: RequestProps): Promise<ResponseProps> {
+    console.log('address', { lat, long });
+
     const estimateRequest = EstimateRequest.create({
       description,
       email,
@@ -44,8 +58,16 @@ export class CreateEstimateRequestUseCase {
       name,
       phone,
       user_id: user_id || null,
-      latitude,
-      longitude,
+      address: {
+        city: address_city,
+        latitude: Number(lat),
+        longitude: Number(long),
+        neighborhood: address_neighborhood,
+        number: address_number,
+        postal_code: address_postal_code,
+        state: address_state,
+        street: address_street,
+      },
     });
 
     await this.estimateRequestRepository.save(estimateRequest);

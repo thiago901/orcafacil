@@ -1,9 +1,13 @@
-import { EstimateRequestRepository } from '@core/modules/estimate-request/application/ports/repositories/estimate-request-repository';
+import {
+  EstimateRequestRepository,
+  GetAllByGeoLocationProps,
+} from '@core/modules/estimate-request/application/ports/repositories/estimate-request-repository';
 import { PrismaService } from '../prisma.service';
 import { EstimateRequestMapping } from './mapping/estimate-request-mapping';
 
 import { Injectable } from '@nestjs/common';
 import { EstimateRequest } from '@core/modules/estimate-request/entities/estimate-request';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaEstimateRequestRepository
@@ -31,9 +35,33 @@ export class PrismaEstimateRequestRepository
     await this.prisma.estimateRequest.create({
       data,
     });
+    await this.prisma.$executeRawUnsafe(`
+      UPDATE "estimate_request"
+      SET "location" = ST_SetSRID(ST_MakePoint("longitude", "latitude"), 4326)::geography
+      WHERE "id" = '${data.id}';
+    `);
   }
-  async getAll(): Promise<EstimateRequest[]> {
+  async getAllByGeoLocation({
+    lat,
+    long,
+    radius_in_meters,
+  }: GetAllByGeoLocationProps): Promise<EstimateRequest[]> {
+    const nearbyIds = await this.prisma.$queryRaw<
+      Array<{ id: string }>
+    >(Prisma.sql`
+    SELECT "id"
+    FROM "estimate_request"
+    WHERE ST_DWithin(
+      "location",
+      ST_SetSRID(ST_MakePoint(${Number(long)}, ${Number(lat)}), 4326)::geography,
+      ${Number(radius_in_meters)}
+    )
+  `);
+    const estimateRequestIds = nearbyIds.map((r) => r.id);
     const estimate_requests = await this.prisma.estimateRequest.findMany({
+      where: {
+        id: { in: estimateRequestIds },
+      },
       include: {
         proposals: true,
       },

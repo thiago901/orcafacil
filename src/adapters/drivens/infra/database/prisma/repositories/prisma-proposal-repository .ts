@@ -14,9 +14,14 @@ export class PrismaProposalRepository implements ProposalRepository {
   ): Promise<Proposal[]> {
     const proposals = await this.prisma.proposal.findMany({
       where: { estimate_request_id },
+      include: {
+        company: true,
+      },
     });
 
-    return proposals.map((proposal) => ProposalMapping.toDomain(proposal));
+    return proposals.map((proposal) =>
+      ProposalMapping.toDomain(proposal as any),
+    );
   }
   async findByCompanyId(company_id: string): Promise<Proposal[]> {
     const proposals = await this.prisma.proposal.findMany({
@@ -24,6 +29,13 @@ export class PrismaProposalRepository implements ProposalRepository {
     });
 
     return proposals.map((proposal) => ProposalMapping.toDomain(proposal));
+  }
+  async create(proposal: Proposal): Promise<void> {
+    const data = ProposalMapping.toPrisma(proposal);
+
+    await this.prisma.proposal.create({
+      data,
+    });
   }
   async save(proposal: Proposal): Promise<void> {
     const data = ProposalMapping.toPrisma(proposal);

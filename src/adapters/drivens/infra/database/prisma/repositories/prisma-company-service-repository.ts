@@ -10,6 +10,13 @@ export class PrismaCompanyServiceRepository
   implements CompanyServiceRepository
 {
   constructor(private readonly prisma: PrismaService) {}
+  async create(company: CompanyService): Promise<CompanyService> {
+    const data = CompanyServiceMapping.toPrisma(company);
+    await this.prisma.companyService.create({
+      data,
+    });
+    return company;
+  }
   async getAllByCompanyId(company_id: string): Promise<CompanyService[]> {
     const companies = await this.prisma.companyService.findMany({
       where: {

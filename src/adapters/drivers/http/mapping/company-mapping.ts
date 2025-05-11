@@ -15,6 +15,8 @@ export class CompanyMapping {
         country: address?.country,
         state: address?.state,
         zip: address?.zip,
+        latitude: address?.latitude,
+        longitude: address?.longitude,
       },
     };
   }

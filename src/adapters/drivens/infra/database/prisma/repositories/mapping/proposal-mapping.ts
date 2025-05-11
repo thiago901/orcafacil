@@ -1,8 +1,15 @@
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
+import { Company } from '@core/modules/company/entities/company';
 import { Proposal } from '@core/modules/proposal/entities/proposal';
 
-import { Proposal as ProposalPrisma } from '@prisma/client';
+import {
+  Proposal as ProposalPrisma,
+  Company as PrismaCompany,
+} from '@prisma/client';
 
+type ProposalComplete = ProposalPrisma & {
+  company?: PrismaCompany;
+};
 export class ProposalMapping {
   static toDomain({
     id,
@@ -13,8 +20,9 @@ export class ProposalMapping {
     description,
     estimate_request_id,
     updated_at,
+    company,
     reject_at,
-  }: ProposalPrisma) {
+  }: ProposalComplete) {
     return Proposal.create(
       {
         amount,
@@ -25,6 +33,19 @@ export class ProposalMapping {
         estimate_request_id,
         updated_at,
         reject_at,
+        company:
+          company &&
+          Company.create(
+            {
+              about: company.about,
+              address: null,
+              avatar: company.avatar,
+              name: company.name,
+              owner_id: company.owner_id,
+              ratting: company.ratting,
+            },
+            new UniqueEntityID(company_id),
+          ),
       },
       new UniqueEntityID(id),
     );

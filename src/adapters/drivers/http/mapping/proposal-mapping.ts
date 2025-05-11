@@ -11,6 +11,7 @@ export class ProposalMapping {
     estimate_request_id,
     updated_at,
     reject_at,
+    company,
   }: Proposal) {
     return {
       id: id.toString(),
@@ -22,6 +23,13 @@ export class ProposalMapping {
       estimate_request_id,
       updated_at,
       reject_at,
+      company: {
+        about: company?.about,
+        avatar: company?.avatar,
+        id: company?.id,
+        name: company?.name,
+        ratting: company?.ratting,
+      },
     };
   }
 }

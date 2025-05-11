@@ -5,6 +5,7 @@ import { ListAllCompaniesUseCase } from './application/use-case/list-all-compani
 import { ListAllCompaniesByOwnerUseCase } from './application/use-case/list-all-companies-by-owneruse-case';
 import { ListAllCompaniesServicesByCompanyUseCase } from './application/use-case/list-all-companies-services-by-company-use-case';
 import { ListAllCompaniesCategoriesUseCase } from './application/use-case/list-all-companies-categories-use-case';
+import { CreateCompanyServiceUseCase } from './application/use-case/create-company-service-use-case';
 
 @Module({
   imports: [],
@@ -16,6 +17,7 @@ import { ListAllCompaniesCategoriesUseCase } from './application/use-case/list-a
     ListAllCompaniesByOwnerUseCase,
     ListAllCompaniesServicesByCompanyUseCase,
     ListAllCompaniesCategoriesUseCase,
+    CreateCompanyServiceUseCase,
   ],
   exports: [
     CreateCompanyUseCase,
@@ -24,6 +26,7 @@ import { ListAllCompaniesCategoriesUseCase } from './application/use-case/list-a
     ListAllCompaniesByOwnerUseCase,
     ListAllCompaniesServicesByCompanyUseCase,
     ListAllCompaniesCategoriesUseCase,
+    CreateCompanyServiceUseCase,
   ],
 })
 export class CompanyModule {}

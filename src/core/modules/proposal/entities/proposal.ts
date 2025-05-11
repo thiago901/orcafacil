@@ -1,12 +1,14 @@
 import { Entity } from '@core/common/entities/entity';
 import { Optional } from '@core/common/entities/optional';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
+import { Company } from '@core/modules/company/entities/company';
 
 export interface ProposalProps {
   amount: number;
   description: string;
   estimate_request_id: string;
   company_id: string;
+  company?: Company;
   created_at: Date;
   updated_at: Date | null;
   approved_at: Date | null;
@@ -70,6 +72,9 @@ export class Proposal extends Entity<ProposalProps> {
   set reject_at(value: Date | null) {
     this.props.reject_at = value;
     this.touch();
+  }
+  get company() {
+    return this.props.company;
   }
 
   private touch() {

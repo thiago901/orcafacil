@@ -37,14 +37,22 @@ model EstimateRequest {
   phone       String
   email       String
   description String
+
+  user_id     String? @map("user_id")
+  address_street String
+  address_number String
+  address_postal_code String
+  address_neighborhood String
+  address_state String
+  address_city String
   latitude    Float
   longitude   Float
-  user_id     String? @map("user_id")
+
 
   user      User?                 @relation(fields: [user_id], references: [id])
   files     EstimateRequestFile[]
   proposals Proposal[]
-
+  created_at  DateTime? @map("created_at") @default(now())
   @@map("estimate_request")
 }
 

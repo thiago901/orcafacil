@@ -26,7 +26,7 @@ export class CompanyCategoryController {
 
   @Get('/')
   @Public()
-  async create() {
+  async listAll() {
     const result = await this.listAllCompaniesCategoriesUseCase.execute();
     if (result.isLeft()) {
       throw new HttpException('result.value', HttpStatus.BAD_REQUEST);

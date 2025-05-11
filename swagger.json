@@ -1,0 +1,1019 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/info": {
+      "get": {
+        "operationId": "InfoController_info",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Info"
+        ]
+      }
+    },
+    "/proposals": {
+      "post": {
+        "operationId": "ProposalController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProposalProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Proposal"
+        ]
+      }
+    },
+    "/proposals/{id}": {
+      "get": {
+        "operationId": "ProposalController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Proposal"
+        ]
+      }
+    },
+    "/proposals/company/{company_id}": {
+      "get": {
+        "operationId": "ProposalController_listAllByCompany",
+        "parameters": [
+          {
+            "name": "company_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Proposal"
+        ]
+      }
+    },
+    "/proposals/estimate/{estimate_id}": {
+      "get": {
+        "operationId": "ProposalController_listAllByEstimateId",
+        "parameters": [
+          {
+            "name": "estimate_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Proposal"
+        ]
+      }
+    },
+    "/proposals/{id}/reject": {
+      "patch": {
+        "operationId": "ProposalController_rejectProposal",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Proposal"
+        ]
+      }
+    },
+    "/proposals/{id}/approve": {
+      "patch": {
+        "operationId": "ProposalController_aproveProposal",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Proposal"
+        ]
+      }
+    },
+    "/users": {
+      "post": {
+        "operationId": "UserController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      },
+      "get": {
+        "operationId": "UserController_listAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "put": {
+        "operationId": "UserController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      },
+      "delete": {
+        "operationId": "UserController_delete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      },
+      "get": {
+        "operationId": "UserController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      }
+    },
+    "/companies": {
+      "post": {
+        "operationId": "CompanyController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCompanyProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Company"
+        ]
+      },
+      "get": {
+        "operationId": "CompanyController_listAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Company"
+        ]
+      }
+    },
+    "/companies/{id}": {
+      "get": {
+        "operationId": "CompanyController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Company"
+        ]
+      }
+    },
+    "/companies/owner/{owner_id}": {
+      "get": {
+        "operationId": "CompanyController_listAllByOwnerId",
+        "parameters": [
+          {
+            "name": "owner_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Company"
+        ]
+      }
+    },
+    "/sessions": {
+      "post": {
+        "operationId": "SessionController_createSession",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthenticateUserProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Session"
+        ]
+      }
+    },
+    "/forgot-password": {
+      "post": {
+        "operationId": "SessionController_forgotPassword",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecoverPasswordProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Session"
+        ]
+      }
+    },
+    "/estimate-requests": {
+      "post": {
+        "operationId": "EstimateRequestController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEstimateRequestProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimate Request"
+        ]
+      },
+      "get": {
+        "operationId": "EstimateRequestController_listAll",
+        "parameters": [
+          {
+            "name": "latitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "longitude",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "radiusInMeters",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimate Request"
+        ]
+      }
+    },
+    "/estimate-requests/user/{id}": {
+      "get": {
+        "operationId": "EstimateRequestController_findByUserId",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimate Request"
+        ]
+      }
+    },
+    "/estimate-requests/{id}": {
+      "get": {
+        "operationId": "EstimateRequestController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimate Request"
+        ]
+      }
+    },
+    "/estimate-requests/{id}/files": {
+      "post": {
+        "operationId": "EstimateRequestController_uploadFiles",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimate Request"
+        ]
+      },
+      "get": {
+        "operationId": "EstimateRequestController_listRequestFiles",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimate Request"
+        ]
+      }
+    },
+    "/companies-services/{company_id}": {
+      "get": {
+        "operationId": "CompanyServicesController_listByCompany",
+        "parameters": [
+          {
+            "name": "company_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Company Services"
+        ]
+      }
+    },
+    "/companies-services": {
+      "post": {
+        "operationId": "CompanyServicesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCompanyServiceProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Company Services"
+        ]
+      }
+    },
+    "/companies-categories": {
+      "get": {
+        "operationId": "CompanyCategoryController_listAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Company Categories"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "OrçaFacil API",
+    "description": "Documentação das APIs do OrçaFacil",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "CreateProposalProps": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number"
+          },
+          "company_id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "estimate_request_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount",
+          "company_id",
+          "description",
+          "estimate_request_id"
+        ]
+      },
+      "CreateUserProps": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6
+          },
+          "phone": {
+            "type": "string",
+            "minLength": 8
+          },
+          "avatar": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password",
+          "phone"
+        ]
+      },
+      "UpdateUserProps": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6
+          },
+          "avatar": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateCompanyProps": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2
+          },
+          "owner_id": {
+            "type": "string"
+          },
+          "avatar": {
+            "type": "string"
+          },
+          "about": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 2
+              },
+              "city": {
+                "type": "string",
+                "minLength": 2
+              },
+              "country": {
+                "type": "string",
+                "minLength": 2
+              },
+              "state": {
+                "type": "string",
+                "minLength": 2
+              },
+              "zip": {
+                "type": "string",
+                "minLength": 2
+              },
+              "address": {
+                "type": "string",
+                "minLength": 2
+              },
+              "latitude": {
+                "type": "number"
+              },
+              "longitude": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "name",
+              "city",
+              "country",
+              "state",
+              "zip",
+              "address",
+              "latitude",
+              "longitude"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "owner_id",
+          "about",
+          "address"
+        ]
+      },
+      "AuthenticateUserProps": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "RecoverPasswordProps": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "CreateEstimateRequestProps": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2
+          },
+          "description": {
+            "type": "string"
+          },
+          "footage": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMinimum": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "phone": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 15
+          },
+          "user_id": {
+            "type": "string"
+          },
+          "address_city": {
+            "type": "string"
+          },
+          "address_neighborhood": {
+            "type": "string"
+          },
+          "address_number": {
+            "type": "string"
+          },
+          "address_postal_code": {
+            "type": "string"
+          },
+          "address_state": {
+            "type": "string"
+          },
+          "address_street": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "string"
+          },
+          "long": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "footage",
+          "email",
+          "phone",
+          "address_city",
+          "address_neighborhood",
+          "address_number",
+          "address_postal_code",
+          "address_state",
+          "address_street",
+          "lat",
+          "long"
+        ]
+      },
+      "CreateCompanyServiceProps": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 2
+          },
+          "category_id": {
+            "type": "string"
+          },
+          "company_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "category_id",
+          "company_id"
+        ]
+      }
+    }
+  }
+}
