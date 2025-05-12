@@ -1,0 +1,79 @@
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  UseInterceptors,
+  UsePipes,
+} from '@nestjs/common';
+
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
+import { LoggingInterceptor } from '../Interceptors/custom-logger-routes';
+
+import { Public } from '@adapters/drivens/infra/auth/public';
+
+import { ListJobsByCompanyUseCase } from '@core/modules/job/application/use-case/list-jobs-by-company-use-case';
+import { CreateJobUseCase } from '@core/modules/job/application/use-case/create-job-use-case';
+import { JobMapping } from '../mapping/job-mapping';
+import {
+  CreateJobProps,
+  createJobSchema,
+} from './validations/create-job.validate';
+import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { GetJobByIdUseCase } from '@core/modules/job/application/use-case/get-jobs-by-id-use-case';
+
+@ApiTags('Jobs')
+@ApiBearerAuth()
+@Controller('/jobs')
+@UseInterceptors(LoggingInterceptor)
+export class JobsController {
+  constructor(
+    private readonly listJobsByCompanyUseCase: ListJobsByCompanyUseCase,
+    private readonly createJobUseCase: CreateJobUseCase,
+    private readonly getJobByIdUseCase: GetJobByIdUseCase,
+  ) {}
+
+  @Get('/company/:company_id')
+  @Public()
+  async listAllByCompany(@Param('company_id') company_id: string) {
+    const result = await this.listJobsByCompanyUseCase.execute({ company_id });
+    if (result.isLeft()) {
+      throw new HttpException('result.value', HttpStatus.BAD_REQUEST);
+    }
+    return {
+      result: result.value.jobs.map(JobMapping.toView),
+    };
+  }
+
+  @Get('/:id')
+  @Public()
+  async jobById(@Param('id') id: string) {
+    const result = await this.getJobByIdUseCase.execute({ id });
+    if (result.isLeft()) {
+      throw new HttpException('result.value', HttpStatus.BAD_REQUEST);
+    }
+    return {
+      result: JobMapping.toView(result.value.job),
+    };
+  }
+  @Post('/')
+  @Public()
+  @UsePipes(new ZodValidationPipe(createJobSchema))
+  async createJob(@Body() body: CreateJobProps) {
+    const { company_id, proposal_id } = body;
+    const result = await this.createJobUseCase.execute({
+      company_id,
+      proposal_id,
+    });
+    if (result.isLeft()) {
+      throw new HttpException('result.value', HttpStatus.BAD_REQUEST);
+    }
+    return {
+      result: JobMapping.toView(result.value.job),
+    };
+  }
+}

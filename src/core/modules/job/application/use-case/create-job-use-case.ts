@@ -5,22 +5,30 @@ import { Either, right } from '@core/common/entities/either';
 
 interface RequestProps {
   company_id: string;
+  proposal_id: string;
 }
 
 type ResponseProps = Either<
   null,
   {
-    jobs: Job[];
+    job: Job;
   }
 >;
 
 @Injectable()
-export class ListJobsByCompanyUseCase {
+export class CreateJobUseCase {
   constructor(private readonly jobRepository: JobRepository) {}
 
-  async execute({ company_id }: RequestProps): Promise<ResponseProps> {
-    const jobs = await this.jobRepository.findByCompanyId(company_id);
+  async execute({
+    company_id,
+    proposal_id,
+  }: RequestProps): Promise<ResponseProps> {
+    const job = Job.create({
+      company_id,
+      proposal_id,
+    });
+    await this.jobRepository.create(job);
 
-    return right({ jobs });
+    return right({ job });
   }
 }

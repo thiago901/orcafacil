@@ -718,6 +718,91 @@
         ]
       }
     },
+    "/jobs/company/{company_id}": {
+      "get": {
+        "operationId": "JobsController_listAllByCompany",
+        "parameters": [
+          {
+            "name": "company_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Jobs"
+        ]
+      }
+    },
+    "/jobs/{id}": {
+      "get": {
+        "operationId": "JobsController_jobById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Jobs"
+        ]
+      }
+    },
+    "/jobs": {
+      "post": {
+        "operationId": "JobsController_createJob",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateJobProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Jobs"
+        ]
+      }
+    },
     "/companies-categories": {
       "get": {
         "operationId": "CompanyCategoryController_listAll",
@@ -758,6 +843,9 @@
       "CreateProposalProps": {
         "type": "object",
         "properties": {
+          "name": {
+            "type": "string"
+          },
           "amount": {
             "type": "number"
           },
@@ -772,6 +860,7 @@
           }
         },
         "required": [
+          "name",
           "amount",
           "company_id",
           "description",
@@ -1012,6 +1101,23 @@
           "name",
           "category_id",
           "company_id"
+        ]
+      },
+      "CreateJobProps": {
+        "type": "object",
+        "properties": {
+          "company_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "proposal_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "company_id",
+          "proposal_id"
         ]
       }
     }

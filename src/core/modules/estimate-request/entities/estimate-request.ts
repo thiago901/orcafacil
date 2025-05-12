@@ -25,16 +25,20 @@ export interface EstimateRequestProps {
   proposals?: Proposal[];
   estimate_request_files?: EstimateRequestFile[];
   created_at: Date;
-  updated_at?: Date;
+  updated_at: Date | null;
 }
 
 export class EstimateRequest extends Entity<EstimateRequestProps> {
   static create(
-    props: Optional<EstimateRequestProps, 'created_at'>,
+    props: Optional<EstimateRequestProps, 'created_at' | 'updated_at'>,
     id?: UniqueEntityID,
   ) {
     return new EstimateRequest(
-      { ...props, created_at: props.created_at ?? new Date() },
+      {
+        ...props,
+        created_at: props.created_at ?? new Date(),
+        updated_at: props.updated_at ?? new Date(),
+      },
       id,
     );
   }

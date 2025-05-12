@@ -26,9 +26,14 @@ export class PrismaProposalRepository implements ProposalRepository {
   async findByCompanyId(company_id: string): Promise<Proposal[]> {
     const proposals = await this.prisma.proposal.findMany({
       where: { company_id },
+      include: {
+        estimateRequest: true,
+      },
     });
 
-    return proposals.map((proposal) => ProposalMapping.toDomain(proposal));
+    return proposals.map((proposal) =>
+      ProposalMapping.toDomain(proposal as any),
+    );
   }
   async create(proposal: Proposal): Promise<void> {
     const data = ProposalMapping.toPrisma(proposal);

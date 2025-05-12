@@ -6,6 +6,7 @@ import { Either, right } from '@core/common/entities/either';
 import { ResourceNotFoundError } from '@core/common/errors/common/resource-not-found-error';
 
 interface RequestProps {
+  name: string;
   amount: number;
   company_id: string;
   description: string;
@@ -24,12 +25,14 @@ export class CreateProposalUseCase {
   constructor(private readonly proposalRepository: ProposalRepository) {}
 
   async execute({
+    name,
     amount,
     company_id,
     description,
     estimate_request_id,
   }: RequestProps): Promise<ResponseProps> {
     const proposal = Proposal.create({
+      name,
       amount,
       company_id,
       description,

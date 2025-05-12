@@ -2,13 +2,16 @@ import { Entity } from '@core/common/entities/entity';
 import { Optional } from '@core/common/entities/optional';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { Company } from '@core/modules/company/entities/company';
+import { EstimateRequest } from '@core/modules/estimate-request/entities/estimate-request';
 
 export interface ProposalProps {
   amount: number;
+  name: string;
   description: string;
   estimate_request_id: string;
   company_id: string;
   company?: Company;
+  estimate_request?: EstimateRequest | null;
   created_at: Date;
   updated_at: Date | null;
   approved_at: Date | null;
@@ -75,6 +78,12 @@ export class Proposal extends Entity<ProposalProps> {
   }
   get company() {
     return this.props.company;
+  }
+  get estimate_request() {
+    return this.props.estimate_request;
+  }
+  get name() {
+    return this.props.name;
   }
 
   private touch() {

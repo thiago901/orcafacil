@@ -55,6 +55,7 @@ export class EstimateRequestMapping {
         proposals: proposals?.map((proposal) =>
           Proposal.create(
             {
+              name: proposal.name,
               amount: proposal.amount,
               company_id: proposal.company_id,
               description: proposal.description,

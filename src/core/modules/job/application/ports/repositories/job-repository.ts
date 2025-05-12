@@ -1,6 +1,8 @@
 import { Job } from '@core/modules/job/entities/job';
 
 export abstract class JobRepository {
-  abstract save(user: Job): Promise<void>;
-  abstract findByCompanyId(companyId: number): Promise<Job[]>;
+  abstract create(job: Job): Promise<void>;
+  abstract save(job: Job): Promise<void>;
+  abstract findByCompanyId(company_id: string): Promise<Job[]>;
+  abstract findById(id: string): Promise<Job | null>;
 }

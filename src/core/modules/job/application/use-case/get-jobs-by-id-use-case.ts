@@ -2,25 +2,28 @@ import { Job } from '@core/modules/job/entities/job';
 import { JobRepository } from '../ports/repositories/job-repository';
 import { Injectable } from '@nestjs/common';
 import { Either, right } from '@core/common/entities/either';
+import { ResourceNotFoundError } from '@core/common/errors/common/resource-not-found-error';
 
 interface RequestProps {
-  company_id: string;
+  id: string;
 }
 
 type ResponseProps = Either<
   null,
   {
-    jobs: Job[];
+    job: Job;
   }
 >;
 
 @Injectable()
-export class ListJobsByCompanyUseCase {
+export class GetJobByIdUseCase {
   constructor(private readonly jobRepository: JobRepository) {}
 
-  async execute({ company_id }: RequestProps): Promise<ResponseProps> {
-    const jobs = await this.jobRepository.findByCompanyId(company_id);
-
-    return right({ jobs });
+  async execute({ id }: RequestProps): Promise<ResponseProps> {
+    const job = await this.jobRepository.findById(id);
+    if (!job) {
+      throw new ResourceNotFoundError();
+    }
+    return right({ job });
   }
 }

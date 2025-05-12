@@ -113,6 +113,7 @@ model PostFile {
 
 model Proposal {
   id                  String    @id @default(uuid())
+  name                String
   amount              Int
   description         String
   estimate_request_id String    @map("estimate_request_id")
@@ -183,11 +184,11 @@ model Company {
 
 model Job {
   id         String  @id @default(uuid())
-  company_id String? @map("company_id")
-  proposalId String? @unique @map("proposal_id")
+  company_id String @map("company_id")
+  proposal_id String @unique @map("proposal_id")
 
-  company  Company?  @relation(fields: [company_id], references: [id])
-  proposal Proposal? @relation(fields: [proposalId], references: [id])
+  company  Company  @relation(fields: [company_id], references: [id])
+  proposal Proposal @relation(fields: [proposal_id], references: [id])
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
 

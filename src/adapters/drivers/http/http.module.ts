@@ -26,11 +26,24 @@ import { CompanyServicesController } from './controllers/company-services-contro
 import { PrismaCompanyCategoryRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-company-category-repository';
 import { CompanyCategoryRepository } from '@core/modules/company/application/ports/repositories/company-catagories-repository';
 import { CompanyCategoryController } from './controllers/company-categories-controller';
+import { JobsController } from './controllers/jobs-controller';
+import { JobModule } from '@core/modules/job/job.module';
+import { JobRepository } from '@core/modules/job/application/ports/repositories/job-repository';
+import { PrismaJobsRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-jobs-repository';
 
 @Module({
   imports: [
     DatabaseModule,
     UserModule,
+    {
+      module: JobModule,
+      providers: [
+        {
+          provide: JobRepository,
+          useClass: PrismaJobsRepository,
+        },
+      ],
+    },
     {
       module: CompanyModule,
       providers: [
@@ -68,6 +81,10 @@ import { CompanyCategoryController } from './controllers/company-categories-cont
           provide: ProposalRepository,
           useClass: PrismaProposalRepository,
         },
+        {
+          provide: JobRepository,
+          useClass: PrismaJobsRepository,
+        },
       ],
     },
   ],
@@ -80,7 +97,7 @@ import { CompanyCategoryController } from './controllers/company-categories-cont
     SessionController,
     EstimateRequestController,
     CompanyServicesController,
-
+    JobsController,
     CompanyCategoryController,
   ],
 })
