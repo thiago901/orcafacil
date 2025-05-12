@@ -52,7 +52,9 @@ model EstimateRequest {
   user      User?                 @relation(fields: [user_id], references: [id])
   files     EstimateRequestFile[]
   proposals Proposal[]
-  created_at  DateTime? @map("created_at") @default(now())
+  created_at DateTime  @map("created_at")
+  updated_at DateTime? @map("updated_at")
+
   @@map("estimate_request")
 }
 
@@ -60,7 +62,8 @@ model EstimateRequestFile {
   id                  String   @id @default(uuid())
   url                 String
   estimate_request_id String   @map("estimate_request_id")
-  created_at          DateTime @map("created_at")
+  created_at DateTime  @map("created_at")
+  updated_at DateTime? @map("updated_at")
 
   estimateRequest EstimateRequest @relation(fields: [estimate_request_id], references: [id])
 
@@ -71,7 +74,8 @@ model File {
   id         String   @id @default(uuid())
   name       String?
   type       String?
-  created_at DateTime @map("created_at")
+  created_at DateTime  @map("created_at")
+  updated_at DateTime? @map("updated_at")
 
   postFiles PostFile[]
 
@@ -84,7 +88,7 @@ model Post {
   body       String?   @db.Text
   user_id    String    @map("user_id")
   status     String?
-  created_at DateTime? @map("created_at")
+  created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
 
   user      User       @relation(fields: [user_id], references: [id])
@@ -101,6 +105,8 @@ model PostFile {
 
   post Post? @relation(fields: [postId], references: [id])
   file File? @relation(fields: [filesId], references: [id])
+  created_at DateTime  @map("created_at")
+  updated_at DateTime? @map("updated_at")
 
   @@map("post_files")
 }
@@ -129,7 +135,8 @@ model Tag {
   postId String? @map("post_id")
 
   post Post? @relation(fields: [postId], references: [id])
-
+  created_at DateTime  @map("created_at")
+  updated_at DateTime? @map("updated_at")
   @@map("tags")
 }
 
@@ -167,6 +174,10 @@ model Company {
 
   address CompanyAddress @relation(fields: [address_id], references: [id])
 
+  created_at DateTime  @map("created_at")
+  updated_at DateTime? @map("updated_at")
+  
+
   @@map("company")
 }
 
@@ -177,6 +188,8 @@ model Job {
 
   company  Company?  @relation(fields: [company_id], references: [id])
   proposal Proposal? @relation(fields: [proposalId], references: [id])
+  created_at DateTime  @map("created_at")
+  updated_at DateTime? @map("updated_at")
 
   @@map("jobs")
 }

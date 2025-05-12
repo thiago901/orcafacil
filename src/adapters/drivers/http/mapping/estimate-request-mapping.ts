@@ -11,6 +11,9 @@ export class EstimateRequestMapping {
     user_id,
     proposals,
     estimate_request_files,
+    address,
+    created_at,
+    updated_at,
   }: EstimateRequest) {
     return {
       id: id.toString(),
@@ -36,6 +39,9 @@ export class EstimateRequestMapping {
         url: file.url,
         created_at: file.created_at,
       })),
+      address,
+      created_at,
+      updated_at,
     };
   }
 }

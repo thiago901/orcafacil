@@ -43,7 +43,7 @@ export class SessionController {
     if (result.isLeft()) {
       throw new HttpException(result.value.message, HttpStatus.UNAUTHORIZED);
     }
-    return { token: result.value.token };
+    return { result: { token: result.value.token } };
   }
 
   @Post('/forgot-password')

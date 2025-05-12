@@ -11,7 +11,17 @@ export class PrismaCompanyRepository implements CompanyRepository {
   constructor(private readonly prisma: PrismaService) {}
   async save(company: Company): Promise<void> {
     const data = CompanyMapping.toPrisma(company);
-    const { about, avatar, id, name, owner_id, ratting, address } = data;
+    const {
+      about,
+      avatar,
+      id,
+      name,
+      owner_id,
+      ratting,
+      address,
+      updated_at,
+      created_at,
+    } = data;
     await this.prisma.companyAddress.create({
       data: {
         city: address.city,
@@ -33,6 +43,8 @@ export class PrismaCompanyRepository implements CompanyRepository {
             name,
             owner_id,
             ratting,
+            created_at,
+            updated_at,
           },
         },
       },

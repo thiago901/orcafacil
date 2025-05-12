@@ -2,6 +2,7 @@ import { Entity } from '@core/common/entities/entity';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { Proposal } from '@core/modules/proposal/entities/proposal';
 import { EstimateRequestFile } from './estimate-request-file';
+import { Optional } from '@core/common/entities/optional';
 
 type AddressProp = {
   street: string;
@@ -23,11 +24,19 @@ export interface EstimateRequestProps {
   address: AddressProp;
   proposals?: Proposal[];
   estimate_request_files?: EstimateRequestFile[];
+  created_at: Date;
+  updated_at?: Date;
 }
 
 export class EstimateRequest extends Entity<EstimateRequestProps> {
-  static create(props: EstimateRequestProps, id?: UniqueEntityID) {
-    return new EstimateRequest(props, id);
+  static create(
+    props: Optional<EstimateRequestProps, 'created_at'>,
+    id?: UniqueEntityID,
+  ) {
+    return new EstimateRequest(
+      { ...props, created_at: props.created_at ?? new Date() },
+      id,
+    );
   }
 
   get name() {
@@ -61,5 +70,12 @@ export class EstimateRequest extends Entity<EstimateRequestProps> {
   }
   get address() {
     return this.props.address;
+  }
+
+  get created_at() {
+    return this.props.created_at;
+  }
+  get updated_at() {
+    return this.props.updated_at;
   }
 }

@@ -2,6 +2,7 @@ import { Entity } from '@core/common/entities/entity';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { CompanyAddress } from './company-address';
 import { CompanyService } from './company-service';
+import { Optional } from '@core/common/entities/optional';
 
 export interface CompanyProps {
   name: string;
@@ -11,11 +12,22 @@ export interface CompanyProps {
   about: string | null;
   address: CompanyAddress | null;
   services?: CompanyService[];
+  created_at: Date;
+  updated_at?: Date;
 }
 
 export class Company extends Entity<CompanyProps> {
-  static create(props: CompanyProps, id?: UniqueEntityID) {
-    return new Company(props, id);
+  static create(
+    props: Optional<CompanyProps, 'created_at'>,
+    id?: UniqueEntityID,
+  ) {
+    return new Company(
+      {
+        ...props,
+        created_at: props.created_at ?? new Date(),
+      },
+      id,
+    );
   }
 
   get name() {
@@ -41,5 +53,11 @@ export class Company extends Entity<CompanyProps> {
   }
   get services() {
     return this.props.services;
+  }
+  get created_at() {
+    return this.props.created_at;
+  }
+  get updated_at() {
+    return this.props.updated_at;
   }
 }

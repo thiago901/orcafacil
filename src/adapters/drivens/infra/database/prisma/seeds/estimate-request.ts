@@ -5,6 +5,10 @@ export async function estimate_request_geolocation() {
 
   const prisma = new PrismaService();
   await prisma.$executeRawUnsafe(`
+    CREATE EXTENSION IF NOT EXISTS postgis;
+
+  `);
+  await prisma.$executeRawUnsafe(`
     ALTER TABLE "estimate_request"
     ADD COLUMN IF NOT EXISTS "location" geography(Point, 4326);
   `);

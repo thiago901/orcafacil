@@ -61,6 +61,8 @@ export class CompanyMapping {
       ratting: companyPrisma.ratting,
       about: companyPrisma.about,
       address_id: companyPrisma.address.id.toString(),
+      created_at: company.created_at,
+      updated_at: company.updated_at,
       address: {
         id: companyPrisma.address.id.toString(),
         name: companyPrisma.address.name,

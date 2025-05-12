@@ -73,7 +73,6 @@ export class EstimateRequestController {
     if (result.isLeft()) {
       throw new HttpException('result.value', HttpStatus.NOT_FOUND);
     }
-    console.log(result.value.estimateRequests);
 
     return {
       result: result.value.estimateRequests.map(EstimateRequestMapping.toView),

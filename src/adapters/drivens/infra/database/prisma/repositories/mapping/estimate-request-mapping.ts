@@ -98,6 +98,8 @@ export class EstimateRequestMapping {
       address_street: estimateRequest.address.street,
       user_id: estimateRequest.user_id,
       id: estimateRequest.id.toString(),
+      created_at: estimateRequest.created_at,
+      updated_at: estimateRequest.updated_at,
     };
   }
 }
