@@ -2,14 +2,17 @@ import { RequiredProps } from '@core/common/entities/required';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { Company } from '@core/modules/company/entities/company';
 import { CompanyAddress } from '@core/modules/company/entities/company-address';
+import { CompanyService } from '@core/modules/company/entities/company-service';
 
 import {
   Company as CompanyPrisma,
   CompanyAddress as CompanyAddressPrisma,
+  CompanyService as CompanyServicePrisma,
 } from '@prisma/client';
 
 type CompanyCompletePrisma = CompanyPrisma & {
   address?: CompanyAddressPrisma;
+  services?: CompanyServicePrisma[];
 };
 export class CompanyMapping {
   static toDomain({
@@ -21,6 +24,7 @@ export class CompanyMapping {
     about,
     address_id,
     address,
+    services,
   }: CompanyCompletePrisma) {
     return Company.create(
       {
@@ -29,6 +33,18 @@ export class CompanyMapping {
         owner_id,
         ratting: Number(ratting),
         about,
+        services: !services
+          ? []
+          : services.map((service) =>
+              CompanyService.create(
+                {
+                  category_id: service.category_id,
+                  company_id: service.company_id,
+                  name: service.name,
+                },
+                new UniqueEntityID(service.id),
+              ),
+            ),
         address: !address
           ? null
           : CompanyAddress.create(

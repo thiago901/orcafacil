@@ -63,6 +63,7 @@ export class CompanyController {
 
   @Get()
   @HttpCode(200)
+  @Public()
   async listAll() {
     const result = await this.listAllCompaniesUseCase.execute();
     if (result.isLeft()) {

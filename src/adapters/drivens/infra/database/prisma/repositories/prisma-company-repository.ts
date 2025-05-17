@@ -51,7 +51,12 @@ export class PrismaCompanyRepository implements CompanyRepository {
     });
   }
   async getAll(): Promise<Company[]> {
-    const users = await this.prisma.company.findMany();
+    const users = await this.prisma.company.findMany({
+      include: {
+        address: true,
+        services: true,
+      },
+    });
 
     return users.map((company) => CompanyMapping.toDomain(company));
   }

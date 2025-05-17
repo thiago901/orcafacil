@@ -1,7 +1,15 @@
 import { Company } from '@core/modules/company/entities/company';
 
 export class CompanyMapping {
-  static toView({ id, avatar, about, name, ratting, address }: Company) {
+  static toView({
+    id,
+    avatar,
+    about,
+    name,
+    ratting,
+    address,
+    services,
+  }: Company) {
     return {
       id: id.toString(),
       avatar,
@@ -18,6 +26,11 @@ export class CompanyMapping {
         latitude: address?.latitude,
         longitude: address?.longitude,
       },
+      services: services?.map((service) => ({
+        id: service.id.toString(),
+        name: service.name,
+        category_id: service.category_id.toString(),
+      })),
     };
   }
 }

@@ -72,8 +72,8 @@ model EstimateRequestFile {
 
 model File {
   id         String   @id @default(uuid())
-  name       String?
-  type       String?
+  name       String
+  type       String
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
 
@@ -84,10 +84,11 @@ model File {
 
 model Post {
   id         String    @id @default(uuid())
-  title      String?
-  body       String?   @db.Text
+  title      String
+  body       String   @db.Text
   user_id    String    @map("user_id")
-  status     String?
+  company_id String    @map("company_id")
+  status     String
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
 
@@ -97,14 +98,36 @@ model Post {
 
   @@map("posts")
 }
+model TagPost {
+  id         String    @id @default(uuid())
+  tag_id String
+  post_id String
+  tag Tag @relation(fields: [tag_id], references: [id])
+
+  @@map("tag_posts")
+}
+model Tag {
+  id     String  @id @default(uuid())
+  name   String
+  post_id String @map("post_id")
+  created_at DateTime  @map("created_at")
+  updated_at DateTime? @map("updated_at")
+
+  post Post @relation(fields: [post_id], references: [id])
+  tags TagPost[]
+  @@map("tags")
+}
+
 
 model PostFile {
   id      String  @id @default(uuid())
-  postId  String? @map("post_id")
-  filesId String? @map("files_id")
+  post_id  String @map("post_id")
+  file_id String @map("files_id")
+  company_id String @map("company_id")
 
-  post Post? @relation(fields: [postId], references: [id])
-  file File? @relation(fields: [filesId], references: [id])
+  post Post @relation(fields: [post_id], references: [id])
+  file File @relation(fields: [file_id], references: [id])
+
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
 
@@ -130,16 +153,6 @@ model Proposal {
   @@map("proposals")
 }
 
-model Tag {
-  id     String  @id @default(uuid())
-  name   String?
-  postId String? @map("post_id")
-
-  post Post? @relation(fields: [postId], references: [id])
-  created_at DateTime  @map("created_at")
-  updated_at DateTime? @map("updated_at")
-  @@map("tags")
-}
 
 model CompanyAddress {
   id         String    @id @default(uuid())
