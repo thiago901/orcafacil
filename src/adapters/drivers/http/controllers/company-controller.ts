@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -6,7 +7,9 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  Patch,
   Post,
+  UploadedFile,
   UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
@@ -26,6 +29,8 @@ import {
 } from './validations/create-company.validate';
 import { CompanyMapping } from '../mapping/company-mapping';
 import { ListAllCompaniesByOwnerUseCase } from '@core/modules/company/application/use-case/list-all-companies-by-owneruse-case';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { UploadProfileImageUseCase } from '@core/modules/company/application/use-case/upload-profile-image-use-case';
 
 @ApiTags('Company')
 @ApiBearerAuth()
@@ -37,6 +42,7 @@ export class CompanyController {
     private readonly findCompanyByIdUseCase: FindCompanyByIdUseCase,
     private readonly listAllCompaniesUseCase: ListAllCompaniesUseCase,
     private readonly listAllCompaniesByOwnerUseCase: ListAllCompaniesByOwnerUseCase,
+    private readonly uploadProfileImageUseCase: UploadProfileImageUseCase,
   ) {}
 
   @Post('/')
@@ -87,5 +93,30 @@ export class CompanyController {
       );
     }
     return { result: result.value.companies.map(CompanyMapping.toView) };
+  }
+
+  @Patch('/:id/file')
+  @UseInterceptors(FileInterceptor('file'))
+  @Public()
+  async uploadFiles(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('id') company_id: string,
+  ) {
+    console.log('file', file);
+
+    if (!file) {
+      throw new BadRequestException('Nenhum arquivo enviado!');
+    }
+
+    await this.uploadProfileImageUseCase.execute({
+      file,
+      company_id,
+    });
+
+    return {
+      status: 201,
+      message:
+        'The video is being uploaded and we will inform you of the next statuses!',
+    };
   }
 }

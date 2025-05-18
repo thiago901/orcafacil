@@ -37,6 +37,9 @@ export class Company extends Entity<CompanyProps> {
   get avatar() {
     return this.props.avatar;
   }
+  set avatar(avatar: string | null) {
+    this.props.avatar = avatar;
+  }
 
   get ratting() {
     return this.props.ratting;

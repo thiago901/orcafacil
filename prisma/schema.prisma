@@ -22,8 +22,6 @@ model User {
   avatar     String?
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
-
-  posts            Post[]
   estimateRequests EstimateRequest[]
   company          Company?
 
@@ -37,7 +35,7 @@ model EstimateRequest {
   phone       String
   email       String
   description String
-
+  location Unsupported("geography(Point,4326)")?
   user_id     String? @map("user_id")
   address_street String
   address_number String
@@ -92,7 +90,6 @@ model Post {
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
 
-  user      User       @relation(fields: [user_id], references: [id])
   postFiles PostFile[]
   tags      Tag[]
 
@@ -178,6 +175,9 @@ model Company {
   avatar     String?
   ratting    Float   @default(0)
   about      String?
+  phone      String?
+  email      String?
+  website    String?
   owner_id   String  @unique @map("owner_id")
   address_id String  @unique
 
@@ -211,6 +211,7 @@ model Job {
 model CompanyService {
   id         String    @id @default(uuid())
   name String
+  category_name String?
   company_id String    
   category_id String   
   created_at DateTime  

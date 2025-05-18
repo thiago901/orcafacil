@@ -55,7 +55,7 @@ export class CreateCompanyUseCase {
       services: [],
     });
 
-    await this.companyRepository.save(company);
+    await this.companyRepository.create(company);
 
     return right({ company });
   }

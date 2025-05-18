@@ -18,6 +18,33 @@ export class PrismaCompanyRepository implements CompanyRepository {
       name,
       owner_id,
       ratting,
+
+      updated_at,
+      created_at,
+    } = data;
+    await this.prisma.company.update({
+      data: {
+        about,
+        avatar,
+        id,
+        name,
+        owner_id,
+        ratting,
+        updated_at,
+        created_at,
+      },
+      where: { id },
+    });
+  }
+  async create(company: Company): Promise<void> {
+    const data = CompanyMapping.toPrisma(company);
+    const {
+      about,
+      avatar,
+      id,
+      name,
+      owner_id,
+      ratting,
       address,
       updated_at,
       created_at,
