@@ -25,6 +25,9 @@ export class CompanyMapping {
     address_id,
     address,
     services,
+    email,
+    phone,
+    website,
   }: CompanyCompletePrisma) {
     return Company.create(
       {
@@ -33,11 +36,15 @@ export class CompanyMapping {
         owner_id,
         ratting: Number(ratting),
         about,
+        email,
+        phone,
+        website,
         services: !services
           ? []
           : services.map((service) =>
               CompanyService.create(
                 {
+                  category_name: service.category_name,
                   category_id: service.category_id,
                   company_id: service.company_id,
                   name: service.name,

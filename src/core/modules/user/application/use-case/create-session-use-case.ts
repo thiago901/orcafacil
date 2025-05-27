@@ -25,7 +25,7 @@ export class CreateSessionUseCase {
   async execute({ email, password }: RequestProps): Promise<ResponseProps> {
     const user = await this.userRepository.findByEmail(email, {
       relations: {
-        company: true,
+        companies: true,
       },
     });
 

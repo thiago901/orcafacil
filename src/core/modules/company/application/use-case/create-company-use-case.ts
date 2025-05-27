@@ -8,6 +8,9 @@ type RequestProps = {
   name: string;
   owner_id: string;
   about: string | null;
+  email: string | null;
+  phone: string | null;
+  website: string | null;
   address: {
     name: string;
     city: string;
@@ -42,6 +45,9 @@ export class CreateCompanyUseCase {
       owner_id,
       ratting: 0,
       about,
+      email: null,
+      phone: null,
+      website: null,
       address: CompanyAddress.create({
         address: address.address,
         city: address.city,

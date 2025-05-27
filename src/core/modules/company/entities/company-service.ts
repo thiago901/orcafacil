@@ -5,6 +5,7 @@ import { Category } from './category';
 
 export interface CompanyServiceProps {
   name: string;
+  category_name: string;
   company_id: string;
   category_id: string;
   created_at: Date;
@@ -48,5 +49,8 @@ export class CompanyService extends Entity<CompanyServiceProps> {
 
   get updated_at(): Date | null {
     return this.props.updated_at;
+  }
+  get category_name(): string {
+    return this.props.category_name;
   }
 }

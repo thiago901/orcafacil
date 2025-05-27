@@ -6,6 +6,9 @@ export const createCompanySchema = z.object({
   owner_id: z.string(),
   avatar: z.string().optional(),
   about: z.string().nullable(),
+  email: z.string().email().nullable(),
+  phone: z.string().nullable(),
+  website: z.string().url().nullable(),
   address: z.object({
     name: z.string().min(2),
     city: z.string().min(2),

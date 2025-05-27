@@ -43,8 +43,9 @@ export class CompanyServicesController {
   @Post('/')
   @Public()
   async create(@Body() body: CreateCompanyServiceProps) {
-    const { category_id, company_id, name } = body;
+    const { category_id, company_id, name, category_name } = body;
     const result = await this.createCompanyServiceUseCase.execute({
+      category_name,
       category_id,
       company_id,
       name,

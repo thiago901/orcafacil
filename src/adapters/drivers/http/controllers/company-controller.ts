@@ -9,6 +9,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
   UsePipes,
@@ -29,7 +30,7 @@ import {
 } from './validations/create-company.validate';
 import { CompanyMapping } from '../mapping/company-mapping';
 import { ListAllCompaniesByOwnerUseCase } from '@core/modules/company/application/use-case/list-all-companies-by-owneruse-case';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadProfileImageUseCase } from '@core/modules/company/application/use-case/upload-profile-image-use-case';
 
 @ApiTags('Company')
@@ -70,8 +71,13 @@ export class CompanyController {
   @Get()
   @HttpCode(200)
   @Public()
-  async listAll() {
-    const result = await this.listAllCompaniesUseCase.execute();
+  async listAll(@Query('categories') categories: string[]) {
+    if (!Array.isArray(categories) && categories) {
+      categories = [categories];
+    }
+    const result = await this.listAllCompaniesUseCase.execute({
+      categories: categories,
+    });
     if (result.isLeft()) {
       throw new HttpException(
         'Internal Server Error',

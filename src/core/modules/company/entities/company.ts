@@ -11,6 +11,9 @@ export interface CompanyProps {
   owner_id: string;
   about: string | null;
   address: CompanyAddress | null;
+  website: string | null;
+  email: string | null;
+  phone: string | null;
   services?: CompanyService[];
   created_at: Date;
   updated_at?: Date;
@@ -50,6 +53,15 @@ export class Company extends Entity<CompanyProps> {
   }
   get about() {
     return this.props.about;
+  }
+  get email() {
+    return this.props.email;
+  }
+  get phone() {
+    return this.props.phone;
+  }
+  get website() {
+    return this.props.website;
   }
   get address() {
     return this.props.address;

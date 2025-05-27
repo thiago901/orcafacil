@@ -9,6 +9,10 @@ export class CompanyMapping {
     ratting,
     address,
     services,
+    phone,
+    website,
+    email,
+    created_at,
   }: Company) {
     return {
       id: id.toString(),
@@ -16,6 +20,10 @@ export class CompanyMapping {
       name,
       ratting,
       about,
+      created_at,
+      phone,
+      website,
+      email,
       address: {
         id: address?.id.toString(),
         address: address?.address,
@@ -29,6 +37,7 @@ export class CompanyMapping {
       services: services?.map((service) => ({
         id: service.id.toString(),
         name: service.name,
+        category_name: service.category_name,
         category_id: service.category_id.toString(),
       })),
     };

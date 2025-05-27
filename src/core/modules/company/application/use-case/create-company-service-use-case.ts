@@ -7,6 +7,7 @@ type RequestProps = {
   name: string;
   category_id: string;
   company_id: string;
+  category_name: string;
 };
 type ResponseProps = Either<
   null,
@@ -25,9 +26,11 @@ export class CreateCompanyServiceUseCase {
     name,
     category_id,
     company_id,
+    category_name,
   }: RequestProps): Promise<ResponseProps> {
     const service = CompanyService.create({
-      category_id,
+      category_id: category_id,
+      category_name,
       company_id,
       name,
     });

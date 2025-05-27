@@ -9,6 +9,7 @@ export class CompanyServiceMapping {
     name,
     updated_at,
     category,
+    category_name,
   }: CompanyService) {
     return {
       id: id.toString(),
@@ -16,6 +17,7 @@ export class CompanyServiceMapping {
       company_id,
       created_at,
       name,
+      category_name,
       updated_at,
       category: {
         id: category?.id.toString(),

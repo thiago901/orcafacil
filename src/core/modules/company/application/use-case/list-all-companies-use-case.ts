@@ -3,6 +3,9 @@ import { CompanyRepository } from '../ports/repositories/company-repository';
 import { Injectable } from '@nestjs/common';
 import { Either, right } from '@core/common/entities/either';
 
+type RequestProps = {
+  categories?: string[];
+};
 type ResponseProps = Either<
   null,
   {
@@ -14,8 +17,8 @@ type ResponseProps = Either<
 export class ListAllCompaniesUseCase {
   constructor(private readonly companyRepository: CompanyRepository) {}
 
-  async execute(): Promise<ResponseProps> {
-    const companies = await this.companyRepository.getAll();
+  async execute({ categories }: RequestProps): Promise<ResponseProps> {
+    const companies = await this.companyRepository.getAll({ categories });
 
     return right({ companies });
   }

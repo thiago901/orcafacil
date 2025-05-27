@@ -23,7 +23,7 @@ model User {
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
   estimateRequests EstimateRequest[]
-  company          Company?
+  companies  Company[] 
 
   @@map("users")
 }
@@ -178,10 +178,10 @@ model Company {
   phone      String?
   email      String?
   website    String?
-  owner_id   String  @unique @map("owner_id")
+  owner_id   String  @map("owner_id")
   address_id String  @unique
 
-  owner     User       @relation(fields: [owner_id], references: [id])
+  owner       User     @relation(fields: [owner_id], references: [id])
   proposals Proposal[]
   jobs      Job[]
   services CompanyService[]
@@ -211,7 +211,7 @@ model Job {
 model CompanyService {
   id         String    @id @default(uuid())
   name String
-  category_name String?
+  category_name String
   company_id String    
   category_id String   
   created_at DateTime  

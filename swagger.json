@@ -350,7 +350,19 @@
       },
       "get": {
         "operationId": "CompanyController_listAll",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "categories",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -962,6 +974,20 @@
             "type": "string",
             "nullable": true
           },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
           "address": {
             "type": "object",
             "properties": {
@@ -1012,6 +1038,9 @@
           "name",
           "owner_id",
           "about",
+          "email",
+          "phone",
+          "website",
           "address"
         ]
       },
@@ -1123,12 +1152,16 @@
           },
           "company_id": {
             "type": "string"
+          },
+          "category_name": {
+            "type": "string"
           }
         },
         "required": [
           "name",
           "category_id",
-          "company_id"
+          "company_id",
+          "category_name"
         ]
       },
       "CreateJobProps": {

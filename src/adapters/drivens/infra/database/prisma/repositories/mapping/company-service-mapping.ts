@@ -20,11 +20,13 @@ export class CompanyServiceMapping {
     name,
     updated_at,
     category,
+    category_name,
   }: CompanyCompletePrisma) {
     return CompanyService.create(
       {
         category_id,
         company_id,
+        category_name,
         name,
         created_at,
         updated_at,
@@ -45,6 +47,7 @@ export class CompanyServiceMapping {
 
   static toPrisma(company: CompanyService) {
     return {
+      category_name: company.category_name,
       category_id: company.category_id,
       company_id: company.company_id,
       created_at: company.created_at,
