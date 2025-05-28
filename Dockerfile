@@ -1,5 +1,6 @@
-FROM node:alpine
+FROM node:18-slim
 
+RUN apt-get update && apt-get install -y openssl libssl1.1
 WORKDIR /app
 
 COPY package.json .
