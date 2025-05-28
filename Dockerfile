@@ -1,22 +1,29 @@
 FROM node:18-slim
 
-RUN apt-get update && apt-get install -y openssl libssl1.1
+# Instala dependências do sistema
+RUN apt-get update && \
+  apt-get install -y \
+  openssl \
+  libssl-dev \
+  ca-certificates \
+  curl \
+  && rm -rf /var/lib/apt/lists/*
+
+# Define diretório de trabalho
 WORKDIR /app
 
-COPY package.json .
-
-RUN npm cache clear --force
+# Copia e instala dependências do projeto
+COPY package*.json ./
 RUN npm install
 
+# Copia restante dos arquivos
 COPY . .
 
-ENV NODE_ENV=dev
+# Gera Prisma Client
+RUN npx prisma generate
 
-
-
-RUN npm run prisma:generate
-
+# Compila a aplicação
 RUN npm run build
 
-
-CMD ["sh","-c","npx prisma migrate deploy && npm run start:seed && npm run start:prod"]
+# Define o comando de startup
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run start:seed && npm run start:prod"]
