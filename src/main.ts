@@ -23,6 +23,6 @@ async function bootstrap() {
   // Exporta para JSON
   writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
 
-  await app.listen(envService.get('PORT') || 3333);
+  await app.listen(Number(envService.get('PORT')) || 3333);
 }
 bootstrap();
