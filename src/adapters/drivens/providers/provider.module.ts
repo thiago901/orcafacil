@@ -6,7 +6,9 @@ import { JwtProvider } from './jwt-provider';
 import { TokenProvider } from '@core/modules/user/application/ports/providers/token-provider';
 
 import { UploadFileProvider } from '@core/modules/estimate-request/application/ports/provider/upload-file';
-import { LocalUploadFileProvider } from './local-upload-file';
+// import { LocalUploadFileProvider } from './local-upload-file';
+
+import { FirebaseUploadFileProvider } from './firebase-storage-upload-file';
 
 @Module({
   providers: [
@@ -20,7 +22,7 @@ import { LocalUploadFileProvider } from './local-upload-file';
     },
     {
       provide: UploadFileProvider,
-      useClass: LocalUploadFileProvider,
+      useClass: FirebaseUploadFileProvider,
     },
     EnvService,
   ],
