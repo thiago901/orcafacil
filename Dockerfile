@@ -1,29 +1,30 @@
+# Imagem base leve com suporte a node e npm
 FROM node:18-slim
 
-# Instala dependências do sistema
-RUN apt-get update && \
-  apt-get install -y \
-  openssl \
-  libssl-dev \
-  ca-certificates \
-  curl \
-  && rm -rf /var/lib/apt/lists/*
+# Atualiza pacotes e instala dependências do Prisma
+RUN apt-get update && apt-get install -y openssl
 
-# Define diretório de trabalho
+# Diretório de trabalho
 WORKDIR /app
 
-# Copia e instala dependências do projeto
+# Copia o package.json e instala dependências
 COPY package*.json ./
 RUN npm install
 
-# Copia restante dos arquivos
+# Copia o restante da aplicação
 COPY . .
 
-# Gera Prisma Client
-RUN npx prisma generate
+# Gera os clientes do Prisma
+RUN npm run prisma:generate
 
-# Compila a aplicação
+# Compila o projeto
 RUN npm run build
 
-# Define o comando de startup
+# Define variáveis de ambiente para o NestJS
+ENV NODE_ENV=production
+
+# Expõe a porta esperada pelo Render (MUITO IMPORTANTE)
+EXPOSE 3000
+
+# Comando de inicialização com migração + start
 CMD ["sh", "-c", "npx prisma migrate deploy && npm run start:prod"]
