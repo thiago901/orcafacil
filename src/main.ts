@@ -9,7 +9,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const envService = app.get(EnvService);
 
-  app.enableCors({ origin: '*' });
+  app.enableCors({
+    origin: ['https://orcafacilweb.vercel.app', '*'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  });
   patchNestJsSwagger();
   const config = new DocumentBuilder()
     .setTitle('OrçaFacil API')
