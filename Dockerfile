@@ -27,4 +27,4 @@ ENV NODE_ENV=production
 EXPOSE 3000
 
 # Comando de inicialização com migração + start
-CMD ["sh", "-c", "npx prisma migrate deploy && npm run start:prod"]
+CMD ["sh", "-c", "npm run start:prod"]
