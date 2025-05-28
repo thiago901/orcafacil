@@ -26,4 +26,4 @@ RUN npx prisma generate
 RUN npm run build
 
 # Define o comando de startup
-CMD ["sh", "-c", "npx prisma migrate deploy && npm run start:seed && npm run start:prod"]
+CMD ["sh", "-c", "npx prisma migrate deploy && npm run start:prod"]
