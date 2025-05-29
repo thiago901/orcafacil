@@ -18,6 +18,9 @@ export async function estimate_request_geolocation() {
   await prisma.$executeRawUnsafe(`
     DROP INDEX IF EXISTS estimate_request_location_gist;
   `);
+  await prisma.$executeRawUnsafe(`
+    DROP INDEX IF EXISTS company_address_location_gist;
+  `);
 }
 
 estimate_request_geolocation();

@@ -10,6 +10,7 @@ export const schemaEnv = z.object({
   FIREBASE_CREDENTIALS: z.coerce.string(),
   FIREBASE_BUCKET_STORAGE_NAME: z.coerce.string(),
   FIREBASE_DATABASE_URL: z.coerce.string(),
+  NOMINATIM_POSTAL_CODE: z.coerce.string(),
 });
 
 export type Env = z.infer<typeof schemaEnv>;

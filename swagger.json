@@ -574,6 +574,17 @@
             "schema": {
               "type": "number"
             }
+          },
+          {
+            "name": "category[]",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
           }
         ],
         "responses": {
@@ -1014,12 +1025,6 @@
               "address": {
                 "type": "string",
                 "minLength": 2
-              },
-              "latitude": {
-                "type": "number"
-              },
-              "longitude": {
-                "type": "number"
               }
             },
             "required": [
@@ -1028,9 +1033,7 @@
               "country",
               "state",
               "zip",
-              "address",
-              "latitude",
-              "longitude"
+              "address"
             ]
           }
         },
@@ -1117,10 +1120,7 @@
           "address_street": {
             "type": "string"
           },
-          "lat": {
-            "type": "string"
-          },
-          "long": {
+          "category": {
             "type": "string"
           }
         },
@@ -1130,14 +1130,14 @@
           "footage",
           "email",
           "phone",
+          "user_id",
           "address_city",
           "address_neighborhood",
           "address_number",
           "address_postal_code",
           "address_state",
           "address_street",
-          "lat",
-          "long"
+          "category"
         ]
       },
       "CreateCompanyServiceProps": {

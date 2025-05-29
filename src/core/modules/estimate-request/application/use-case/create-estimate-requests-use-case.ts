@@ -2,9 +2,10 @@ import { EstimateRequest } from '@core/modules/estimate-request/entities/estimat
 import { EstimateRequestRepository } from '../ports/repositories/estimate-request-repository';
 import { Injectable } from '@nestjs/common';
 import { Either, right } from '@core/common/entities/either';
+import { AddressFinderProvider } from '@core/common/application/ports/providers/address-finder';
 
 interface RequestProps {
-  user_id?: string;
+  user_id: string;
   description: string;
   email: string;
   footage: number;
@@ -16,8 +17,7 @@ interface RequestProps {
   address_neighborhood: string;
   address_state: string;
   address_city: string;
-  lat: string;
-  long: string;
+  category: string;
 }
 
 type ResponseProps = Either<
@@ -31,6 +31,7 @@ type ResponseProps = Either<
 export class CreateEstimateRequestUseCase {
   constructor(
     private readonly estimateRequestRepository: EstimateRequestRepository,
+    private readonly addressFinderProvider: AddressFinderProvider,
   ) {}
 
   async execute({
@@ -46,10 +47,14 @@ export class CreateEstimateRequestUseCase {
     address_postal_code,
     address_state,
     address_street,
-    lat,
-    long,
+    category,
   }: RequestProps): Promise<ResponseProps> {
-    console.log('address', { lat, long });
+    const addressData = await this.addressFinderProvider.find({
+      city: address_city,
+      postal_code: address_postal_code,
+      state: address_state,
+      street: address_street,
+    });
 
     const estimateRequest = EstimateRequest.create({
       description,
@@ -57,11 +62,13 @@ export class CreateEstimateRequestUseCase {
       footage,
       name,
       phone,
-      user_id: user_id || null,
+      user_id: user_id,
+      category: category,
+
       address: {
         city: address_city,
-        latitude: Number(lat),
-        longitude: Number(long),
+        latitude: Number(addressData.lat) || 0,
+        longitude: Number(addressData.lon) || 0,
         neighborhood: address_neighborhood,
         number: address_number,
         postal_code: address_postal_code,

@@ -46,6 +46,9 @@ export class PrismaCompanyRepository implements CompanyRepository {
       avatar,
       id,
       name,
+      email,
+      phone,
+      website,
       owner_id,
       ratting,
       address,
@@ -73,12 +76,21 @@ export class PrismaCompanyRepository implements CompanyRepository {
             name,
             owner_id,
             ratting,
+            email,
+            phone,
+            website,
             created_at,
             updated_at,
           },
         },
       },
     });
+
+    await this.prisma.$executeRawUnsafe(`
+      UPDATE "company_address"
+      SET "location" = ST_SetSRID(ST_MakePoint("longitude", "latitude"), 4326)::geography
+      WHERE "id" = '${data.id}';
+    `);
   }
   async getAll({ categories }: GetAllCompaniesProps): Promise<Company[]> {
     const where = categories
@@ -107,6 +119,9 @@ export class PrismaCompanyRepository implements CompanyRepository {
   }
   async getAllByOwner(owner_id: string): Promise<Company[]> {
     const users = await this.prisma.company.findMany({
+      include: {
+        address: true,
+      },
       where: {
         owner_id,
       },

@@ -99,11 +99,19 @@ export class EstimateRequestController {
     @Query('latitude') latitude: number,
     @Query('longitude') longitude: number,
     @Query('radiusInMeters') radiusInMeters: number,
+    @Query('category[]') category?: string[],
   ) {
+    console.log('category', category);
+
     const result = await this.listEstimateRequestsUseCase.execute({
       latitude,
       longitude,
       radius_in_meters: radiusInMeters,
+      category: category
+        ? Array.isArray(category)
+          ? category
+          : [category]
+        : undefined,
     });
     if (result.isLeft()) {
       throw new HttpException(

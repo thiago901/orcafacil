@@ -83,9 +83,13 @@ export class CompanyMapping {
       owner_id: companyPrisma.owner_id,
       ratting: companyPrisma.ratting,
       about: companyPrisma.about,
+      email: companyPrisma.email,
+      phone: companyPrisma.phone,
+      website: companyPrisma.website,
       address_id: companyPrisma.address.id.toString(),
       created_at: company.created_at,
       updated_at: company.updated_at,
+
       address: {
         id: companyPrisma.address.id.toString(),
         name: companyPrisma.address.name,

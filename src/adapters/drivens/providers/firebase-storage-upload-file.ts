@@ -13,7 +13,7 @@ import * as path from 'node:path';
 @Injectable()
 export class FirebaseUploadFileProvider implements UploadFileProvider {
   constructor(private readonly env: EnvService) {
-    const serviceAccount = JSON.parse(env.get('FIREBASE_CREDENTIALS'));
+    const serviceAccount = JSON.parse(this.env.get('FIREBASE_CREDENTIALS'));
     serviceAccount.private_key = serviceAccount.private_key.replace(
       /\\n/g,
       '\n',
@@ -22,8 +22,8 @@ export class FirebaseUploadFileProvider implements UploadFileProvider {
     if (!admin.apps.length) {
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
-        storageBucket: env.get('FIREBASE_BUCKET_STORAGE_NAME'),
-        databaseURL: env.get('FIREBASE_DATABASE_URL'),
+        storageBucket: this.env.get('FIREBASE_BUCKET_STORAGE_NAME'),
+        databaseURL: this.env.get('FIREBASE_DATABASE_URL'),
       });
     }
   }

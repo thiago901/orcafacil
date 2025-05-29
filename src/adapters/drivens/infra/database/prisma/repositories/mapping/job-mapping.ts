@@ -55,6 +55,7 @@ export class JobMapping {
                       state: proposal.estimateRequest.address_state,
                       street: proposal.estimateRequest.address_street,
                     },
+                    category: proposal.estimateRequest.category,
                     description: proposal.estimateRequest.description,
                     email: proposal.estimateRequest.email,
                     footage: proposal.estimateRequest.footage,

@@ -7,6 +7,7 @@ type EstimateRequestProps = {
   longitude: number;
   latitude: number;
   radius_in_meters: number;
+  category?: string[];
 };
 type ResponseProps = Either<
   null,
@@ -25,12 +26,14 @@ export class ListEstimateRequestsUseCase {
     latitude,
     longitude,
     radius_in_meters,
+    category,
   }: EstimateRequestProps): Promise<ResponseProps> {
     const estimateRequests =
       await this.estimateRequestRepository.getAllByGeoLocation({
         lat: latitude,
         long: longitude,
         radius_in_meters,
+        category,
       });
 
     return right({ estimateRequests });

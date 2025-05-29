@@ -45,6 +45,7 @@ export class PrismaEstimateRequestRepository
     lat,
     long,
     radius_in_meters,
+    category,
   }: GetAllByGeoLocationProps): Promise<EstimateRequest[]> {
     const nearbyIds = await this.prisma.$queryRaw<
       Array<{ id: string }>
@@ -57,10 +58,23 @@ export class PrismaEstimateRequestRepository
       ${Number(radius_in_meters)}
     )
   `);
+    const categoryWhere =
+      category && category.length > 0
+        ? {
+            AND: category.map((cat) => ({
+              category: {
+                equals: cat,
+                mode: Prisma.QueryMode.insensitive,
+              },
+            })),
+          }
+        : {};
     const estimateRequestIds = nearbyIds.map((r) => r.id);
     const estimate_requests = await this.prisma.estimateRequest.findMany({
       where: {
         id: { in: estimateRequestIds },
+
+        ...categoryWhere,
       },
       include: {
         proposals: true,

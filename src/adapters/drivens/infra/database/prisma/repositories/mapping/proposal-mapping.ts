@@ -49,6 +49,7 @@ export class ProposalMapping {
                 name: estimateRequest.name,
                 phone: estimateRequest.phone,
                 user_id: estimateRequest.user_id,
+                category: estimateRequest.category,
                 address: {
                   latitude: estimateRequest.latitude,
                   longitude: estimateRequest.longitude,

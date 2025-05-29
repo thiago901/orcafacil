@@ -30,6 +30,8 @@ import { JobsController } from './controllers/jobs-controller';
 import { JobModule } from '@core/modules/job/job.module';
 import { JobRepository } from '@core/modules/job/application/ports/repositories/job-repository';
 import { PrismaJobsRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-jobs-repository';
+import { AddressFinderProvider } from '@core/common/application/ports/providers/address-finder';
+import { NominatimAddressFinderProvider } from '@adapters/drivens/providers/nominatim-provider';
 
 @Module({
   imports: [
@@ -59,6 +61,10 @@ import { PrismaJobsRepository } from '@adapters/drivens/infra/database/prisma/re
           provide: CompanyCategoryRepository,
           useClass: PrismaCompanyCategoryRepository,
         },
+        {
+          provide: AddressFinderProvider,
+          useClass: NominatimAddressFinderProvider,
+        },
       ],
     },
     {
@@ -71,6 +77,10 @@ import { PrismaJobsRepository } from '@adapters/drivens/infra/database/prisma/re
         {
           provide: EstimateRequestFileRepository,
           useClass: PrismaEstimateRequestFileRepository,
+        },
+        {
+          provide: AddressFinderProvider,
+          useClass: NominatimAddressFinderProvider,
         },
       ],
     },

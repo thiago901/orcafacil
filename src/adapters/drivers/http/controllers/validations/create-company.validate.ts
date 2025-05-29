@@ -16,8 +16,6 @@ export const createCompanySchema = z.object({
     state: z.string().min(2),
     zip: z.string().min(2),
     address: z.string().min(2),
-    latitude: z.number(),
-    longitude: z.number(),
   }),
 });
 

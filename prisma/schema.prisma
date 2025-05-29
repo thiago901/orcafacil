@@ -46,7 +46,7 @@ model EstimateRequest {
   address_city String
   latitude    Float
   longitude   Float
-
+  category   String
 
   user      User?                 @relation(fields: [user_id], references: [id])
   files     EstimateRequestFile[]
@@ -164,7 +164,7 @@ model CompanyAddress {
   longitude  Float
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
-
+  location Unsupported("geography(Point,4326)")?
   company Company?
 
   @@map("company_address")

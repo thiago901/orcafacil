@@ -9,6 +9,8 @@ import { UploadFileProvider } from '@core/modules/estimate-request/application/p
 // import { LocalUploadFileProvider } from './local-upload-file';
 
 import { FirebaseUploadFileProvider } from './firebase-storage-upload-file';
+import { AddressFinderProvider } from '@core/common/application/ports/providers/address-finder';
+import { NominatimAddressFinderProvider } from './nominatim-provider';
 
 @Module({
   providers: [
@@ -24,9 +26,13 @@ import { FirebaseUploadFileProvider } from './firebase-storage-upload-file';
       provide: UploadFileProvider,
       useClass: FirebaseUploadFileProvider,
     },
+    {
+      provide: AddressFinderProvider,
+      useClass: NominatimAddressFinderProvider,
+    },
     EnvService,
   ],
 
-  exports: [TokenProvider, HashProvider, UploadFileProvider],
+  exports: [TokenProvider, HashProvider, UploadFileProvider, EnvService],
 })
 export class ProviderModule {}

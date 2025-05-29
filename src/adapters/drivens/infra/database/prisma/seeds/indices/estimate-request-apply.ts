@@ -10,15 +10,29 @@ export async function estimate_request_geolocation() {
   //   ALTER TABLE "estimate_request"
   //   ADD COLUMN IF NOT EXISTS "location" geography(Point, 4326);
   // `);
-  // await prisma.$executeRawUnsafe(`
-  //   UPDATE "estimate_request"
-  //   SET "location" = ST_SetSRID(ST_MakePoint("longitude", "latitude"), 4326)::geography
-  //   WHERE "location" IS NULL;
-  // `);
+
   await prisma.$executeRawUnsafe(`
     CREATE INDEX IF NOT EXISTS estimate_request_location_gist
     ON "estimate_request"
     USING GIST("location");
+  `);
+
+  await prisma.$executeRawUnsafe(`
+    UPDATE "estimate_request"
+    SET "location" = ST_SetSRID(ST_MakePoint("longitude", "latitude"), 4326)::geography
+    WHERE "location" IS NULL;
+  `);
+
+  await prisma.$executeRawUnsafe(`
+    CREATE INDEX IF NOT EXISTS company_address_location_gist
+    ON "company_address"
+    USING GIST("location");
+  `);
+
+  await prisma.$executeRawUnsafe(`
+    UPDATE "company_address"
+    SET "location" = ST_SetSRID(ST_MakePoint("longitude", "latitude"), 4326)::geography
+    WHERE "location" IS NULL;
   `);
 }
 

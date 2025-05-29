@@ -30,7 +30,7 @@ export class EstimateRequestMapping {
     address_postal_code,
     address_state,
     address_street,
-
+    category,
     proposals,
     files,
   }: EstimateRequestComplete) {
@@ -42,6 +42,7 @@ export class EstimateRequestMapping {
         name,
         phone,
         user_id,
+        category,
         address: {
           latitude,
           longitude,
@@ -89,6 +90,7 @@ export class EstimateRequestMapping {
       footage: estimateRequest.footage,
       name: estimateRequest.name,
       phone: estimateRequest.phone,
+      category: estimateRequest.category,
       latitude: estimateRequest.address.latitude,
       longitude: estimateRequest.address.longitude,
       address_city: estimateRequest.address.city,

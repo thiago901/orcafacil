@@ -4,6 +4,7 @@ export type GetAllByGeoLocationProps = {
   lat: number;
   long: number;
   radius_in_meters: number;
+  category?: string[];
 };
 export abstract class EstimateRequestRepository {
   abstract save(user: EstimateRequest): Promise<void>;
