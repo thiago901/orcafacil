@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 export const schemaEnv = z.object({
   DATABASE_URL: z.string().url(),
+  DATABASE_DIRECT_URL: z.string().url(),
   PORT: z.coerce.number().optional().default(3000),
   JWT_PUBLIC_KEY: z.coerce.string(),
   JWT_PRIVATE_KEY: z.coerce.string(),
