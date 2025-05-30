@@ -28,6 +28,7 @@ export class InfoController {
     // const aa = await result.json();
 
     // console.log('result', aa);
+
     return {
       version: pkg.version,
       service: pkg.name,

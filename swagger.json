@@ -872,6 +872,34 @@
           "Company Categories"
         ]
       }
+    },
+    "/dashboard/{company_id}": {
+      "get": {
+        "operationId": "DashboardController_getDashboard",
+        "parameters": [
+          {
+            "name": "company_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Dashboard"
+        ]
+      }
     }
   },
   "info": {
@@ -996,7 +1024,6 @@
           },
           "website": {
             "type": "string",
-            "format": "uri",
             "nullable": true
           },
           "address": {

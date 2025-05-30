@@ -8,7 +8,7 @@ export const createCompanySchema = z.object({
   about: z.string().nullable(),
   email: z.string().email().nullable(),
   phone: z.string().nullable(),
-  website: z.string().url().nullable(),
+  website: z.string().nullable(),
   address: z.object({
     name: z.string().min(2),
     city: z.string().min(2),
