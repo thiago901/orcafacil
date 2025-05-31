@@ -33,6 +33,11 @@ import { PrismaJobsRepository } from '@adapters/drivens/infra/database/prisma/re
 import { AddressFinderProvider } from '@core/common/application/ports/providers/address-finder';
 import { NominatimAddressFinderProvider } from '@adapters/drivens/providers/nominatim-provider';
 import { DashboardController } from './controllers/dashboard-controller';
+import { EstimateRequestMessageController } from './controllers/estimate-request-message-controller';
+import { EstimateRequestMessageRepository } from '@core/modules/estimate-request/application/ports/repositories/estimate-request-repository-message';
+import { PrismaEstimateRequestMessageRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-estimate-request-message-repository';
+import { UserRepository } from '@core/modules/user/application/ports/repositories/user-repository';
+import { PrismaUserRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-user-repository';
 
 @Module({
   imports: [
@@ -83,6 +88,18 @@ import { DashboardController } from './controllers/dashboard-controller';
           provide: AddressFinderProvider,
           useClass: NominatimAddressFinderProvider,
         },
+        {
+          provide: EstimateRequestMessageRepository,
+          useClass: PrismaEstimateRequestMessageRepository,
+        },
+        {
+          provide: CompanyRepository,
+          useClass: PrismaCompanyRepository,
+        },
+        {
+          provide: UserRepository,
+          useClass: PrismaUserRepository,
+        },
       ],
     },
     {
@@ -119,6 +136,7 @@ import { DashboardController } from './controllers/dashboard-controller';
     JobsController,
     CompanyCategoryController,
     DashboardController,
+    EstimateRequestMessageController,
   ],
 })
 export class HTTPModule {}

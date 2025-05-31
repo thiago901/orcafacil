@@ -10,8 +10,11 @@ async function bootstrap() {
   const envService = app.get(EnvService);
 
   app.enableCors({
-    origin: ['https://orcafacilweb.vercel.app', '*'],
-    // origin: '*',
+    origin:
+      envService.get('ENVIRONMENT') === 'DEV'
+        ? '*'
+        : ['https://orcafacilweb.vercel.app', '*'],
+
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
   patchNestJsSwagger();

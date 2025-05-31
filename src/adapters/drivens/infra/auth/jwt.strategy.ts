@@ -18,7 +18,7 @@ export class JWTStrategy extends PassportStrategy(Strategy) {
     const jwt_public_key = env.get('JWT_PUBLIC_KEY');
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      //   ignoreExpiration: true,
+      ignoreExpiration: true,
       secretOrKey: Buffer.from(jwt_public_key, 'base64'),
       alalgorithm: 'RS256',
     });

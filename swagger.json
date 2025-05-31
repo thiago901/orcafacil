@@ -900,6 +900,99 @@
           "Dashboard"
         ]
       }
+    },
+    "/estimate-requests-message": {
+      "post": {
+        "operationId": "EstimateRequestMessageController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEstimateRequestMessageProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimate Request Message"
+        ]
+      }
+    },
+    "/estimate-requests-message/{estimate_request_id}": {
+      "get": {
+        "operationId": "EstimateRequestMessageController_findByEsitmateId",
+        "parameters": [
+          {
+            "name": "estimate_request_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimate Request Message"
+        ]
+      }
+    },
+    "/estimate-requests-message/{estimate_request_id}/company/{company_id}": {
+      "get": {
+        "operationId": "EstimateRequestMessageController_findByEstimateAndCompany",
+        "parameters": [
+          {
+            "name": "estimate_request_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "company_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimate Request Message"
+        ]
+      }
     }
   },
   "info": {
@@ -1206,6 +1299,37 @@
         "required": [
           "company_id",
           "proposal_id"
+        ]
+      },
+      "CreateEstimateRequestMessageProps": {
+        "type": "object",
+        "properties": {
+          "company_id": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "estimate_request_id": {
+            "type": "string"
+          },
+          "sender": {
+            "type": "string",
+            "enum": [
+              "COMPANY",
+              "CLIENT"
+            ]
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "company_id",
+          "content",
+          "estimate_request_id",
+          "sender",
+          "type"
         ]
       }
     }

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 export const schemaEnv = z.object({
+  ENVIRONMENT: z.enum(['DEV', 'PROD']).default('DEV'),
   DATABASE_URL: z.string().url(),
   DATABASE_DIRECT_URL: z.string().url(),
   PORT: z.coerce.number().optional().default(3000),

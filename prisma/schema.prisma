@@ -47,15 +47,39 @@ model EstimateRequest {
   address_city String
   latitude    Float
   longitude   Float
-  category   String
+  category   String @default("Pintor")
 
   user      User?                 @relation(fields: [user_id], references: [id])
   files     EstimateRequestFile[]
   proposals Proposal[]
+  messages Message[]
+
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
 
   @@map("estimate_request")
+}
+
+model Message {
+  id                String           @id @default(uuid())
+  content           String
+  sender        SenderType       // 'CLIENT' ou 'COMPANY'
+  type  String
+  estimate_request_id String
+  company_id String
+  company_name String
+  user_name String
+  created_at         DateTime         @default(now())
+  updated_at         DateTime         @default(now())
+
+  estimate_request   EstimateRequest  @relation(fields: [estimate_request_id], references: [id])
+
+  @@map("messages")
+}
+
+enum SenderType {
+  CLIENT
+  COMPANY
 }
 
 model EstimateRequestFile {

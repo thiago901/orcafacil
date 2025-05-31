@@ -5,6 +5,9 @@ import { ListEstimateRequestsUseCase } from './application/use-case/list-estimat
 import { UploadEstimateRequestFilesUseCase } from './application/use-case/upload-estimate-requests-files-use-case';
 import { ListEstimateRequestFilesUseCase } from './application/use-case/list-estimate-requests-files-use-case';
 import { FindEstimateRequestsByIdUseCase } from './application/use-case/find-estimate-requests-by-id-use-case';
+import { CreateEstimateRequestMessageUseCase } from './application/use-case/create-estimate-requests-message-use-case';
+import { GetAllMessagesByEstimateRequestUseCase } from './application/use-case/get-all-messages-by-estimate-requests-use-case';
+import { GetMessagesByEstimateRequestAndCompanyUseCase } from './application/use-case/get-messages-by-estimate-requests-and-company-use-case copy';
 
 @Module({
   imports: [],
@@ -16,6 +19,9 @@ import { FindEstimateRequestsByIdUseCase } from './application/use-case/find-est
     UploadEstimateRequestFilesUseCase,
     ListEstimateRequestFilesUseCase,
     FindEstimateRequestsByIdUseCase,
+    CreateEstimateRequestMessageUseCase,
+    GetAllMessagesByEstimateRequestUseCase,
+    GetMessagesByEstimateRequestAndCompanyUseCase,
   ],
   exports: [
     ListEstimateRequestsByUserUseCase,
@@ -24,6 +30,9 @@ import { FindEstimateRequestsByIdUseCase } from './application/use-case/find-est
     UploadEstimateRequestFilesUseCase,
     ListEstimateRequestFilesUseCase,
     FindEstimateRequestsByIdUseCase,
+    CreateEstimateRequestMessageUseCase,
+    GetAllMessagesByEstimateRequestUseCase,
+    GetMessagesByEstimateRequestAndCompanyUseCase,
   ],
 })
 export class EstimateRequestModule {}

@@ -3,6 +3,7 @@ import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { Proposal } from '@core/modules/proposal/entities/proposal';
 import { EstimateRequestFile } from './estimate-request-file';
 import { Optional } from '@core/common/entities/optional';
+import { EstimateRequestMessage } from './estimate-request-message';
 
 type AddressProp = {
   street: string;
@@ -24,6 +25,7 @@ export interface EstimateRequestProps {
   user_id: string | null;
   address: AddressProp;
   proposals?: Proposal[];
+  messages?: EstimateRequestMessage[];
   estimate_request_files?: EstimateRequestFile[];
   created_at: Date;
   updated_at: Date | null;
@@ -78,6 +80,9 @@ export class EstimateRequest extends Entity<EstimateRequestProps> {
   }
   get category() {
     return this.props.category;
+  }
+  get messages() {
+    return this.props.messages;
   }
 
   get created_at() {

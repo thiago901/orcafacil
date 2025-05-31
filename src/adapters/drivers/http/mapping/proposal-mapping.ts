@@ -26,7 +26,7 @@ export class ProposalMapping {
       company: {
         about: company?.about,
         avatar: company?.avatar,
-        id: company?.id,
+        id: company?.id.toString(),
         name: company?.name,
         ratting: company?.ratting,
       },
