@@ -56,6 +56,7 @@ model EstimateRequest {
 
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
+  finished_at DateTime? @map("finished_at")
 
   @@map("estimate_request")
 }

@@ -33,6 +33,7 @@ export class EstimateRequestMapping {
         approved_at: proposal.approved_at,
         reject_at: proposal.reject_at,
       })),
+      proposals_amount: proposals?.length || 0,
       estimate_request_files: estimate_request_files?.map((file) => ({
         id: file.id.toString(),
         estimate_request_id: file.estimate_request_id.toString(),

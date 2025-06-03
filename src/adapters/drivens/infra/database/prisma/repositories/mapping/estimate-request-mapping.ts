@@ -33,6 +33,7 @@ export class EstimateRequestMapping {
     category,
     proposals,
     files,
+    finished_at,
   }: EstimateRequestComplete) {
     return EstimateRequest.create(
       {
@@ -43,6 +44,7 @@ export class EstimateRequestMapping {
         phone,
         user_id,
         category,
+        finished_at,
         address: {
           latitude,
           longitude,

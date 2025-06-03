@@ -29,6 +29,7 @@ export interface EstimateRequestProps {
   estimate_request_files?: EstimateRequestFile[];
   created_at: Date;
   updated_at: Date | null;
+  finished_at: Date | null;
 }
 
 export class EstimateRequest extends Entity<EstimateRequestProps> {
@@ -85,6 +86,9 @@ export class EstimateRequest extends Entity<EstimateRequestProps> {
     return this.props.messages;
   }
 
+  get finished_at() {
+    return this.props.finished_at;
+  }
   get created_at() {
     return this.props.created_at;
   }
