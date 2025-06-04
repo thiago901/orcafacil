@@ -2,16 +2,19 @@ import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { EstimateRequest } from '@core/modules/estimate-request/entities/estimate-request';
 import { EstimateRequestFile } from '@core/modules/estimate-request/entities/estimate-request-file';
 import { Proposal } from '@core/modules/proposal/entities/proposal';
+import { User } from '@core/modules/user/entities/user';
 
 import {
   EstimateRequest as EstimateRequestPrisma,
   Proposal as ProposalPrisma,
   EstimateRequestFile as EstimateRequestFilePrisma,
+  User as UserPrisma,
 } from '@prisma/client';
 
 type EstimateRequestComplete = EstimateRequestPrisma & {
   proposals?: ProposalPrisma[];
   files?: EstimateRequestFilePrisma[];
+  user?: UserPrisma;
 };
 export class EstimateRequestMapping {
   static toDomain({
@@ -34,6 +37,7 @@ export class EstimateRequestMapping {
     proposals,
     files,
     finished_at,
+    user,
   }: EstimateRequestComplete) {
     return EstimateRequest.create(
       {
@@ -45,6 +49,18 @@ export class EstimateRequestMapping {
         user_id,
         category,
         finished_at,
+        user: !user
+          ? null
+          : User.create(
+              {
+                avatar: user.avatar,
+                email: user.email,
+                name: user.name,
+                password: '',
+                phone: user.phone,
+              },
+              new UniqueEntityID(user.id),
+            ),
         address: {
           latitude,
           longitude,

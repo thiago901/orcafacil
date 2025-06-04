@@ -14,6 +14,7 @@ export class EstimateRequestMapping {
     address,
     created_at,
     updated_at,
+    user,
   }: EstimateRequest) {
     return {
       id: id.toString(),
@@ -23,6 +24,13 @@ export class EstimateRequestMapping {
       name,
       phone,
       user_id,
+      user: {
+        avatar: user?.avatar,
+        email: user?.email,
+        name: user?.name,
+        phone: user?.phone,
+        id: user?.id.toString(),
+      },
       proposals: proposals?.map((proposal) => ({
         id: proposal.id.toString(),
         company_id: proposal.company_id.toString(),
