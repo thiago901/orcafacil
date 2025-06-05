@@ -91,6 +91,7 @@ export class PrismaEstimateRequestRepository
       include: {
         proposals: true,
         files: true,
+        user: true,
       },
     });
 
@@ -98,6 +99,6 @@ export class PrismaEstimateRequestRepository
       return null;
     }
 
-    return EstimateRequestMapping.toDomain(estimaterequest);
+    return EstimateRequestMapping.toDomain(estimaterequest as any);
   }
 }

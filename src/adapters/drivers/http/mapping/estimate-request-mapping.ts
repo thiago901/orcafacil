@@ -14,6 +14,7 @@ export class EstimateRequestMapping {
     address,
     created_at,
     updated_at,
+    user,
   }: EstimateRequest) {
     return {
       id: id.toString(),
@@ -23,6 +24,13 @@ export class EstimateRequestMapping {
       name,
       phone,
       user_id,
+      user: {
+        avatar: user?.avatar,
+        email: user?.email,
+        name: user?.name,
+        phone: user?.phone,
+        id: user?.id.toString(),
+      },
       proposals: proposals?.map((proposal) => ({
         id: proposal.id.toString(),
         company_id: proposal.company_id.toString(),
@@ -33,6 +41,7 @@ export class EstimateRequestMapping {
         approved_at: proposal.approved_at,
         reject_at: proposal.reject_at,
       })),
+      proposals_amount: proposals?.length || 0,
       estimate_request_files: estimate_request_files?.map((file) => ({
         id: file.id.toString(),
         estimate_request_id: file.estimate_request_id.toString(),

@@ -38,9 +38,13 @@ import { EstimateRequestMessageRepository } from '@core/modules/estimate-request
 import { PrismaEstimateRequestMessageRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-estimate-request-message-repository';
 import { UserRepository } from '@core/modules/user/application/ports/repositories/user-repository';
 import { PrismaUserRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-user-repository';
+import { RealtimeMessageNotificationProvider } from '@core/modules/estimate-request/application/ports/provider/realtime-message-notification';
+import { ChatEmitter } from '../web-socket/emitters/chat-emitter';
+import { WebSocketModule } from '../web-socket/web-socket.module';
 
 @Module({
   imports: [
+    WebSocketModule,
     DatabaseModule,
     UserModule,
     {
@@ -99,6 +103,10 @@ import { PrismaUserRepository } from '@adapters/drivens/infra/database/prisma/re
         {
           provide: UserRepository,
           useClass: PrismaUserRepository,
+        },
+        {
+          provide: RealtimeMessageNotificationProvider,
+          useClass: ChatEmitter,
         },
       ],
     },

@@ -64,7 +64,7 @@ export class CreateEstimateRequestUseCase {
       phone,
       user_id: user_id,
       category: category,
-
+      finished_at: null,
       address: {
         city: address_city,
         latitude: Number(addressData.lat) || 0,

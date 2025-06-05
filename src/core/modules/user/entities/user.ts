@@ -12,6 +12,7 @@ export interface UserProps {
   created_at: Date;
   updated_at: Date;
   company?: Company | null;
+  role: string;
 }
 
 export class User extends Entity<UserProps> {
@@ -69,6 +70,9 @@ export class User extends Entity<UserProps> {
     this.touch();
   }
 
+  get role() {
+    return this.props.role;
+  }
   get created_at() {
     return this.props.created_at;
   }

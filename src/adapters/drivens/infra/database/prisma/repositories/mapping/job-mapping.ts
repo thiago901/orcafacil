@@ -44,6 +44,7 @@ export class JobMapping {
                 proposal.estimateRequest &&
                 EstimateRequest.create(
                   {
+                    finished_at: proposal.estimateRequest.finished_at,
                     address: {
                       city: proposal.estimateRequest.address_city,
                       latitude: proposal.estimateRequest.latitude,

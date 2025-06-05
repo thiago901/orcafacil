@@ -26,6 +26,7 @@ import {
 import { CurrentUser } from '@adapters/drivens/infra/auth/current-user-decorator';
 import { TokenPayload } from '@adapters/drivens/infra/auth/jwt.strategy';
 import { GetMessagesByEstimateRequestAndCompanyUseCase } from '@core/modules/estimate-request/application/use-case/get-messages-by-estimate-requests-and-company-use-case copy';
+import { GetAllMessagesGroupByCompanyUseCase } from '@core/modules/estimate-request/application/use-case/get-all-messages-group-by-company-use-case';
 
 @ApiTags('Estimate Request Message')
 @ApiBearerAuth()
@@ -36,6 +37,7 @@ export class EstimateRequestMessageController {
     private readonly createEstimateRequestMessageUseCase: CreateEstimateRequestMessageUseCase,
     private readonly getAllMessagesByEstimateRequestUseCase: GetAllMessagesByEstimateRequestUseCase,
     private readonly getMessagesByEstimateRequestAndCompanyUseCase: GetMessagesByEstimateRequestAndCompanyUseCase,
+    private readonly getAllMessagesGroupByCompanyUseCase: GetAllMessagesGroupByCompanyUseCase,
   ) {}
 
   @Post()
@@ -81,6 +83,23 @@ export class EstimateRequestMessageController {
       result: result.value.estimate_request_messages.map(
         EstimateRequestMesssageMapping.toView,
       ),
+    };
+  }
+
+  @Get('/:estimate_request_id/company')
+  @HttpCode(200)
+  async findByEsitmateIdCompany(
+    @Param('estimate_request_id') estimate_request_id: string,
+  ) {
+    const result = await this.getAllMessagesGroupByCompanyUseCase.execute({
+      estimate_request_id,
+    });
+    if (result.isLeft()) {
+      throw new HttpException('result.value', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      result: result.value.estimate_request_messages,
     };
   }
 

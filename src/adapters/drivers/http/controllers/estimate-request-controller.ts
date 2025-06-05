@@ -73,9 +73,22 @@ export class EstimateRequestController {
     if (result.isLeft()) {
       throw new HttpException('result.value', HttpStatus.NOT_FOUND);
     }
+    const formatted = result.value.estimateRequests.reduce(
+      (acc, cur) => {
+        acc.result.push(EstimateRequestMapping.toView(cur));
+        acc.proposal_amout += cur.proposals?.length || 0;
+        acc.finished_amount += !!cur.finished_at ? 1 : 0;
+        return acc;
+      },
+      { result: [] as any[], proposal_amout: 0, finished_amount: 0 },
+    );
 
     return {
-      result: result.value.estimateRequests.map(EstimateRequestMapping.toView),
+      result: {
+        estimate_requests: formatted.result,
+        proposals_amout: formatted.proposal_amout,
+        finished_amount: formatted.finished_amount,
+      },
     };
   }
   @Get('/:id')

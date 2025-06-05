@@ -9,6 +9,8 @@ import {
 import { CompanyRepository } from '@core/modules/company/application/ports/repositories/company-repository';
 import { UserRepository } from '@core/modules/user/application/ports/repositories/user-repository';
 import { ResourceNotFoundError } from '@core/common/errors/common/resource-not-found-error';
+import { RealtimeMessageNotificationProvider } from '../ports/provider/realtime-message-notification';
+import { ChatEmitter } from '@adapters/drivers/web-socket/emitters/chat-emitter';
 
 interface RequestProps {
   content: string;
@@ -32,6 +34,7 @@ export class CreateEstimateRequestMessageUseCase {
     private readonly estimateRequestMessageRepository: EstimateRequestMessageRepository,
     private readonly companyRepository: CompanyRepository,
     private readonly userRepository: UserRepository,
+    private readonly realtimeMessageNotificationProvider: ChatEmitter,
   ) {}
 
   async execute({
@@ -58,7 +61,25 @@ export class CreateEstimateRequestMessageUseCase {
     });
 
     await this.estimateRequestMessageRepository.create(message);
+    await this.realtimeMessageNotificationProvider.sendMessage(
+      estimate_request_id,
+      'message:recieve',
+      {
+        message: {
+          content: message.content,
+          estimate_request_id: message.estimate_request_id,
+          company_id: message.company_id,
+          user_name: message.user_name,
+          company_name: message.company_name,
+          sender: message.sender,
+          type: message.type,
+          created_at: message.created_at,
+          updated_at: message.updated_at,
 
+          id: message.id.toString(),
+        },
+      },
+    );
     return right({ estimate_request_message: message });
   }
 }

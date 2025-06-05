@@ -26,6 +26,7 @@ model User {
   updated_at DateTime? @map("updated_at")
   estimateRequests EstimateRequest[]
   companies  Company[] 
+  role String @default("customer")
 
   @@map("users")
 }
@@ -56,6 +57,7 @@ model EstimateRequest {
 
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
+  finished_at DateTime? @map("finished_at")
 
   @@map("estimate_request")
 }
@@ -69,6 +71,7 @@ model Message {
   company_id String
   company_name String
   user_name String
+  read Boolean? @default(false)
   created_at         DateTime         @default(now())
   updated_at         DateTime         @default(now())
 

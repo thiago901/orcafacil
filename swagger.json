@@ -958,6 +958,34 @@
         ]
       }
     },
+    "/estimate-requests-message/{estimate_request_id}/company": {
+      "get": {
+        "operationId": "EstimateRequestMessageController_findByEsitmateIdCompany",
+        "parameters": [
+          {
+            "name": "estimate_request_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimate Request Message"
+        ]
+      }
+    },
     "/estimate-requests-message/{estimate_request_id}/company/{company_id}": {
       "get": {
         "operationId": "EstimateRequestMessageController_findByEstimateAndCompany",
@@ -1058,6 +1086,13 @@
             "type": "string",
             "minLength": 8
           },
+          "role": {
+            "type": "string",
+            "enum": [
+              "company",
+              "customer"
+            ]
+          },
           "avatar": {
             "type": "string"
           }
@@ -1066,7 +1101,8 @@
           "name",
           "email",
           "password",
-          "phone"
+          "phone",
+          "role"
         ]
       },
       "UpdateUserProps": {
