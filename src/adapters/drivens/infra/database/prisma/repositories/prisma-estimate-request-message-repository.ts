@@ -30,6 +30,7 @@ export class PrismaEstimateRequestMessageRepository
       EstimateRequestMessageMapping.toDomain(estimateRequestMessage),
     );
   }
+
   async findByEstimateIdAndCompanyId(
     estimate_request_id: string,
     company_id: string,

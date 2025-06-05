@@ -8,9 +8,11 @@ import { FindEstimateRequestsByIdUseCase } from './application/use-case/find-est
 import { CreateEstimateRequestMessageUseCase } from './application/use-case/create-estimate-requests-message-use-case';
 import { GetAllMessagesByEstimateRequestUseCase } from './application/use-case/get-all-messages-by-estimate-requests-use-case';
 import { GetMessagesByEstimateRequestAndCompanyUseCase } from './application/use-case/get-messages-by-estimate-requests-and-company-use-case copy';
+import { WebSocketModule } from '@adapters/drivers/web-socket/web-socket.module';
+import { GetAllMessagesGroupByCompanyUseCase } from './application/use-case/get-all-messages-group-by-company-use-case';
 
 @Module({
-  imports: [],
+  imports: [WebSocketModule],
   controllers: [],
   providers: [
     ListEstimateRequestsByUserUseCase,
@@ -22,6 +24,7 @@ import { GetMessagesByEstimateRequestAndCompanyUseCase } from './application/use
     CreateEstimateRequestMessageUseCase,
     GetAllMessagesByEstimateRequestUseCase,
     GetMessagesByEstimateRequestAndCompanyUseCase,
+    GetAllMessagesGroupByCompanyUseCase,
   ],
   exports: [
     ListEstimateRequestsByUserUseCase,
@@ -33,6 +36,7 @@ import { GetMessagesByEstimateRequestAndCompanyUseCase } from './application/use
     CreateEstimateRequestMessageUseCase,
     GetAllMessagesByEstimateRequestUseCase,
     GetMessagesByEstimateRequestAndCompanyUseCase,
+    GetAllMessagesGroupByCompanyUseCase,
   ],
 })
 export class EstimateRequestModule {}

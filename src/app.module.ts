@@ -11,6 +11,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { ProviderModule } from '@adapters/drivens/providers/provider.module';
 import { AuthModule } from '@adapters/drivens/infra/auth/auth.module';
 import { join } from 'node:path';
+import { WebSocketModule } from '@adapters/drivers/web-socket/web-socket.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { join } from 'node:path';
         index: false,
       },
     }),
+    WebSocketModule,
     EnvModule,
     HTTPModule,
     AuthModule,

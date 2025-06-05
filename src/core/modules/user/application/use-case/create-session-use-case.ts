@@ -47,6 +47,7 @@ export class CreateSessionUseCase {
       email: user.email,
       name: user.name,
       company_id: user.company?.id.toString(),
+      role: user.role,
     });
 
     return right({ token });

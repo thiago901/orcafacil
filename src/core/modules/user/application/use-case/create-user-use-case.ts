@@ -11,6 +11,7 @@ interface RequestProps {
   phone: string;
   avatar?: string;
   password: string;
+  role: string;
 }
 
 type ResponseProps = Either<Error, { user: User }>;
@@ -28,11 +29,13 @@ export class CreateUserUseCase {
     phone,
     password,
     avatar,
+    role,
   }: RequestProps): Promise<ResponseProps> {
     const user = User.create({
       name,
       email,
       phone,
+      role,
       avatar: avatar ? avatar : null,
       password: await this.hashProvider.hash(password),
     });

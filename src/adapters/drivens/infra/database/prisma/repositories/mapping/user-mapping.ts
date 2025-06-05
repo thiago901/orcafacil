@@ -18,6 +18,7 @@ export class UserMapping {
     avatar,
     updated_at,
     company,
+    role,
   }: UserComplete) {
     return User.create(
       {
@@ -28,6 +29,7 @@ export class UserMapping {
         password,
         avatar,
         phone,
+        role,
         company: company
           ? Company.create(
               {

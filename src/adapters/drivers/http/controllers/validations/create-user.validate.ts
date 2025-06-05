@@ -6,6 +6,7 @@ export const createUserSchema = z.object({
   email: z.string().email(),
   password: z.string().min(6),
   phone: z.string().min(8),
+  role: z.enum(['company', 'customer']),
   avatar: z.string().optional(),
 });
 

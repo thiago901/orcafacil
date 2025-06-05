@@ -6,6 +6,7 @@ export type SenderType = 'CLIENT' | 'COMPANY';
 export interface EstimateRequestMessageProps {
   content: string;
   sender: SenderType;
+  read: boolean;
   type: string;
   estimate_request_id: string;
   company_id: string;
@@ -17,7 +18,10 @@ export interface EstimateRequestMessageProps {
 
 export class EstimateRequestMessage extends Entity<EstimateRequestMessageProps> {
   static create(
-    props: Optional<EstimateRequestMessageProps, 'created_at' | 'updated_at'>,
+    props: Optional<
+      EstimateRequestMessageProps,
+      'created_at' | 'updated_at' | 'read'
+    >,
     id?: UniqueEntityID,
   ) {
     return new EstimateRequestMessage(
@@ -25,6 +29,7 @@ export class EstimateRequestMessage extends Entity<EstimateRequestMessageProps> 
         ...props,
         created_at: props.created_at ?? new Date(),
         updated_at: props.updated_at ?? new Date(),
+        read: props.read ?? false,
       },
       id,
     );
@@ -47,6 +52,9 @@ export class EstimateRequestMessage extends Entity<EstimateRequestMessageProps> 
   }
   get user_name() {
     return this.props.user_name;
+  }
+  get read() {
+    return this.props.read;
   }
 
   get estimate_request_id() {
