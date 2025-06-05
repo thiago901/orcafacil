@@ -15,7 +15,7 @@ import { SocketService } from './web-socket.service';
 import { ChatEmitter } from './emitters/chat-emitter';
 @WebSocketGateway(0, {
   cors: {
-    origin: '*',
+    origin: 'https://orcafacilweb.vercel.app',
   },
   transports: ['websocket'],
 })
