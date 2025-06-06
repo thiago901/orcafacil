@@ -9,7 +9,7 @@ import {
 import { CompanyRepository } from '@core/modules/company/application/ports/repositories/company-repository';
 import { UserRepository } from '@core/modules/user/application/ports/repositories/user-repository';
 import { ResourceNotFoundError } from '@core/common/errors/common/resource-not-found-error';
-import { RealtimeMessageNotificationProvider } from '../ports/provider/realtime-message-notification';
+
 import { ChatEmitter } from '@adapters/drivers/web-socket/emitters/chat-emitter';
 
 interface RequestProps {

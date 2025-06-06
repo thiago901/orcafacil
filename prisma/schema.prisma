@@ -31,6 +31,22 @@ model User {
   @@map("users")
 }
 
+
+model Notification {
+  id         String    @id @default(uuid())
+  title       String
+  type      String
+  message   String
+  read     Boolean
+  recipient_id String
+  created_at DateTime  @map("created_at")
+  updated_at DateTime? @map("updated_at")
+
+
+  @@map("notifications")
+}
+
+
 model EstimateRequest {
   id          String  @id @default(uuid())
   footage     Int

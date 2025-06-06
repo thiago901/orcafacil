@@ -5,9 +5,10 @@ import { FindProposalsByIdUseCase } from './application/use-case/find-proposals-
 import { CreateProposalUseCase } from './application/use-case/create-proposals-use-case';
 import { ApproveProposalUseCase } from './application/use-case/approve-proposal-use-case ';
 import { RejectProposalUseCase } from './application/use-case/reject-proposal-use-case';
+import { WebSocketModule } from '@adapters/drivers/web-socket/web-socket.module';
 
 @Module({
-  imports: [],
+  imports: [WebSocketModule],
   controllers: [],
   providers: [
     ListProposalsByEstimateUseCase,

@@ -9,6 +9,10 @@ import * as path from 'path';
 import { EstimateRequestRepository } from '@core/modules/estimate-request/application/ports/repositories/estimate-request-repository';
 import { CompanyRepository } from '@core/modules/company/application/ports/repositories/company-repository';
 import { EnvService } from '@adapters/drivens/infra/envs/env.service';
+
+import { ProposalsEmitter } from '@adapters/drivers/web-socket/emitters/proposals-emitter';
+import { NotificationRepository } from '@core/modules/notification/application/ports/repositories/notification-repository';
+import { Notification } from '@core/modules/notification/entities/notification';
 interface RequestProps {
   name: string;
   amount: number;
@@ -32,6 +36,8 @@ export class CreateProposalUseCase {
     private readonly estimateRepository: EstimateRequestRepository,
     private readonly companyRepository: CompanyRepository,
     private readonly emailProvider: EmailProvider,
+    private readonly proposalNotificationProvider: ProposalsEmitter,
+    private readonly notificationRepository: NotificationRepository,
   ) {}
 
   async execute({
@@ -68,6 +74,30 @@ export class CreateProposalUseCase {
         clientName: estimate.name,
         companyName: company.name,
         proposalLink: `${this.env.get('WEB_APPLICATION_URL')}/my-budgets/${estimate_request_id}`,
+      },
+    });
+
+    const message = {
+      title: 'Proposta recebida',
+      text: `Proposta recebida da empresa ${company.name}`,
+      estimate_request_id,
+    };
+    const notification = Notification.create({
+      message: JSON.stringify(message),
+      read: false,
+      recipient_id: estimate.user_id!,
+      title: 'Proposta recebida',
+      type: 'PROPOSAL',
+    });
+    await this.notificationRepository.create(notification);
+
+    this.proposalNotificationProvider.sendNotification({
+      to: estimate.user_id!,
+      event: 'proposal:sent',
+      payload: {
+        id: notification.id.toString(),
+        message,
+        recipient_id: notification.recipient_id,
       },
     });
     return right({ proposal });

@@ -41,6 +41,12 @@ import { PrismaUserRepository } from '@adapters/drivens/infra/database/prisma/re
 import { RealtimeMessageNotificationProvider } from '@core/modules/estimate-request/application/ports/provider/realtime-message-notification';
 import { ChatEmitter } from '../web-socket/emitters/chat-emitter';
 import { WebSocketModule } from '../web-socket/web-socket.module';
+import { ProposalsEmitter } from '../web-socket/emitters/proposals-emitter';
+import { ProposalNotificationProvider } from '@core/modules/proposal/application/ports/providers/proposal-notification-provider';
+import { NotificationModule } from '@core/modules/notification/notification.module';
+import { NotificationRepository } from '@core/modules/notification/application/ports/repositories/notification-repository';
+import { PrismaNotificationRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-notification-repository';
+import { NotificationController } from './controllers/notification-controller';
 
 @Module({
   imports: [
@@ -129,6 +135,23 @@ import { WebSocketModule } from '../web-socket/web-socket.module';
           provide: CompanyRepository,
           useClass: PrismaCompanyRepository,
         },
+        {
+          provide: ProposalNotificationProvider,
+          useClass: ProposalsEmitter,
+        },
+        {
+          provide: NotificationRepository,
+          useClass: PrismaNotificationRepository,
+        },
+      ],
+    },
+    {
+      module: NotificationModule,
+      providers: [
+        {
+          provide: NotificationRepository,
+          useClass: PrismaNotificationRepository,
+        },
       ],
     },
   ],
@@ -145,6 +168,7 @@ import { WebSocketModule } from '../web-socket/web-socket.module';
     CompanyCategoryController,
     DashboardController,
     EstimateRequestMessageController,
+    NotificationController,
   ],
 })
 export class HTTPModule {}
