@@ -45,6 +45,7 @@ export class CreateSessionUseCase {
     const token = await this.tokenProvider.sign({
       sub: user.id.toString(),
       email: user.email,
+      phone: user.phone,
       name: user.name,
       company_id: user.company?.id.toString(),
       role: user.role,

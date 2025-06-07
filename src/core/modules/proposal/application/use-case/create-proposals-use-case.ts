@@ -64,7 +64,7 @@ export class CreateProposalUseCase {
     await this.proposalRepository.create(proposal);
     await this.emailProvider.send({
       from: 'onboarding@resend.dev',
-      to: 'tsrocha901@gmail.com',
+      to: estimate.email,
       subject: 'Proposta recebida',
       templatePath: path.resolve(
         process.cwd(),

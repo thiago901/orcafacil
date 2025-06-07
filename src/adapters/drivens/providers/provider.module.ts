@@ -10,7 +10,7 @@ import { UploadFileProvider } from '@core/modules/estimate-request/application/p
 
 import { FirebaseUploadFileProvider } from './firebase-storage-upload-file';
 import { AddressFinderProvider } from '@core/common/application/ports/providers/address-finder';
-import { NominatimAddressFinderProvider } from './nominatim-provider';
+
 import { EmailProvider } from '@core/common/application/ports/providers/email-provider';
 import { ResendEmailProvider } from './resend-email-provider';
 import { LocationiqProvider } from './locationiq-provider';

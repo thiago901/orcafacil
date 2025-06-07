@@ -31,7 +31,7 @@ import { JobModule } from '@core/modules/job/job.module';
 import { JobRepository } from '@core/modules/job/application/ports/repositories/job-repository';
 import { PrismaJobsRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-jobs-repository';
 import { AddressFinderProvider } from '@core/common/application/ports/providers/address-finder';
-import { NominatimAddressFinderProvider } from '@adapters/drivens/providers/nominatim-provider';
+
 import { DashboardController } from './controllers/dashboard-controller';
 import { EstimateRequestMessageController } from './controllers/estimate-request-message-controller';
 import { EstimateRequestMessageRepository } from '@core/modules/estimate-request/application/ports/repositories/estimate-request-repository-message';
