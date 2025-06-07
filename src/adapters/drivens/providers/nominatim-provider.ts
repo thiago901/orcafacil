@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { EnvService } from '../infra/envs/env.service';
 
@@ -18,14 +18,19 @@ export class NominatimAddressFinderProvider implements AddressFinderProvider {
     state,
     street,
   }: AddressFinderProviderResponseProps): Promise<AddressFinderProviderResponse> {
-    const q = `${street}, ${city}, ${state}, ${postal_code}`;
+    try {
+      const q = `${street}, ${city}, ${state}, ${postal_code}`;
 
-    const url = `${this.env.get('NOMINATIM_POSTAL_CODE')}/search?format=json&q=${encodeURIComponent(q)}`;
-    const respose = await fetch(url, {
-      headers: { 'User-Agent': 'SeuProjeto/1.0 (seu-email@dominio.com)' },
-    });
-    const fmtJson = await respose.json();
+      const url = `${this.env.get('NOMINATIM_POSTAL_CODE')}/search?format=json&q=${encodeURIComponent(q)}`;
+      const respose = await fetch(url, {
+        headers: { 'User-Agent': 'SeuProjeto/1.0 (tsrocha901@gmail.com)' },
+      });
+      const fmtJson = await respose.json();
 
-    return fmtJson[0];
+      return fmtJson[0];
+    } catch (error) {
+      Logger.error(error, NominatimAddressFinderProvider.name);
+      throw new Error(error);
+    }
   }
 }
