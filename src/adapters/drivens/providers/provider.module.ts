@@ -13,6 +13,7 @@ import { AddressFinderProvider } from '@core/common/application/ports/providers/
 import { NominatimAddressFinderProvider } from './nominatim-provider';
 import { EmailProvider } from '@core/common/application/ports/providers/email-provider';
 import { ResendEmailProvider } from './resend-email-provider';
+import { LocationiqProvider } from './locationiq-provider';
 
 @Module({
   providers: [
@@ -30,7 +31,7 @@ import { ResendEmailProvider } from './resend-email-provider';
     },
     {
       provide: AddressFinderProvider,
-      useClass: NominatimAddressFinderProvider,
+      useClass: LocationiqProvider,
     },
     {
       provide: EmailProvider,

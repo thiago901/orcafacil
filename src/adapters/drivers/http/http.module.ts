@@ -47,6 +47,7 @@ import { NotificationModule } from '@core/modules/notification/notification.modu
 import { NotificationRepository } from '@core/modules/notification/application/ports/repositories/notification-repository';
 import { PrismaNotificationRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-notification-repository';
 import { NotificationController } from './controllers/notification-controller';
+import { LocationiqProvider } from '@adapters/drivens/providers/locationiq-provider';
 
 @Module({
   imports: [
@@ -79,7 +80,7 @@ import { NotificationController } from './controllers/notification-controller';
         },
         {
           provide: AddressFinderProvider,
-          useClass: NominatimAddressFinderProvider,
+          useClass: LocationiqProvider,
         },
       ],
     },
@@ -96,7 +97,7 @@ import { NotificationController } from './controllers/notification-controller';
         },
         {
           provide: AddressFinderProvider,
-          useClass: NominatimAddressFinderProvider,
+          useClass: LocationiqProvider,
         },
         {
           provide: EstimateRequestMessageRepository,

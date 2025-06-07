@@ -15,6 +15,8 @@ export const schemaEnv = z.object({
   NOMINATIM_POSTAL_CODE: z.coerce.string(),
   RESEND_EMAIL_KEY: z.coerce.string(),
   WEB_APPLICATION_URL: z.coerce.string(),
+  LOCATION_IQ_URL: z.coerce.string(),
+  LOCATION_IQ_KEY: z.coerce.string(),
 });
 
 export type Env = z.infer<typeof schemaEnv>;

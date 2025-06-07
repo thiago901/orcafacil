@@ -4,6 +4,7 @@ import { User } from '../../entities/user';
 import { UserRepository } from '../ports/repositories/user-repository';
 import { HashProvider } from '../ports/providers/hash-provider';
 import { ResourceNotCreatedError } from '@core/common/errors/common/resource-not-created-error';
+import { ResourceAlreadyExistsError } from '../errors/resource-already-exists-error';
 
 interface RequestProps {
   name: string;
@@ -14,7 +15,7 @@ interface RequestProps {
   role: string;
 }
 
-type ResponseProps = Either<Error, { user: User }>;
+type ResponseProps = Either<ResourceAlreadyExistsError, { user: User }>;
 
 @Injectable()
 export class CreateUserUseCase {
@@ -41,6 +42,11 @@ export class CreateUserUseCase {
     });
 
     try {
+      const existUser = await this.userRepository.findByEmail(email);
+      if (existUser) {
+        return left(new ResourceAlreadyExistsError());
+      }
+
       await this.userRepository.save(user);
       return right({ user });
     } catch (error: any) {
