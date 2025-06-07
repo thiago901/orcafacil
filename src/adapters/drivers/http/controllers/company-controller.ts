@@ -9,6 +9,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   UploadedFile,
   UseInterceptors,
@@ -32,6 +33,11 @@ import { CompanyMapping } from '../mapping/company-mapping';
 import { ListAllCompaniesByOwnerUseCase } from '@core/modules/company/application/use-case/list-all-companies-by-owneruse-case';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadProfileImageUseCase } from '@core/modules/company/application/use-case/upload-profile-image-use-case';
+import {
+  UpdateCompanyProps,
+  updateCompanySchema,
+} from './validations/update-company.validate';
+import { UpdateCompanyUseCase } from '@core/modules/company/application/use-case/update-company-use-case';
 
 @ApiTags('Company')
 @ApiBearerAuth()
@@ -44,6 +50,7 @@ export class CompanyController {
     private readonly listAllCompaniesUseCase: ListAllCompaniesUseCase,
     private readonly listAllCompaniesByOwnerUseCase: ListAllCompaniesByOwnerUseCase,
     private readonly uploadProfileImageUseCase: UploadProfileImageUseCase,
+    private readonly updateCompanyUseCase: UpdateCompanyUseCase,
   ) {}
 
   @Post('/')
@@ -52,6 +59,19 @@ export class CompanyController {
   @UsePipes(new ZodValidationPipe(createCompanySchema))
   async create(@Body() body: CreateCompanyProps) {
     const result = await this.createCompanyUseCase.execute(body);
+    if (result.isLeft()) {
+      throw new HttpException('result.value', HttpStatus.BAD_REQUEST);
+    }
+    return { result: CompanyMapping.toView(result.value.company) };
+  }
+  @Put('/:id')
+  @Public()
+  @UsePipes(new ZodValidationPipe(updateCompanySchema))
+  async update(@Param('id') id: string, @Body() body: UpdateCompanyProps) {
+    const result = await this.updateCompanyUseCase.execute({
+      id,
+      ...body,
+    });
     if (result.isLeft()) {
       throw new HttpException('result.value', HttpStatus.BAD_REQUEST);
     }

@@ -7,6 +7,7 @@ import { ListAllCompaniesServicesByCompanyUseCase } from './application/use-case
 import { ListAllCompaniesCategoriesUseCase } from './application/use-case/list-all-companies-categories-use-case';
 import { CreateCompanyServiceUseCase } from './application/use-case/create-company-service-use-case';
 import { UploadProfileImageUseCase } from './application/use-case/upload-profile-image-use-case';
+import { UpdateCompanyUseCase } from './application/use-case/update-company-use-case';
 
 @Module({
   imports: [],
@@ -20,6 +21,7 @@ import { UploadProfileImageUseCase } from './application/use-case/upload-profile
     ListAllCompaniesCategoriesUseCase,
     CreateCompanyServiceUseCase,
     UploadProfileImageUseCase,
+    UpdateCompanyUseCase,
   ],
   exports: [
     CreateCompanyUseCase,
@@ -30,6 +32,7 @@ import { UploadProfileImageUseCase } from './application/use-case/upload-profile
     ListAllCompaniesCategoriesUseCase,
     CreateCompanyServiceUseCase,
     UploadProfileImageUseCase,
+    UpdateCompanyUseCase,
   ],
 })
 export class CompanyModule {}

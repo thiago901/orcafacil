@@ -36,7 +36,9 @@ export class Company extends Entity<CompanyProps> {
   get name() {
     return this.props.name;
   }
-
+  set name(name: string) {
+    this.props.name = name;
+  }
   get avatar() {
     return this.props.avatar;
   }
@@ -54,17 +56,32 @@ export class Company extends Entity<CompanyProps> {
   get about() {
     return this.props.about;
   }
+  set about(about: string | null) {
+    this.props.about = about;
+  }
   get email() {
     return this.props.email;
+  }
+  set email(email: string | null) {
+    this.props.email = email;
   }
   get phone() {
     return this.props.phone;
   }
+  set phone(phone: string | null) {
+    this.props.phone = phone;
+  }
   get website() {
     return this.props.website;
   }
+  set website(website: string | null) {
+    this.props.website = website;
+  }
   get address() {
     return this.props.address;
+  }
+  set address(address: CompanyAddress | null) {
+    this.props.address = address;
   }
   get services() {
     return this.props.services;
