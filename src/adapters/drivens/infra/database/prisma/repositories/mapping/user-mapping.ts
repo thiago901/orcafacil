@@ -59,6 +59,7 @@ export class UserMapping {
       updated_at: user.updated_at,
       email: user.email,
       name: user.name,
+      role: user.role,
       password: user.password,
       phone: user.phone,
     };
