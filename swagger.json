@@ -320,6 +320,34 @@
         ]
       }
     },
+    "/users/{id}/file": {
+      "patch": {
+        "operationId": "UserController_uploadFiles",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      }
+    },
     "/companies": {
       "post": {
         "operationId": "CompanyController_create",

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 import { EnvService } from '../infra/envs/env.service';
 import { lookup } from 'mime-types';
@@ -52,5 +52,28 @@ export class FirebaseUploadFileProvider implements UploadFileProvider {
     return {
       path: `https://storage.googleapis.com/${bucket.name}/${bucketRepo.name}`,
     };
+  }
+
+  async delete(fileUrl: string): Promise<void> {
+    const bucket = admin.storage().bucket();
+    const bucketName = bucket.name;
+    const prefix = `https://storage.googleapis.com/${bucketName}/`;
+    if (!fileUrl.startsWith(prefix)) {
+      Logger.error(
+        'URL inválida para este bucket',
+        FirebaseUploadFileProvider.name,
+      );
+      return;
+    }
+
+    const filePath = fileUrl.replace(prefix, '');
+
+    const file = bucket.file(filePath);
+
+    const [exists] = await file.exists();
+    if (!exists) return;
+
+    await file.delete();
+    Logger.log(`File ${fileUrl} was deleted`, FirebaseUploadFileProvider.name);
   }
 }

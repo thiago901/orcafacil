@@ -10,4 +10,5 @@ export abstract class UploadFileProvider {
   abstract upload(
     data: UploadFileProviderProps,
   ): Promise<UploadFileProviderResponse>;
+  abstract delete(fileUrl: string): Promise<void>;
 }

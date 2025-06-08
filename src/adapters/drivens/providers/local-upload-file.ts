@@ -14,6 +14,9 @@ import { randomUUID } from 'node:crypto';
 @Injectable()
 export class LocalUploadFileProvider implements UploadFileProvider {
   constructor(private readonly env: EnvService) {}
+  delete(fileUrl: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 
   async upload({
     file,

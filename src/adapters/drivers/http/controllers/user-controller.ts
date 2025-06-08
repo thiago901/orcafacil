@@ -11,6 +11,9 @@ import {
   UseInterceptors,
   UsePipes,
   Delete,
+  Patch,
+  UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -31,6 +34,8 @@ import { ListAllUsersUseCase } from '@core/modules/user/application/use-case/lis
 import { UserMapping } from '../mapping/user-mapping';
 import { FindUserByIdUseCase } from '@core/modules/user/application/use-case/find-user-by-id-use-case';
 import { Public } from '@adapters/drivens/infra/auth/public';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadProfileImageUseCase } from '@core/modules/user/application/use-case/upload-profile-image-use-case';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -43,9 +48,10 @@ export class UserController {
     private readonly deleteUserUseCase: DeleteUserUseCase,
     private readonly findUserByIdUseCase: FindUserByIdUseCase,
     private readonly listAllUsersUseCase: ListAllUsersUseCase,
+    private readonly uploadProfileImageUseCase: UploadProfileImageUseCase,
   ) {}
 
-  @Post('')
+  @Post('/')
   @Public()
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createUserSchema))
@@ -88,7 +94,7 @@ export class UserController {
     return { result: UserMapping.toView(result.value.user) };
   }
 
-  @Get('')
+  @Get('/')
   @HttpCode(200)
   async listAll() {
     const result = await this.listAllUsersUseCase.execute();
@@ -99,5 +105,28 @@ export class UserController {
       );
     }
     return { result: result.value.users.map(UserMapping.toView) };
+  }
+
+  @Patch('/:id/file')
+  @UseInterceptors(FileInterceptor('file'))
+  @Public()
+  async uploadFiles(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('id') user_id: string,
+  ) {
+    if (!file) {
+      throw new BadRequestException('Nenhum arquivo enviado!');
+    }
+
+    await this.uploadProfileImageUseCase.execute({
+      file,
+      user_id,
+    });
+
+    return {
+      status: 201,
+      message:
+        'The video is being uploaded and we will inform you of the next statuses!',
+    };
   }
 }

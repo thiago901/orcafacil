@@ -57,6 +57,7 @@ export class UserMapping {
       id: user.id.toString(),
       created_at: user.created_at,
       updated_at: user.updated_at,
+      avatar: user.avatar,
       email: user.email,
       name: user.name,
       role: user.role,
