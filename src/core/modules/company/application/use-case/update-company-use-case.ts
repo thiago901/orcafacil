@@ -82,7 +82,7 @@ export class UpdateCompanyUseCase {
     company.name = name ? name : company.name;
     company.phone = phone ? phone : company.phone;
     company.website = website ? website : company.website;
-
+    await this.companyRepository.save(company);
     return right({ company });
   }
 }

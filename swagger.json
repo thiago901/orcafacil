@@ -1196,6 +1196,54 @@
           "Notifications"
         ]
       }
+    },
+    "/payments/customer": {
+      "post": {
+        "operationId": "PaymentController_createCustomer",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomerProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Payment"
+        ]
+      }
+    },
+    "/payments/session": {
+      "post": {
+        "operationId": "PaymentController_createSession",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePaymentSessionProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Payment"
+        ]
+      }
     }
   },
   "info": {
@@ -1633,6 +1681,33 @@
           "recipient_id",
           "title",
           "type"
+        ]
+      },
+      "CreateCustomerProps": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "CreatePaymentSessionProps": {
+        "type": "object",
+        "properties": {
+          "customer_id": {
+            "type": "string"
+          },
+          "price_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customer_id",
+          "price_id"
         ]
       }
     }

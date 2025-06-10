@@ -15,6 +15,9 @@ import { EmailProvider } from '@core/common/application/ports/providers/email-pr
 import { ResendEmailProvider } from './resend-email-provider';
 import { LocationiqProvider } from './locationiq-provider';
 
+import { StripeProvider } from './stripe-provider';
+import { PaymentsProvider } from '@core/modules/payment/application/ports/providers/payments-provider';
+
 @Module({
   providers: [
     {
@@ -37,6 +40,10 @@ import { LocationiqProvider } from './locationiq-provider';
       provide: EmailProvider,
       useClass: ResendEmailProvider,
     },
+    {
+      provide: PaymentsProvider,
+      useClass: StripeProvider,
+    },
     EnvService,
   ],
 
@@ -47,6 +54,7 @@ import { LocationiqProvider } from './locationiq-provider';
     EnvService,
     EmailProvider,
     AddressFinderProvider,
+    PaymentsProvider,
   ],
 })
 export class ProviderModule {}

@@ -17,6 +17,8 @@ export const schemaEnv = z.object({
   WEB_APPLICATION_URL: z.coerce.string(),
   LOCATION_IQ_URL: z.coerce.string(),
   LOCATION_IQ_KEY: z.coerce.string(),
+  STRIPE_WEBHOOK_SECRET: z.coerce.string(),
+  STRIPE_SECRET_KEY: z.coerce.string(),
 });
 
 export type Env = z.infer<typeof schemaEnv>;
