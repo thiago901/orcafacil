@@ -1244,6 +1244,53 @@
           "Payment"
         ]
       }
+    },
+    "/plans/{plan_id}": {
+      "get": {
+        "operationId": "PlanController_getById",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Plan"
+        ]
+      }
+    },
+    "/plans": {
+      "get": {
+        "operationId": "PlanController_getAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Plan"
+        ]
+      }
     }
   },
   "info": {

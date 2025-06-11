@@ -50,6 +50,10 @@ import { NotificationController } from './controllers/notification-controller';
 import { LocationiqProvider } from '@adapters/drivens/providers/locationiq-provider';
 import { PaymentController } from './controllers/payment-controller';
 import { PaymentModule } from '@core/modules/payment/payment.module';
+import { PlanController } from './controllers/plan-controller';
+import { PlanModule } from '@core/modules/plan/plan.module';
+import { PlanRepository } from '@core/modules/plan/application/ports/providers/plan-repository';
+import { PrismaPlanRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-plan-repository';
 
 @Module({
   imports: [
@@ -160,6 +164,15 @@ import { PaymentModule } from '@core/modules/payment/payment.module';
     {
       module: PaymentModule,
     },
+    {
+      module: PlanModule,
+      providers: [
+        {
+          provide: PlanRepository,
+          useClass: PrismaPlanRepository,
+        },
+      ],
+    },
   ],
 
   controllers: [
@@ -176,6 +189,7 @@ import { PaymentModule } from '@core/modules/payment/payment.module';
     EstimateRequestMessageController,
     NotificationController,
     PaymentController,
+    PlanController,
   ],
 })
 export class HTTPModule {}

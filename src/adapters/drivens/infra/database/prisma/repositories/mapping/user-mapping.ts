@@ -19,6 +19,7 @@ export class UserMapping {
     updated_at,
     company,
     role,
+    plan_id,
   }: UserComplete) {
     return User.create(
       {
@@ -30,6 +31,7 @@ export class UserMapping {
         avatar,
         phone,
         role,
+        plan_id,
         company: company
           ? Company.create(
               {
@@ -63,6 +65,7 @@ export class UserMapping {
       role: user.role,
       password: user.password,
       phone: user.phone,
+      plan_id: user.plan_id,
     };
   }
 }

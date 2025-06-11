@@ -13,6 +13,7 @@ export interface UserProps {
   updated_at: Date;
   company?: Company | null;
   role: string;
+  plan_id?: string | null;
 }
 
 export class User extends Entity<UserProps> {
@@ -25,6 +26,7 @@ export class User extends Entity<UserProps> {
         ...props,
         created_at: props.created_at ?? new Date(),
         updated_at: props.updated_at ?? new Date(),
+        plan_id: props.plan_id ?? 'free',
       },
       id,
     );
@@ -86,5 +88,8 @@ export class User extends Entity<UserProps> {
 
   get company() {
     return this.props.company;
+  }
+  get plan_id() {
+    return this.props.plan_id;
   }
 }

@@ -25,8 +25,12 @@ model User {
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
   estimateRequests EstimateRequest[]
-  companies  Company[] 
+  plan_id String?
   role String @default("customer")
+
+  companies  Company[] 
+  plan Plan? @relation(fields: [plan_id], references: [id])
+  plan_usage PlanUsage[]
 
   @@map("users")
 }
@@ -46,6 +50,31 @@ model Notification {
   @@map("notifications")
 }
 
+model Plan {
+  id         String   @id
+  name       String
+  description       String?
+  resources  Json     // Ex: { proposalsPerMonth: 5 }
+  price_month Float @default(0)
+  price_year Float @default(0)
+  actived    Boolean  @default(true)
+  created_at DateTime @default(now()) @map("created_at")
+  updated_at DateTime? @map("updated_at")
+  users      User[]   // Relacionamento reverso
+
+  @@map("plans")
+}
+
+model PlanUsage {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  resource  String   // Ex: "proposalsPerMonth"
+  count     Int      @default(0)
+  period    DateTime // Início do mês
+
+  @@unique([userId, resource, period])
+}
 
 model EstimateRequest {
   id          String  @id @default(uuid())
