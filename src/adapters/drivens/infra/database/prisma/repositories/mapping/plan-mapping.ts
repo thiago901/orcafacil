@@ -13,6 +13,7 @@ export class PlanMapping {
     price_month,
     price_year,
     name,
+    price_id,
     resources,
     description,
     updated_at,
@@ -24,6 +25,7 @@ export class PlanMapping {
         price_month,
         description,
         price_year,
+        price_id,
         name,
         resources,
         updated_at: updated_at ?? new Date(),
@@ -41,6 +43,7 @@ export class PlanMapping {
       price_year: plan.price_year,
       description: plan.description,
       name: plan.name,
+      price_id: plan.price_id,
       resources: plan.resources,
       updated_at: plan.updated_at,
     };

@@ -8,6 +8,7 @@ export class PlanMapping {
     price_month,
     price_year,
     name,
+    price_id,
     resources,
     updated_at,
     description,
@@ -26,6 +27,7 @@ export class PlanMapping {
       price_year,
       description,
       name,
+      price_id,
       resources: array,
       updated_at,
     };

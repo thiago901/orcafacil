@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import * as bodyParser from 'body-parser';
 import { AppModule } from './app.module';
 import { EnvService } from '@adapters/drivens/infra/envs/env.service';
 import { patchNestJsSwagger } from 'nestjs-zod';
@@ -29,7 +30,10 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document, {});
   // Exporta para JSON
   writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
-
+  app.use(
+    '/payments/webhooks/stripe',
+    bodyParser.raw({ type: 'application/json' }),
+  );
   await app.listen(Number(envService.get('PORT')) || 3333, '0.0.0.0');
 }
 bootstrap();

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import Stripe from 'stripe';
 import { EnvService } from '../infra/envs/env.service';
 import { PaymentsProvider } from '@core/modules/payment/application/ports/providers/payments-provider';
@@ -14,12 +14,29 @@ export class StripeProvider implements PaymentsProvider {
   }
 
   async createCustomer(email: string) {
+    const customers = await this.stripe.customers.list({
+      email: email, // Ele tenta filtrar, mas retorna múltiplos
+      limit: 10,
+    });
+
+    const match = customers.data.find((c: any) => c.email === email);
+    if (!!match) {
+      return {
+        id: match.id,
+        email,
+        name: match.name,
+      };
+    }
     const customer = await this.stripe.customers.create({ email });
-    Logger.log(`customer: ${JSON.stringify(customer)}`);
-    return;
+
+    return {
+      id: customer.id,
+      email,
+      name: customer.name,
+    };
   }
 
-  async createCheckoutSession(customerId: string, priceId: string) {
+  async createCheckoutSession(customer_id: string, priceId: string) {
     // const prices = await this.stripe.prices.list({
     //   lookup_keys: [priceId],
     //   expand: ['data.product'],
@@ -29,7 +46,7 @@ export class StripeProvider implements PaymentsProvider {
       billing_address_collection: 'auto',
       mode: 'subscription',
       payment_method_types: ['card'],
-      customer: 'cus_ST8cMQp3KABpLD',
+      customer: customer_id,
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${this.env.get('WEB_APPLICATION_URL')}/payments/success`,
       cancel_url: `${this.env.get('WEB_APPLICATION_URL')}/payments/canceled`,

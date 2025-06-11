@@ -1,4 +1,8 @@
-type CreateCustomer = void;
+type CreateCustomer = {
+  id: string;
+  email: string;
+  name?: string | null;
+};
 export abstract class PaymentsProvider {
   abstract createCheckoutSession(
     customer_id: string,

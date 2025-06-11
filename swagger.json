@@ -320,6 +320,25 @@
         ]
       }
     },
+    "/users/profile/me": {
+      "get": {
+        "operationId": "UserController_profile",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      }
+    },
     "/users/{id}/file": {
       "patch": {
         "operationId": "UserController_uploadFiles",
@@ -555,7 +574,7 @@
         ]
       }
     },
-    "/forgot-password": {
+    "/sessions/forgot-password": {
       "post": {
         "operationId": "SessionController_forgotPassword",
         "parameters": [],
@@ -571,6 +590,25 @@
         },
         "responses": {
           "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Session"
+        ]
+      }
+    },
+    "/sessions/refresh": {
+      "post": {
+        "operationId": "SessionController_refresh",
+        "parameters": [],
+        "responses": {
+          "201": {
             "description": ""
           }
         },
@@ -1235,6 +1273,29 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Payment"
+        ]
+      }
+    },
+    "/payments/webhooks/stripe": {
+      "post": {
+        "operationId": "PaymentController_handleStripeWebhook",
+        "parameters": [
+          {
+            "name": "stripe-signature",
+            "required": true,
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""

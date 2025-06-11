@@ -9,6 +9,7 @@ import { UpdateUserUseCase } from './application/use-case/update-user-use-case';
 import { UserRepository } from './application/ports/repositories/user-repository';
 import { PrismaUserRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-user-repository';
 import { UploadProfileImageUseCase } from './application/use-case/upload-profile-image-use-case';
+import { RefreshSessionUseCase } from './application/use-case/refresh-session-use-case';
 
 @Module({
   imports: [],
@@ -26,6 +27,7 @@ import { UploadProfileImageUseCase } from './application/use-case/upload-profile
       useClass: PrismaUserRepository,
     },
     UploadProfileImageUseCase,
+    RefreshSessionUseCase,
   ],
   exports: [
     CreateSessionUseCase,
@@ -36,6 +38,7 @@ import { UploadProfileImageUseCase } from './application/use-case/upload-profile
     RecoverPasswordUseCase,
     UpdateUserUseCase,
     UploadProfileImageUseCase,
+    RefreshSessionUseCase,
   ],
 })
 export class UserModule {}

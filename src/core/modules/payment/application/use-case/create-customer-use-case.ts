@@ -8,14 +8,19 @@ interface RequestProps {
   email: string;
 }
 
-type ResponseProps = Either<ResourceAlreadyExistsError, null>;
+type ResponseProps = Either<
+  ResourceAlreadyExistsError,
+  { customer: { id: string; email: string } }
+>;
 
 @Injectable()
 export class CreateCustomerUseCase {
   constructor(private readonly paymentsProvider: PaymentsProvider) {}
 
   async execute({ email }: RequestProps): Promise<ResponseProps> {
-    await this.paymentsProvider.createCustomer(email);
-    return right(null);
+    const customer = await this.paymentsProvider.createCustomer(email);
+    return right({
+      customer,
+    });
   }
 }

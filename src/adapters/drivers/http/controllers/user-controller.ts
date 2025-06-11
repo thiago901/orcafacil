@@ -36,6 +36,8 @@ import { FindUserByIdUseCase } from '@core/modules/user/application/use-case/fin
 import { Public } from '@adapters/drivens/infra/auth/public';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadProfileImageUseCase } from '@core/modules/user/application/use-case/upload-profile-image-use-case';
+import { CurrentUser } from '@adapters/drivens/infra/auth/current-user-decorator';
+import { TokenPayload } from '@adapters/drivens/infra/auth/jwt.strategy';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -88,6 +90,17 @@ export class UserController {
   @HttpCode(200)
   async findById(@Param('id') id: string) {
     const result = await this.findUserByIdUseCase.execute({ id });
+    if (result.isLeft()) {
+      throw new HttpException(result.value.message, HttpStatus.NOT_FOUND);
+    }
+    return { result: UserMapping.toView(result.value.user) };
+  }
+  @Get('/profile/me')
+  @HttpCode(200)
+  async profile(@CurrentUser() user: TokenPayload) {
+    console.log('user', user);
+
+    const result = await this.findUserByIdUseCase.execute({ id: user.sub });
     if (result.isLeft()) {
       throw new HttpException(result.value.message, HttpStatus.NOT_FOUND);
     }

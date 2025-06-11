@@ -57,6 +57,7 @@ model Plan {
   resources  Json     // Ex: { proposalsPerMonth: 5 }
   price_month Float @default(0)
   price_year Float @default(0)
+  price_id String?
   actived    Boolean  @default(true)
   created_at DateTime @default(now()) @map("created_at")
   updated_at DateTime? @map("updated_at")

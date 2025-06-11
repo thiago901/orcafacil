@@ -6,7 +6,10 @@ export type UserRepositoryOptions = {
 export abstract class UserRepository {
   abstract save(user: User): Promise<void>;
   abstract getAll(): Promise<User[]>;
-  abstract findById(id: string): Promise<User | null>;
+  abstract findById(
+    id: string,
+    options?: UserRepositoryOptions,
+  ): Promise<User | null>;
   abstract findByEmail(
     email: string,
     options?: UserRepositoryOptions,

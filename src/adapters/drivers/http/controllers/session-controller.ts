@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  UseGuards,
   UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
@@ -23,18 +24,23 @@ import {
 import { CreateSessionUseCase } from '@core/modules/user/application/use-case/create-session-use-case';
 import { RecoverPasswordUseCase } from '@core/modules/user/application/use-case/recover-password-use-case';
 import { Public } from '@adapters/drivens/infra/auth/public';
+import { JwtAuthGuard } from '@adapters/drivens/infra/auth/jwt-auth-guard';
+import { CurrentUser } from '@adapters/drivens/infra/auth/current-user-decorator';
+import { TokenPayload } from '@adapters/drivens/infra/auth/jwt.strategy';
+import { RefreshSessionUseCase } from '@core/modules/user/application/use-case/refresh-session-use-case';
 
 @ApiTags('Session')
 @ApiBearerAuth()
-@Controller('/')
+@Controller('/sessions')
 @UseInterceptors(LoggingInterceptor)
 export class SessionController {
   constructor(
     private readonly createSessionUseCase: CreateSessionUseCase,
     private readonly forgotPasswordUseCase: RecoverPasswordUseCase,
+    private readonly refreshSessionUseCase: RefreshSessionUseCase,
   ) {}
 
-  @Post('/sessions')
+  @Post('/')
   @Public()
   @HttpCode(200)
   @UsePipes(new ZodValidationPipe(authenticateUserSchema))
@@ -55,5 +61,14 @@ export class SessionController {
       throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
     }
     return { message: 'Recovery instructions sent' };
+  }
+  @Post('refresh')
+  @UseGuards(JwtAuthGuard)
+  async refresh(@CurrentUser() user: TokenPayload) {
+    const result = await this.refreshSessionUseCase.execute({ id: user.sub });
+    if (result.isLeft()) {
+      throw new HttpException(result.value.message, HttpStatus.UNAUTHORIZED);
+    }
+    return { result: { token: result.value.token } };
   }
 }

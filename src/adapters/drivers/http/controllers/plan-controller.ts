@@ -15,6 +15,7 @@ import { LoggingInterceptor } from '../Interceptors/custom-logger-routes';
 import { PlanMapping } from '../mapping/plan-mapping';
 import { FindPlanByIdUseCase } from '@core/modules/plan/application/use-case/find-plan-by-id-use-case';
 import { GetAllPlansUseCase } from '@core/modules/plan/application/use-case/get-all-plan-by-id-use-case';
+import { Public } from '@adapters/drivens/infra/auth/public';
 
 @ApiTags('Plan')
 @ApiBearerAuth()
@@ -36,6 +37,7 @@ export class PlanController {
     return { result: PlanMapping.toView(result.value.plan) };
   }
   @Get('/')
+  @Public()
   @HttpCode(200)
   async getAll() {
     const result = await this.getAllPlansUseCase.execute();

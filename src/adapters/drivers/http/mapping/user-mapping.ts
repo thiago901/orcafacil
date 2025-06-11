@@ -7,6 +7,8 @@ export class UserMapping {
     email,
     name,
     phone,
+    plan_id,
+    role,
     updated_at,
     avatar,
   }: User) {
@@ -18,6 +20,8 @@ export class UserMapping {
       phone,
       updated_at,
       avatar,
+      plan_id,
+      role,
     };
   }
 }

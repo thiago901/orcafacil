@@ -9,7 +9,7 @@ export interface PlanProps {
   actived: boolean;
   price_month: number;
   price_year: number;
-
+  price_id?: string | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -56,6 +56,9 @@ export class Plan extends Entity<PlanProps> {
   }
   get description() {
     return this.props.description;
+  }
+  get price_id() {
+    return this.props.price_id;
   }
 
   private touch() {
