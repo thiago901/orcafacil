@@ -22,13 +22,20 @@ export class PrismaJobsRepository implements JobRepository {
       where: {
         company_id,
       },
+      include: {
+        estimate_request: true,
+      },
     });
 
     return jobs.map((company) => JobMapping.toDomain(company));
   }
 
   async listAll(): Promise<Job[]> {
-    const jobs = await this.prisma.job.findMany({});
+    const jobs = await this.prisma.job.findMany({
+      include: {
+        estimate_request: true,
+      },
+    });
 
     return jobs.map((company) => JobMapping.toDomain(company));
   }
@@ -38,17 +45,12 @@ export class PrismaJobsRepository implements JobRepository {
         id,
       },
       include: {
-        proposal: {
-          include: {
-            estimateRequest: true,
-          },
-        },
+        estimate_request: true,
       },
     });
     if (!job) {
       return null;
     }
-    console.log('job', job);
 
     return JobMapping.toDomain(job as any);
   }

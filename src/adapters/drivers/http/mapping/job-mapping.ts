@@ -8,6 +8,7 @@ export class JobMapping {
     proposal_id,
     updated_at,
     proposal,
+    estimate_request,
   }: Job) {
     return {
       id: id.toString(),
@@ -28,16 +29,16 @@ export class JobMapping {
             updated_at: proposal.updated_at,
           }
         : null,
-      estimate_request: proposal?.estimate_request
+      estimate_request: estimate_request
         ? {
-            id: proposal.estimate_request.id.toString(),
-            address: proposal.estimate_request.address,
-            description: proposal.estimate_request.description,
-            email: proposal.estimate_request.email,
-            name: proposal.estimate_request.name,
-            phone: proposal.estimate_request.phone,
-            created_at: proposal.estimate_request.created_at,
-            updated_at: proposal.estimate_request.updated_at,
+            id: estimate_request.id.toString(),
+            address: estimate_request.address,
+            description: estimate_request.description,
+            email: estimate_request.email,
+            name: estimate_request.name,
+            phone: estimate_request.phone,
+            created_at: estimate_request.created_at,
+            updated_at: estimate_request.updated_at,
           }
         : null,
     };

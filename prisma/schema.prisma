@@ -96,14 +96,16 @@ model EstimateRequest {
   longitude   Float
   category   String @default("Pintor")
 
-  user      User?                 @relation(fields: [user_id], references: [id])
-  files     EstimateRequestFile[]
-  proposals Proposal[]
-  messages Message[]
 
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
   finished_at DateTime? @map("finished_at")
+
+  user      User?                 @relation(fields: [user_id], references: [id])
+  files     EstimateRequestFile[]
+  proposals Proposal[]
+  messages Message[]
+  Job Job[]
 
   @@map("estimate_request")
 }
@@ -274,9 +276,12 @@ model Job {
   id         String  @id @default(uuid())
   company_id String @map("company_id")
   proposal_id String @unique @map("proposal_id")
+  estimate_request_id String    @map("estimate_request_id")
 
   company  Company  @relation(fields: [company_id], references: [id])
   proposal Proposal @relation(fields: [proposal_id], references: [id])
+  estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
+
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
 

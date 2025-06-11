@@ -10,9 +10,8 @@ import {
   Proposal as PrismaProposal,
 } from '@prisma/client';
 type JobComplete = PrismaJob & {
-  proposal?: PrismaProposal & {
-    estimateRequest?: PrismaEstimateRequest;
-  };
+  estimate_request?: PrismaEstimateRequest;
+  proposal?: PrismaProposal;
 };
 export class JobMapping {
   static toDomain({
@@ -20,7 +19,9 @@ export class JobMapping {
     created_at,
     id,
     proposal_id,
+    estimate_request_id,
     updated_at,
+    estimate_request,
     proposal,
   }: JobComplete) {
     return Job.create(
@@ -29,6 +30,34 @@ export class JobMapping {
         proposal_id,
         created_at,
         updated_at,
+        estimate_request_id,
+        estimate_request:
+          estimate_request &&
+          EstimateRequest.create(
+            {
+              finished_at: estimate_request.finished_at,
+              address: {
+                city: estimate_request.address_city,
+                latitude: estimate_request.latitude,
+                longitude: estimate_request.longitude,
+                neighborhood: estimate_request.address_neighborhood,
+                number: estimate_request.address_number,
+                postal_code: estimate_request.address_postal_code,
+                state: estimate_request.address_state,
+                street: estimate_request.address_street,
+              },
+              category: estimate_request.category,
+              description: estimate_request.description,
+              email: estimate_request.email,
+              footage: estimate_request.footage,
+              name: estimate_request.name,
+              phone: estimate_request.phone,
+              user_id: estimate_request.user_id,
+              created_at: estimate_request.created_at,
+              updated_at: estimate_request.updated_at,
+            },
+            new UniqueEntityID(estimate_request.id),
+          ),
         proposal:
           proposal &&
           Proposal.create(
@@ -40,37 +69,6 @@ export class JobMapping {
               estimate_request_id: proposal.estimate_request_id,
               approved_at: proposal.approved_at,
               created_at: proposal.created_at,
-              estimate_request:
-                proposal.estimateRequest &&
-                EstimateRequest.create(
-                  {
-                    finished_at: proposal.estimateRequest.finished_at,
-                    address: {
-                      city: proposal.estimateRequest.address_city,
-                      latitude: proposal.estimateRequest.latitude,
-                      longitude: proposal.estimateRequest.longitude,
-                      neighborhood:
-                        proposal.estimateRequest.address_neighborhood,
-                      number: proposal.estimateRequest.address_number,
-                      postal_code: proposal.estimateRequest.address_postal_code,
-                      state: proposal.estimateRequest.address_state,
-                      street: proposal.estimateRequest.address_street,
-                    },
-                    category: proposal.estimateRequest.category,
-                    description: proposal.estimateRequest.description,
-                    email: proposal.estimateRequest.email,
-                    footage: proposal.estimateRequest.footage,
-                    name: proposal.estimateRequest.name,
-                    phone: proposal.estimateRequest.phone,
-                    user_id: proposal.estimateRequest.user_id,
-                    created_at: proposal.estimateRequest.created_at,
-                    // estimate_request_files:
-                    //   proposal.estimateRequest.estimate_request_files,
-
-                    updated_at: proposal.estimateRequest.updated_at,
-                  },
-                  new UniqueEntityID(proposal.estimateRequest.id),
-                ),
               reject_at: proposal.reject_at,
               updated_at: proposal.updated_at,
             },
@@ -86,6 +84,7 @@ export class JobMapping {
       id: job.id.toString(),
       company_id: job.company_id,
       proposal_id: job.proposal_id,
+      estimate_request_id: job.estimate_request_id,
       created_at: job.created_at,
       updated_at: job.updated_at,
     };

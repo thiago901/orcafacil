@@ -6,6 +6,7 @@ import { Either, right } from '@core/common/entities/either';
 interface RequestProps {
   company_id: string;
   proposal_id: string;
+  estimate_request_id: string;
 }
 
 type ResponseProps = Either<
@@ -22,11 +23,14 @@ export class CreateJobUseCase {
   async execute({
     company_id,
     proposal_id,
+    estimate_request_id,
   }: RequestProps): Promise<ResponseProps> {
     const job = Job.create({
       company_id,
       proposal_id,
+      estimate_request_id,
     });
+
     await this.jobRepository.create(job);
 
     return right({ job });

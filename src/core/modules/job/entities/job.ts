@@ -1,14 +1,17 @@
 import { Entity } from '@core/common/entities/entity';
 import { Optional } from '@core/common/entities/optional';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
+import { EstimateRequest } from '@core/modules/estimate-request/entities/estimate-request';
 import { Proposal } from '@core/modules/proposal/entities/proposal';
 
 export interface JobProps {
   company_id: string;
   proposal_id: string;
+  estimate_request_id: string;
   created_at: Date;
   updated_at: Date | null;
   proposal?: Proposal;
+  estimate_request?: EstimateRequest;
 }
 
 export class Job extends Entity<JobProps> {
@@ -29,6 +32,9 @@ export class Job extends Entity<JobProps> {
   get company_id() {
     return this.props.company_id;
   }
+  get estimate_request_id() {
+    return this.props.estimate_request_id;
+  }
 
   get proposal_id() {
     return this.props.proposal_id;
@@ -41,5 +47,8 @@ export class Job extends Entity<JobProps> {
   }
   get proposal() {
     return this.props.proposal;
+  }
+  get estimate_request() {
+    return this.props.estimate_request;
   }
 }
