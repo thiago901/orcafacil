@@ -14,14 +14,14 @@ async function bootstrap() {
     origin:
       envService.get('ENVIRONMENT') === 'DEV'
         ? '*'
-        : ['https://orcafacilweb.vercel.app', '*'],
+        : ['https://orcafacilweb.vercel.app', 'https://orcalink.com.br'],
 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   });
   patchNestJsSwagger();
   const config = new DocumentBuilder()
-    .setTitle('OrçaFacil API')
-    .setDescription('Documentação das APIs do OrçaFacil')
+    .setTitle('OrçaLink API')
+    .setDescription('Documentação das APIs do OrçaLink')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

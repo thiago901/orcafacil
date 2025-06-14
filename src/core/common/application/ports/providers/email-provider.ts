@@ -1,5 +1,4 @@
 export type EmailProviderResponseProps = {
-  from: string;
   to: string;
   subject: string;
   templatePath: string;

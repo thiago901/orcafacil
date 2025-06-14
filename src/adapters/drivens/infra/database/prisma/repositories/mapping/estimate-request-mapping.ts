@@ -59,6 +59,7 @@ export class EstimateRequestMapping {
                 password: '',
                 phone: user.phone,
                 role: user.role,
+                active: user.active,
               },
               new UniqueEntityID(user.id),
             ),

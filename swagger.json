@@ -339,6 +339,34 @@
         ]
       }
     },
+    "/users/activate/{token}": {
+      "post": {
+        "operationId": "UserController_activateUser",
+        "parameters": [
+          {
+            "name": "token",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Users"
+        ]
+      }
+    },
     "/users/{id}/file": {
       "patch": {
         "operationId": "UserController_uploadFiles",
@@ -1355,8 +1383,8 @@
     }
   },
   "info": {
-    "title": "OrçaFacil API",
-    "description": "Documentação das APIs do OrçaFacil",
+    "title": "OrçaLink API",
+    "description": "Documentação das APIs do OrçaLink",
     "version": "1.0",
     "contact": {}
   },

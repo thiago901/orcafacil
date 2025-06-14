@@ -14,6 +14,7 @@ export interface UserProps {
   company?: Company | null;
   role: string;
   plan_id?: string | null;
+  active: boolean;
 }
 
 export class User extends Entity<UserProps> {
@@ -27,6 +28,7 @@ export class User extends Entity<UserProps> {
         created_at: props.created_at ?? new Date(),
         updated_at: props.updated_at ?? new Date(),
         plan_id: props.plan_id ?? 'free',
+        active: props.active ?? false,
       },
       id,
     );
@@ -61,6 +63,13 @@ export class User extends Entity<UserProps> {
   }
   set phone(phone: string) {
     this.props.phone = phone;
+    this.touch();
+  }
+  get active() {
+    return this.props.active;
+  }
+  set active(active: boolean) {
+    this.props.active = active;
     this.touch();
   }
 

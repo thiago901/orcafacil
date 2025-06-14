@@ -14,6 +14,10 @@ export const schemaEnv = z.object({
   FIREBASE_DATABASE_URL: z.coerce.string(),
   NOMINATIM_POSTAL_CODE: z.coerce.string(),
   RESEND_EMAIL_KEY: z.coerce.string(),
+  RESEND_EMAIL_FROM: z.coerce
+    .string()
+    .optional()
+    .default('noreply@orcalink.com.br'),
   WEB_APPLICATION_URL: z.coerce.string(),
   LOCATION_IQ_URL: z.coerce.string(),
   LOCATION_IQ_KEY: z.coerce.string(),

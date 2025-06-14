@@ -38,6 +38,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadProfileImageUseCase } from '@core/modules/user/application/use-case/upload-profile-image-use-case';
 import { CurrentUser } from '@adapters/drivens/infra/auth/current-user-decorator';
 import { TokenPayload } from '@adapters/drivens/infra/auth/jwt.strategy';
+import { ActivateUserUseCase } from '@core/modules/user/application/use-case/acivate-user-use-case';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -51,6 +52,7 @@ export class UserController {
     private readonly findUserByIdUseCase: FindUserByIdUseCase,
     private readonly listAllUsersUseCase: ListAllUsersUseCase,
     private readonly uploadProfileImageUseCase: UploadProfileImageUseCase,
+    private readonly activateUserUseCase: ActivateUserUseCase,
   ) {}
 
   @Post('/')
@@ -98,13 +100,25 @@ export class UserController {
   @Get('/profile/me')
   @HttpCode(200)
   async profile(@CurrentUser() user: TokenPayload) {
-    console.log('user', user);
-
     const result = await this.findUserByIdUseCase.execute({ id: user.sub });
     if (result.isLeft()) {
       throw new HttpException(result.value.message, HttpStatus.NOT_FOUND);
     }
     return { result: UserMapping.toView(result.value.user) };
+  }
+  @Post('/activate/:token')
+  @HttpCode(200)
+  @Public()
+  async activateUser(@Param('token') token: string) {
+    const result = await this.activateUserUseCase.execute({ token });
+    if (result.isLeft()) {
+      throw new HttpException(result.value.message, HttpStatus.NOT_FOUND);
+    }
+    return {
+      result: {
+        message: 'SUCESS',
+      },
+    };
   }
 
   @Get('/')

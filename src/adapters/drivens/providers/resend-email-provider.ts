@@ -18,7 +18,6 @@ export class ResendEmailProvider implements EmailProvider {
   }
 
   async send({
-    from,
     templatePath,
     variables,
     subject,
@@ -28,7 +27,7 @@ export class ResendEmailProvider implements EmailProvider {
     const compileTemplate = Handlebars.compile(templateFileContent);
     const html = compileTemplate(variables);
     await this.resend.emails.send({
-      from,
+      from: this.env.get('RESEND_EMAIL_FROM'),
       to,
       subject,
       html,

@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
   Post,
+  UnauthorizedException,
   UseGuards,
   UseInterceptors,
   UsePipes,
@@ -47,7 +48,7 @@ export class SessionController {
   async createSession(@Body() body: AuthenticateUserProps) {
     const result = await this.createSessionUseCase.execute(body);
     if (result.isLeft()) {
-      throw new HttpException(result.value.message, HttpStatus.UNAUTHORIZED);
+      throw new UnauthorizedException(result.value.message);
     }
     return { result: { token: result.value.token } };
   }

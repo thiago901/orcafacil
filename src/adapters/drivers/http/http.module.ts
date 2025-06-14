@@ -54,12 +54,27 @@ import { PlanController } from './controllers/plan-controller';
 import { PlanModule } from '@core/modules/plan/plan.module';
 import { PlanRepository } from '@core/modules/plan/application/ports/providers/plan-repository';
 import { PrismaPlanRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-plan-repository';
+import { UserTokenRepository } from '@core/modules/user/application/ports/repositories/user-token-repository';
+import { PrismaUserTokenRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-user-token-repository';
 
 @Module({
   imports: [
     WebSocketModule,
     DatabaseModule,
-    UserModule,
+
+    {
+      module: UserModule,
+      providers: [
+        {
+          provide: UserRepository,
+          useClass: PrismaUserRepository,
+        },
+        {
+          provide: UserTokenRepository,
+          useClass: PrismaUserTokenRepository,
+        },
+      ],
+    },
     {
       module: JobModule,
       providers: [

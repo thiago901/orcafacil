@@ -5,125 +5,137 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DATABASE_DIRECT_URL")
 }
 
 model User {
-  id         String    @id @default(uuid())
-  name       String
-  email      String
-  phone      String
-  password   String
-  avatar     String?
-  created_at DateTime  @map("created_at")
-  updated_at DateTime? @map("updated_at")
+  id               String            @id @default(uuid())
+  name             String
+  email            String
+  phone            String
+  password         String
+  avatar           String?
+  created_at       DateTime          @map("created_at")
+  updated_at       DateTime?         @map("updated_at")
   estimateRequests EstimateRequest[]
-  plan_id String?
-  role String @default("customer")
+  plan_id          String?
+  role             String            @default("customer")
+  active           Boolean           @default(false)
 
-  companies  Company[] 
-  plan Plan? @relation(fields: [plan_id], references: [id])
+  companies  Company[]
+  plan       Plan?       @relation(fields: [plan_id], references: [id])
   plan_usage PlanUsage[]
+  UserToken  UserToken[]
 
   @@map("users")
 }
 
+model UserToken {
+  id         String   @id @default(uuid())
+  type       String
+  token      String   @unique
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id])
+  used Boolean
+  expires_at DateTime
+  created_at DateTime @default(now())
+
+  @@map("user_tokens")
+}
 
 model Notification {
-  id         String    @id @default(uuid())
-  title       String
-  type      String
-  message   String
-  read     Boolean
+  id           String    @id @default(uuid())
+  title        String
+  type         String
+  message      String
+  read         Boolean
   recipient_id String
-  created_at DateTime  @map("created_at")
-  updated_at DateTime? @map("updated_at")
-
+  created_at   DateTime  @map("created_at")
+  updated_at   DateTime? @map("updated_at")
 
   @@map("notifications")
 }
 
 model Plan {
-  id         String   @id
-  name       String
-  description       String?
-  resources  Json     // Ex: { proposalsPerMonth: 5 }
-  price_month Float @default(0)
-  price_year Float @default(0)
-  price_id String?
-  actived    Boolean  @default(true)
-  created_at DateTime @default(now()) @map("created_at")
-  updated_at DateTime? @map("updated_at")
-  users      User[]   // Relacionamento reverso
+  id          String    @id
+  name        String
+  description String?
+  resources   Json // Ex: { proposalsPerMonth: 5 }
+  price_month Float     @default(0)
+  price_year  Float     @default(0)
+  price_id    String?
+  actived     Boolean   @default(true)
+  created_at  DateTime  @default(now()) @map("created_at")
+  updated_at  DateTime? @map("updated_at")
+  users       User[] // Relacionamento reverso
 
   @@map("plans")
 }
 
 model PlanUsage {
-  id        String   @id @default(uuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  resource  String   // Ex: "proposalsPerMonth"
-  count     Int      @default(0)
-  period    DateTime // Início do mês
+  id       String   @id @default(uuid())
+  userId   String
+  user     User     @relation(fields: [userId], references: [id])
+  resource String // Ex: "proposalsPerMonth"
+  count    Int      @default(0)
+  period   DateTime // Início do mês
 
   @@unique([userId, resource, period])
 }
 
 model EstimateRequest {
-  id          String  @id @default(uuid())
-  footage     Int
-  name        String
-  phone       String
-  email       String
-  description String
-  location Unsupported("geography(Point,4326)")?
-  user_id     String? @map("user_id")
-  address_street String
-  address_number String
-  address_postal_code String
+  id                   String                                @id @default(uuid())
+  footage              Int
+  name                 String
+  phone                String
+  email                String
+  description          String
+  location             Unsupported("geography(Point,4326)")?
+  user_id              String?                               @map("user_id")
+  address_street       String
+  address_number       String
+  address_postal_code  String
   address_neighborhood String
-  address_state String
-  address_city String
-  latitude    Float
-  longitude   Float
-  category   String @default("Pintor")
+  address_state        String
+  address_city         String
+  latitude             Float
+  longitude            Float
+  category             String                                @default("Pintor")
 
-
-  created_at DateTime  @map("created_at")
-  updated_at DateTime? @map("updated_at")
+  created_at  DateTime  @map("created_at")
+  updated_at  DateTime? @map("updated_at")
   finished_at DateTime? @map("finished_at")
 
   user      User?                 @relation(fields: [user_id], references: [id])
   files     EstimateRequestFile[]
   proposals Proposal[]
-  messages Message[]
-  Job Job[]
+  messages  Message[]
+  Job       Job[]
 
   @@map("estimate_request")
 }
 
 model Message {
-  id                String           @id @default(uuid())
-  content           String
-  sender        SenderType       // 'CLIENT' ou 'COMPANY'
-  type  String
+  id                  String     @id @default(uuid())
+  content             String
+  sender              SenderType // 'CLIENT' ou 'COMPANY'
+  type                String
   estimate_request_id String
-  company_id String
-  company_name String
-  user_name String
-  read Boolean? @default(false)
-  created_at         DateTime         @default(now())
-  updated_at         DateTime         @default(now())
+  company_id          String
+  company_name        String
+  user_name           String
+  read                Boolean?   @default(false)
+  created_at          DateTime   @default(now())
+  updated_at          DateTime   @default(now())
 
-  estimate_request   EstimateRequest  @relation(fields: [estimate_request_id], references: [id])
+  estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
 
   @@map("messages")
 }
@@ -134,11 +146,11 @@ enum SenderType {
 }
 
 model EstimateRequestFile {
-  id                  String   @id @default(uuid())
+  id                  String    @id @default(uuid())
   url                 String
-  estimate_request_id String   @map("estimate_request_id")
-  created_at DateTime  @map("created_at")
-  updated_at DateTime? @map("updated_at")
+  estimate_request_id String    @map("estimate_request_id")
+  created_at          DateTime  @map("created_at")
+  updated_at          DateTime? @map("updated_at")
 
   estimateRequest EstimateRequest @relation(fields: [estimate_request_id], references: [id])
 
@@ -146,7 +158,7 @@ model EstimateRequestFile {
 }
 
 model File {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   name       String
   type       String
   created_at DateTime  @map("created_at")
@@ -160,7 +172,7 @@ model File {
 model Post {
   id         String    @id @default(uuid())
   title      String
-  body       String   @db.Text
+  body       String    @db.Text
   user_id    String    @map("user_id")
   company_id String    @map("company_id")
   status     String
@@ -172,31 +184,33 @@ model Post {
 
   @@map("posts")
 }
+
 model TagPost {
-  id         String    @id @default(uuid())
-  tag_id String
+  id      String @id @default(uuid())
+  tag_id  String
   post_id String
-  tag Tag @relation(fields: [tag_id], references: [id])
+  tag     Tag    @relation(fields: [tag_id], references: [id])
 
   @@map("tag_posts")
 }
+
 model Tag {
-  id     String  @id @default(uuid())
-  name   String
-  post_id String @map("post_id")
+  id         String    @id @default(uuid())
+  name       String
+  post_id    String    @map("post_id")
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
 
-  post Post @relation(fields: [post_id], references: [id])
+  post Post      @relation(fields: [post_id], references: [id])
   tags TagPost[]
+
   @@map("tags")
 }
 
-
 model PostFile {
-  id      String  @id @default(uuid())
-  post_id  String @map("post_id")
-  file_id String @map("files_id")
+  id         String @id @default(uuid())
+  post_id    String @map("post_id")
+  file_id    String @map("files_id")
   company_id String @map("company_id")
 
   post Post @relation(fields: [post_id], references: [id])
@@ -227,9 +241,8 @@ model Proposal {
   @@map("proposals")
 }
 
-
 model CompanyAddress {
-  id         String    @id @default(uuid())
+  id         String                                @id @default(uuid())
   name       String
   address    String
   city       String
@@ -238,10 +251,10 @@ model CompanyAddress {
   zip        String
   latitude   Float
   longitude  Float
-  created_at DateTime  @map("created_at")
-  updated_at DateTime? @map("updated_at")
-  location Unsupported("geography(Point,4326)")?
-  company Company?
+  created_at DateTime                              @map("created_at")
+  updated_at DateTime?                             @map("updated_at")
+  location   Unsupported("geography(Point,4326)")?
+  company    Company?
 
   @@map("company_address")
 }
@@ -258,28 +271,27 @@ model Company {
   owner_id   String  @map("owner_id")
   address_id String  @unique
 
-  owner       User     @relation(fields: [owner_id], references: [id])
+  owner     User             @relation(fields: [owner_id], references: [id])
   proposals Proposal[]
   jobs      Job[]
-  services CompanyService[]
+  services  CompanyService[]
 
   address CompanyAddress @relation(fields: [address_id], references: [id])
 
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
-  
 
   @@map("company")
 }
 
 model Job {
-  id         String  @id @default(uuid())
-  company_id String @map("company_id")
-  proposal_id String @unique @map("proposal_id")
-  estimate_request_id String    @map("estimate_request_id")
+  id                  String @id @default(uuid())
+  company_id          String @map("company_id")
+  proposal_id         String @unique @map("proposal_id")
+  estimate_request_id String @map("estimate_request_id")
 
-  company  Company  @relation(fields: [company_id], references: [id])
-  proposal Proposal @relation(fields: [proposal_id], references: [id])
+  company          Company         @relation(fields: [company_id], references: [id])
+  proposal         Proposal        @relation(fields: [proposal_id], references: [id])
   estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
 
   created_at DateTime  @map("created_at")
@@ -289,26 +301,26 @@ model Job {
 }
 
 model CompanyService {
-  id         String    @id @default(uuid())
-  name String
+  id            String    @id @default(uuid())
+  name          String
   category_name String
-  company_id String    
-  category_id String   
-  created_at DateTime  
-  updated_at DateTime? 
+  company_id    String
+  category_id   String
+  created_at    DateTime
+  updated_at    DateTime?
 
   company  Company  @relation(fields: [company_id], references: [id])
   category Category @relation(fields: [category_id], references: [id])
 
   @@map("company_services")
 }
-model Category {
-  id         String    @id @default(uuid())
-  name       String
-  created_at DateTime  @map("created_at")
-  updated_at DateTime? @map("updated_at")
-  companies CompanyService[]
 
+model Category {
+  id         String           @id @default(uuid())
+  name       String
+  created_at DateTime         @map("created_at")
+  updated_at DateTime?        @map("updated_at")
+  companies  CompanyService[]
 
   @@map("categories")
 }
