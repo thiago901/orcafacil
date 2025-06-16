@@ -4,8 +4,6 @@ import {
   Controller,
   Headers,
   HttpCode,
-  HttpException,
-  HttpStatus,
   Post,
   Req,
   UseInterceptors,
@@ -115,7 +113,7 @@ export class PaymentController {
 
         // Buscar o plano usando o price_id
         const plan = await this.prismaService.plan.findFirst({
-          where: { price_id: priceId }, // ajuste esse campo conforme seu model
+          where: {}, // ajuste esse campo conforme seu model
         });
 
         if (!plan) {
@@ -126,7 +124,7 @@ export class PaymentController {
         // Atualiza o usuário
         await this.prismaService.user.updateMany({
           where: { email: customerEmail },
-          data: { plan_id: plan.id },
+          data: {},
         });
 
         console.log(

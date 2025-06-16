@@ -21,7 +21,6 @@ export async function planSeed() {
         price_month: 0.0,
         price_year: 0.0,
         description: 'Ideal para começar',
-        price_id: '',
       },
       {
         id: 'basic',
@@ -34,7 +33,6 @@ export async function planSeed() {
         price_month: 19.9,
         price_year: 210.0,
         description: 'Para profissionais ativos',
-        price_id: 'price_1RXsaUQitTm5wxzyWdMMd0r1',
       },
       {
         id: 'profissional',
@@ -47,7 +45,6 @@ export async function planSeed() {
         price_month: 79.9,
         price_year: 798.96,
         description: 'Para profissionais ativos',
-        price_id: 'price_1RXsatQitTm5wxzymxAJfvvM',
       },
     ],
   });

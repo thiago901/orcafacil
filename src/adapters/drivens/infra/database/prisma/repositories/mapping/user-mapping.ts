@@ -19,7 +19,7 @@ export class UserMapping {
     updated_at,
     company,
     role,
-    plan_id,
+
     active,
   }: UserComplete) {
     return User.create(
@@ -33,7 +33,7 @@ export class UserMapping {
         phone,
         role,
         active,
-        plan_id,
+
         company: company
           ? Company.create(
               {
@@ -67,7 +67,7 @@ export class UserMapping {
       role: user.role,
       password: user.password,
       phone: user.phone,
-      plan_id: user.plan_id,
+
       active: user.active,
     };
   }

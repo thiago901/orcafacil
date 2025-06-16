@@ -25,16 +25,66 @@ model User {
   created_at       DateTime          @map("created_at")
   updated_at       DateTime?         @map("updated_at")
   estimateRequests EstimateRequest[]
-  plan_id          String?
   role             String            @default("customer")
   active           Boolean           @default(false)
 
-  companies  Company[]
-  plan       Plan?       @relation(fields: [plan_id], references: [id])
+  companies Company[]
+  UserToken UserToken[]
+
+  user_plans UserPlan[]
   plan_usage PlanUsage[]
-  UserToken  UserToken[]
 
   @@map("users")
+}
+
+model Plan {
+  id             String    @id
+  name           String
+  description    String?
+  resources      Json // Ex: { proposalsPerMonth: 5 }
+  price_month    Float     @default(0)
+  price_id_month String?
+  price_year     Float     @default(0)
+  price_id_year  String?
+  actived        Boolean   @default(true)
+  created_at     DateTime  @default(now()) @map("created_at")
+  updated_at     DateTime? @map("updated_at")
+
+  user_plans UserPlan[]
+
+  @@map("plans")
+}
+
+model UserPlan {
+  id         String      @id @default(uuid())
+  user_id    String
+  plan_id    String
+  status     String      @default("active") // active, cancelled, expired, etc
+  plan_type  String      @default("monthly") // monthly, yearly
+  price      Float       @default(0)
+  start_date DateTime    @default(now())
+  end_date   DateTime?
+  
+  user       User        @relation(fields: [user_id], references: [id])
+  plan       Plan        @relation(fields: [plan_id], references: [id])
+  plan_usage PlanUsage[]
+
+  @@map("user_plans")
+}
+
+model PlanUsage {
+  id           String   @id @default(uuid())
+  user_plan_id String
+  resource     String
+  count        Int      @default(0)
+  period       DateTime
+
+  user_plan UserPlan @relation(fields: [user_plan_id], references: [id])
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+
+  @@unique([user_plan_id, resource, period])
+  @@map("plan_usage")
 }
 
 model UserToken {
@@ -43,7 +93,7 @@ model UserToken {
   token      String   @unique
   user_id    String
   user       User     @relation(fields: [user_id], references: [id])
-  used Boolean
+  used       Boolean
   expires_at DateTime
   created_at DateTime @default(now())
 
@@ -61,33 +111,6 @@ model Notification {
   updated_at   DateTime? @map("updated_at")
 
   @@map("notifications")
-}
-
-model Plan {
-  id          String    @id
-  name        String
-  description String?
-  resources   Json // Ex: { proposalsPerMonth: 5 }
-  price_month Float     @default(0)
-  price_year  Float     @default(0)
-  price_id    String?
-  actived     Boolean   @default(true)
-  created_at  DateTime  @default(now()) @map("created_at")
-  updated_at  DateTime? @map("updated_at")
-  users       User[] // Relacionamento reverso
-
-  @@map("plans")
-}
-
-model PlanUsage {
-  id       String   @id @default(uuid())
-  userId   String
-  user     User     @relation(fields: [userId], references: [id])
-  resource String // Ex: "proposalsPerMonth"
-  count    Int      @default(0)
-  period   DateTime // Início do mês
-
-  @@unique([userId, resource, period])
 }
 
 model EstimateRequest {
