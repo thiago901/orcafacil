@@ -2,10 +2,16 @@ import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { Company } from '@core/modules/company/entities/company';
 import { User } from '@core/modules/user/entities/user';
 
-import { User as UserPrisma, Company as CompanyPrisma } from '@prisma/client';
+import {
+  User as UserPrisma,
+  Company as CompanyPrisma,
+  UserPlan as PrismaUserPlan,
+} from '@prisma/client';
+import { UserPlanMapping } from './user-plan-mapping';
 
 type UserComplete = UserPrisma & {
   company?: CompanyPrisma;
+  user_plans?: PrismaUserPlan[];
 };
 export class UserMapping {
   static toDomain({
@@ -19,7 +25,7 @@ export class UserMapping {
     updated_at,
     company,
     role,
-
+    user_plans,
     active,
   }: UserComplete) {
     return User.create(
@@ -33,7 +39,7 @@ export class UserMapping {
         phone,
         role,
         active,
-
+        plan: user_plans?.map(UserPlanMapping.toDomain)[0] ?? null,
         company: company
           ? Company.create(
               {
@@ -67,7 +73,6 @@ export class UserMapping {
       role: user.role,
       password: user.password,
       phone: user.phone,
-
       active: user.active,
     };
   }

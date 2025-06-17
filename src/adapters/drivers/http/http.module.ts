@@ -78,6 +78,10 @@ import { PlanRepository } from '@core/modules/plan/application/ports/repositorie
           provide: UserTokenRepository,
           useClass: PrismaUserTokenRepository,
         },
+        {
+          provide: UserPlanRepository,
+          useClass: PrismaUserPlanRepository,
+        },
       ],
     },
     {
@@ -181,7 +185,6 @@ import { PlanRepository } from '@core/modules/plan/application/ports/repositorie
         },
       ],
     },
-
     {
       module: PlanModule,
       providers: [
@@ -197,10 +200,37 @@ import { PlanRepository } from '@core/modules/plan/application/ports/repositorie
           provide: UserPlanRepository,
           useClass: PrismaUserPlanRepository,
         },
+        {
+          provide: UserRepository,
+          useClass: PrismaUserRepository,
+        },
       ],
     },
     {
       module: PaymentModule,
+      imports: [
+        {
+          module: PlanModule,
+          providers: [
+            {
+              provide: PlanRepository,
+              useClass: PrismaPlanRepository,
+            },
+            {
+              provide: PlanUsageRepository,
+              useClass: PrismaPlanUsageRepository,
+            },
+            {
+              provide: UserRepository,
+              useClass: PrismaUserRepository,
+            },
+            {
+              provide: UserPlanRepository,
+              useClass: PrismaUserPlanRepository,
+            },
+          ],
+        },
+      ],
     },
   ],
 

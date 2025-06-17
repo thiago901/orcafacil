@@ -22,14 +22,18 @@ export class PrismaUserPlanRepository implements UserPlanRepository {
         user_id: userId,
         status: 'active',
       },
+      include: {
+        plan: true,
+      },
     });
 
     return userPlan ? UserPlanMapping.toDomain(userPlan) : null;
   }
 
   async create(userPlan: UserPlan): Promise<void> {
+    const data = UserPlanMapping.toPrisma(userPlan);
     await this.prisma.userPlan.create({
-      data: UserPlanMapping.toPrisma(userPlan),
+      data,
     });
   }
 

@@ -26,6 +26,8 @@ import { PlanUsageRepository } from '@core/modules/plan/application/ports/reposi
 import { PrismaPlanUsageRepository } from '../infra/database/prisma/repositories/prisma-plan-usage-repository';
 import { UserPlanRepository } from '@core/modules/plan/application/ports/repositories/user-plan-repository';
 import { PrismaUserPlanRepository } from '../infra/database/prisma/repositories/prisma-user-plan-repository';
+import { UserRepository } from '@core/modules/user/application/ports/repositories/user-repository';
+import { PrismaUserRepository } from '../infra/database/prisma/repositories/prisma-user-repository';
 
 @Module({
   imports: [
@@ -43,6 +45,10 @@ import { PrismaUserPlanRepository } from '../infra/database/prisma/repositories/
         {
           provide: UserPlanRepository,
           useClass: PrismaUserPlanRepository,
+        },
+        {
+          provide: UserRepository,
+          useClass: PrismaUserRepository,
         },
       ],
     },

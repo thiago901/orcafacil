@@ -26,7 +26,11 @@ export class CreateSessionUseCase {
     const user = await this.userRepository.findByEmail(email, {
       relations: {
         companies: true,
-        plan: true,
+        user_plans: {
+          where: {
+            status: 'active',
+          },
+        },
       },
     });
 
@@ -50,7 +54,7 @@ export class CreateSessionUseCase {
       name: user.name,
       company_id: user.company?.id.toString(),
       role: user.role,
-      plan_id: user.plan_id,
+      plan_id: user.plan?.plan_id,
     });
 
     return right({ token });

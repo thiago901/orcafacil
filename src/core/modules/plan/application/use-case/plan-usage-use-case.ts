@@ -52,7 +52,7 @@ export class PlanUsageUseCase {
         user_plan_id: user_plan.id.toString(),
         resource,
         count: 1,
-        period,
+        period: type === 'monthly' ? period : null,
         created_at: now,
         user_id,
       });

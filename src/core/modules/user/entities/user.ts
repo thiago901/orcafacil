@@ -2,6 +2,7 @@ import { Entity } from '@core/common/entities/entity';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { Optional } from '@core/common/entities/optional';
 import { Company } from '@core/modules/company/entities/company';
+import { UserPlan } from '@core/modules/plan/entities/user-plan';
 
 export interface UserProps {
   name: string;
@@ -13,7 +14,7 @@ export interface UserProps {
   updated_at: Date;
   company?: Company | null;
   role: string;
-  plan_id?: string | null;
+  plan?: UserPlan | null;
   active: boolean;
 }
 
@@ -27,7 +28,7 @@ export class User extends Entity<UserProps> {
         ...props,
         created_at: props.created_at ?? new Date(),
         updated_at: props.updated_at ?? new Date(),
-        plan_id: props.plan_id ?? 'free',
+        plan: props.plan,
         active: props.active ?? false,
       },
       id,
@@ -98,7 +99,10 @@ export class User extends Entity<UserProps> {
   get company() {
     return this.props.company;
   }
-  get plan_id() {
-    return this.props.plan_id;
+  get plan() {
+    return this.props.plan;
+  }
+  set plan(plan: UserPlan | null | undefined) {
+    this.props.plan = plan;
   }
 }

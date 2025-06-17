@@ -27,6 +27,7 @@ import {
 import Stripe from 'stripe';
 import { PrismaService } from '@adapters/drivens/infra/database/prisma/prisma.service';
 import { Public } from '@adapters/drivens/infra/auth/public';
+import { SubscribePlanUseCase } from '@core/modules/plan/application/use-case/subscribe-plan-use-case';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-05-28.basil',
@@ -39,6 +40,7 @@ export class PaymentController {
   constructor(
     private readonly createCustomerUseCase: CreateCustomerUseCase,
     private readonly createPaymentSessionUseCase: CreatePaymentSessionUseCase,
+    private readonly subscribePlanUseCase: SubscribePlanUseCase,
     private readonly prismaService: PrismaService,
   ) {}
 
@@ -106,14 +108,24 @@ export class PaymentController {
         );
 
         const priceId = sessionWithLineItems.line_items?.data[0]?.price?.id;
+        const lookup_key =
+          sessionWithLineItems.line_items?.data[0]?.price?.lookup_key;
 
         const customerEmail = session.customer_details?.email;
 
         if (!customerEmail || !priceId) break;
 
         // Buscar o plano usando o price_id
+        let whereClause: any = {};
+        if (lookup_key === 'monthly') {
+          whereClause = { price_id_month: priceId };
+        } else if (lookup_key === 'yearly') {
+          whereClause = { price_id_year: priceId };
+        }
         const plan = await this.prismaService.plan.findFirst({
-          where: {}, // ajuste esse campo conforme seu model
+          where: {
+            ...whereClause,
+          }, // ajuste esse campo conforme seu model
         });
 
         if (!plan) {
@@ -122,10 +134,15 @@ export class PaymentController {
         }
 
         // Atualiza o usuário
-        await this.prismaService.user.updateMany({
-          where: { email: customerEmail },
-          data: {},
+        await this.subscribePlanUseCase.execute({
+          plan_id: plan.id,
+          user_id: customerEmail, // Aqui você deve ter o ID do usuário, não o email
+          plan_type: lookup_key as 'monthly' | 'yearly',
         });
+        // await this.prismaService.user.updateMany({
+        //   where: { email: customerEmail },
+        //   data: {},
+        // });
 
         console.log(
           `Plano atualizado para o usuário ${customerEmail}: ${plan.name}`,

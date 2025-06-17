@@ -20,6 +20,13 @@ export class CustomerUsagePlanProvider implements UsagePlanProvider {
     resource,
     user_id,
   }: CheckAndConsumeParams): Promise<void> {
-    await this.planUsageUseCase.execute({ user_id, resource, type: 'fixed' });
+    const result = await this.planUsageUseCase.execute({
+      user_id,
+      resource,
+      type: 'fixed',
+    });
+    if (result.isLeft()) {
+      throw result.value;
+    }
   }
 }

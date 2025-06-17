@@ -7,7 +7,7 @@ export class UserMapping {
     email,
     name,
     phone,
-    plan_id,
+    plan,
     role,
     updated_at,
     avatar,
@@ -20,7 +20,7 @@ export class UserMapping {
       phone,
       updated_at,
       avatar,
-      plan_id,
+      plan,
       role,
     };
   }

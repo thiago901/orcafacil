@@ -18,6 +18,7 @@ export class PrismaUserRepository implements UserRepository {
     await this.prisma.user.upsert({
       create: data,
       update: data,
+
       where: { id: user.id.toString() },
     });
   }

@@ -11,7 +11,9 @@ export class PrismaPlanRepository implements PlanRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async getAll(): Promise<Plan[]> {
-    const plans = await this.prisma.plan.findMany();
+    const plans = await this.prisma.plan.findMany({
+      orderBy: { price_month: 'asc' },
+    });
 
     return plans.map((plan) => PlanMapping.toDomain(plan));
   }

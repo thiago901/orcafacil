@@ -6,6 +6,7 @@ import { UserPlanRepository } from '../ports/repositories/user-plan-repository';
 import { ResourceNotFoundError } from '@core/common/errors/common/resource-not-found-error';
 import { PlanType, UserPlan } from '../../entities/user-plan';
 import { addMonths, addYears } from 'date-fns';
+import { UserRepository } from '@core/modules/user/application/ports/repositories/user-repository';
 type RequestProps = {
   plan_id: string;
   user_id: string;
@@ -18,6 +19,7 @@ export class SubscribePlanUseCase {
   constructor(
     private readonly paymentsProvider: PlanRepository,
     private readonly userPlanRepository: UserPlanRepository,
+    private readonly userRepository: UserRepository,
   ) {}
 
   async execute({
@@ -26,9 +28,13 @@ export class SubscribePlanUseCase {
     plan_type,
   }: RequestProps): Promise<ResponseProps> {
     const now = new Date();
-
-    const current_plan =
-      await this.userPlanRepository.findActiveByUserId(user_id);
+    const user = await this.userRepository.findByEmail(user_id);
+    if (!user) {
+      return left(new ResourceNotFoundError('User not found'));
+    }
+    const current_plan = await this.userPlanRepository.findActiveByUserId(
+      user.id.toString(),
+    );
     if (current_plan) {
       current_plan.status = 'expired';
       current_plan.end_date = now;
@@ -41,7 +47,7 @@ export class SubscribePlanUseCase {
     const duration = this.duration(plan_type, now);
 
     const user_plan = UserPlan.create({
-      user_id: user_id,
+      user_id: user.id.toString(),
       plan_id: plan_id,
       plan_type: plan_type,
       price: plan_type === 'monthly' ? plan.price_month : plan.price_year,

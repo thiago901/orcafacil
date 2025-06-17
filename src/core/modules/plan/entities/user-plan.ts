@@ -15,7 +15,7 @@ export interface UserPlanProps {
   end_date?: Date | null;
   created_at: Date;
   updated_at: Date;
-  plan?: Plan;
+  plan?: Plan | null;
 }
 
 export class UserPlan extends Entity<UserPlanProps> {

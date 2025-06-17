@@ -1,11 +1,15 @@
-import { UserPlan as PrismaUserPlan } from '@prisma/client';
+import { UserPlan as PrismaUserPlan, Plan as PrismaPlan } from '@prisma/client';
 import {
   PlanStatus,
   PlanType,
   UserPlan,
 } from '@core/modules/plan/entities/user-plan';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
+import { PlanMapping } from './plan-mapping';
 
+type PrismaUserPlanComplet = PrismaUserPlan & {
+  plan?: PrismaPlan;
+};
 export class UserPlanMapping {
   static toDomain({
     id,
@@ -17,17 +21,20 @@ export class UserPlanMapping {
     start_date,
     end_date,
     created_at,
-  }: PrismaUserPlan): UserPlan {
+    plan,
+  }: PrismaUserPlanComplet): UserPlan {
     return UserPlan.create(
       {
         user_id,
         plan_id,
         status: status as PlanStatus,
         plan_type: plan_type as PlanType,
+
         price,
         start_date,
         end_date,
         created_at,
+        plan: plan ? PlanMapping.toDomain(plan) : null,
       },
       new UniqueEntityID(id),
     );
