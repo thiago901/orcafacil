@@ -4,9 +4,10 @@ import { Optional } from '@core/common/entities/optional';
 
 export interface PlanUsageProps {
   user_plan_id: string;
+  user_id: string;
   resource: string; // Exemplo: 'proposalsPerMonth'
   count: number;
-  period: Date; // Ex: Primeiro dia do mês
+  period: Date | null; // Ex: Primeiro dia do mês
   created_at: Date;
   updated_at: Date;
 }
@@ -49,6 +50,9 @@ export class PlanUsage extends Entity<PlanUsageProps> {
     this.touch();
   }
 
+  get user_id() {
+    return this.props.user_id;
+  }
   get period() {
     return this.props.period;
   }

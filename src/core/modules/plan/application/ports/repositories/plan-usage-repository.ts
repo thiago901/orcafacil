@@ -1,9 +1,10 @@
 import { PlanUsage } from '@core/modules/plan/entities/plan-usage';
+import { ResourcesAllowed } from '../../common/resources-allowed';
 
 export type FindByUserPlanAndPeriodParams = {
   user_plan_id: string;
-  resource: string;
-  period: Date;
+  resource: ResourcesAllowed;
+  period: Date | null;
 };
 export abstract class PlanUsageRepository {
   abstract findByUserPlanAndPeriod(

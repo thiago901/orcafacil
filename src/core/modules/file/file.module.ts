@@ -3,11 +3,7 @@ import { Module } from '@nestjs/common';
 @Module({
   imports: [],
   controllers: [],
-  providers: [
- 
-  ],
-  exports: [
-
-  ],
+  providers: [],
+  exports: [],
 })
 export class FileModule {}

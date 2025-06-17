@@ -1380,6 +1380,44 @@
           "Plan"
         ]
       }
+    },
+    "/plans/subscribe/{plan_id}": {
+      "post": {
+        "operationId": "PlanController_subscribe",
+        "parameters": [
+          {
+            "name": "plan_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscribePlanProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Plan"
+        ]
+      }
     }
   },
   "info": {
@@ -1849,6 +1887,21 @@
         "required": [
           "customer_id",
           "price_id"
+        ]
+      },
+      "SubscribePlanProps": {
+        "type": "object",
+        "properties": {
+          "plan_type": {
+            "type": "string",
+            "enum": [
+              "monthly",
+              "yearly"
+            ]
+          }
+        },
+        "required": [
+          "plan_type"
         ]
       }
     }

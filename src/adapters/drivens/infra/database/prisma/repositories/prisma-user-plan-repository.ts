@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { UserPlan } from '@core/modules/plan/entities/user-plan';
-import { UserPlanRepository } from '@core/modules/plan/application/ports/providers/user-plan-repository';
+import { UserPlanRepository } from '@core/modules/plan/application/ports/repositories/user-plan-repository';
 import { UserPlanMapping } from './mapping/user-plan-mapping';
 
 @Injectable()

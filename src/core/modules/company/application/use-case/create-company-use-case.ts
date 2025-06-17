@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Either, right } from '@core/common/entities/either';
 import { CompanyAddress } from '../../entities/company-address';
 import { AddressFinderProvider } from '@core/common/application/ports/providers/address-finder';
+import { UsagePlanProvider } from '@core/common/application/ports/providers/usage-plan-provider';
 
 type RequestProps = {
   name: string;
@@ -33,6 +34,7 @@ export class CreateCompanyUseCase {
   constructor(
     private readonly companyRepository: CompanyRepository,
     private readonly addressFinderProvider: AddressFinderProvider,
+    private readonly usagePlanProvider: UsagePlanProvider,
   ) {}
 
   async execute({
@@ -44,6 +46,11 @@ export class CreateCompanyUseCase {
     about,
     address,
   }: RequestProps): Promise<ResponseProps> {
+    await this.usagePlanProvider.checkAndConsumeFixed({
+      resource: 'multiCompanySupport',
+      user_id: owner_id,
+    });
+
     const addressData = await this.addressFinderProvider.find({
       city: address.city,
       postal_code: address.zip,

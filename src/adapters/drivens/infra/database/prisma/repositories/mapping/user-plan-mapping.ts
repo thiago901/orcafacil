@@ -1,5 +1,9 @@
 import { UserPlan as PrismaUserPlan } from '@prisma/client';
-import { UserPlan } from '@core/modules/plan/entities/user-plan';
+import {
+  PlanStatus,
+  PlanType,
+  UserPlan,
+} from '@core/modules/plan/entities/user-plan';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 
 export class UserPlanMapping {
@@ -13,19 +17,17 @@ export class UserPlanMapping {
     start_date,
     end_date,
     created_at,
-    updated_at,
   }: PrismaUserPlan): UserPlan {
     return UserPlan.create(
       {
         user_id,
         plan_id,
-        status,
-        plan_type,
+        status: status as PlanStatus,
+        plan_type: plan_type as PlanType,
         price,
         start_date,
         end_date,
         created_at,
-        updated_at,
       },
       new UniqueEntityID(id),
     );
@@ -42,7 +44,6 @@ export class UserPlanMapping {
       start_date: userPlan.start_date,
       end_date: userPlan.end_date ?? null,
       created_at: userPlan.created_at,
-      updated_at: userPlan.updated_at,
     };
   }
 }

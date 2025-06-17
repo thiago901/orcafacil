@@ -29,7 +29,7 @@ export class PlanMapping {
         price_id_year,
         price_id_month,
         name,
-        resources,
+        resources: resources as any,
         updated_at: updated_at ?? new Date(),
       },
       new UniqueEntityID(id),

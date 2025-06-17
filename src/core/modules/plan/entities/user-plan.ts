@@ -1,17 +1,21 @@
 import { Entity } from '@core/common/entities/entity';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { Optional } from '@core/common/entities/optional';
+import { Plan } from './plan';
 
+export type PlanType = 'monthly' | 'yearly';
+export type PlanStatus = 'active' | 'cancelled' | 'expired';
 export interface UserPlanProps {
   user_id: string;
   plan_id: string;
   status: 'active' | 'cancelled' | 'expired';
-  plan_type: 'monthly' | 'yearly';
+  plan_type: PlanType;
   price: number;
   start_date: Date;
   end_date?: Date | null;
   created_at: Date;
   updated_at: Date;
+  plan?: Plan;
 }
 
 export class UserPlan extends Entity<UserPlanProps> {
@@ -73,6 +77,9 @@ export class UserPlan extends Entity<UserPlanProps> {
 
   get updated_at() {
     return this.props.updated_at;
+  }
+  get plan() {
+    return this.props.plan;
   }
 
   private touch() {

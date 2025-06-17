@@ -52,10 +52,15 @@ import { PaymentController } from './controllers/payment-controller';
 import { PaymentModule } from '@core/modules/payment/payment.module';
 import { PlanController } from './controllers/plan-controller';
 import { PlanModule } from '@core/modules/plan/plan.module';
-import { PlanRepository } from '@core/modules/plan/application/ports/providers/plan-repository';
+
 import { PrismaPlanRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-plan-repository';
 import { UserTokenRepository } from '@core/modules/user/application/ports/repositories/user-token-repository';
 import { PrismaUserTokenRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-user-token-repository';
+import { PlanUsageRepository } from '@core/modules/plan/application/ports/repositories/plan-usage-repository';
+import { PrismaPlanUsageRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-plan-usage-repository';
+import { UserPlanRepository } from '@core/modules/plan/application/ports/repositories/user-plan-repository';
+import { PrismaUserPlanRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-user-plan-repository';
+import { PlanRepository } from '@core/modules/plan/application/ports/repositories/plan-repository';
 
 @Module({
   imports: [
@@ -176,9 +181,7 @@ import { PrismaUserTokenRepository } from '@adapters/drivens/infra/database/pris
         },
       ],
     },
-    {
-      module: PaymentModule,
-    },
+
     {
       module: PlanModule,
       providers: [
@@ -186,7 +189,18 @@ import { PrismaUserTokenRepository } from '@adapters/drivens/infra/database/pris
           provide: PlanRepository,
           useClass: PrismaPlanRepository,
         },
+        {
+          provide: PlanUsageRepository,
+          useClass: PrismaPlanUsageRepository,
+        },
+        {
+          provide: UserPlanRepository,
+          useClass: PrismaUserPlanRepository,
+        },
       ],
+    },
+    {
+      module: PaymentModule,
     },
   ],
 

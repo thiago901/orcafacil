@@ -1,11 +1,14 @@
 import {
+  Body,
   Controller,
   Get,
   HttpCode,
   HttpException,
   HttpStatus,
   Param,
+  Post,
   UseInterceptors,
+  UsePipes,
 } from '@nestjs/common';
 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -16,6 +19,13 @@ import { PlanMapping } from '../mapping/plan-mapping';
 import { FindPlanByIdUseCase } from '@core/modules/plan/application/use-case/find-plan-by-id-use-case';
 import { GetAllPlansUseCase } from '@core/modules/plan/application/use-case/get-all-plan-by-id-use-case';
 import { Public } from '@adapters/drivens/infra/auth/public';
+import { SubscribePlanUseCase } from '@core/modules/plan/application/use-case/subscribe-plan-use-case';
+import { CurrentUser } from '@adapters/drivens/infra/auth/current-user-decorator';
+import {
+  SubscribePlanProps,
+  subscribePlanSchema,
+} from './validations/subscribe-plan.validate';
+import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 
 @ApiTags('Plan')
 @ApiBearerAuth()
@@ -25,6 +35,7 @@ export class PlanController {
   constructor(
     private readonly findPlanByIdUseCase: FindPlanByIdUseCase,
     private readonly getAllPlansUseCase: GetAllPlansUseCase,
+    private readonly subscribePlanUseCase: SubscribePlanUseCase,
   ) {}
 
   @Get('/:plan_id')
@@ -45,5 +56,24 @@ export class PlanController {
       throw new HttpException(result.value.message, HttpStatus.UNAUTHORIZED);
     }
     return { result: result.value.plans.map(PlanMapping.toView) };
+  }
+
+  @Post('/subscribe/:plan_id')
+  @HttpCode(200)
+  @UsePipes(new ZodValidationPipe(subscribePlanSchema))
+  async subscribe(
+    @Param('plan_id') plan_id: string,
+    @CurrentUser() user_id: string,
+    @Body() body: SubscribePlanProps,
+  ) {
+    const result = await this.subscribePlanUseCase.execute({
+      plan_id,
+      plan_type: body.plan_type,
+      user_id,
+    });
+    if (result.isLeft()) {
+      throw new HttpException(result.value.message, HttpStatus.UNAUTHORIZED);
+    }
+    return { result: {}, success: true };
   }
 }

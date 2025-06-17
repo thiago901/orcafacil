@@ -17,8 +17,36 @@ import { LocationiqProvider } from './locationiq-provider';
 
 import { StripeProvider } from './stripe-provider';
 import { PaymentsProvider } from '@core/modules/payment/application/ports/providers/payments-provider';
+import { CustomerUsagePlanProvider } from './customer-usage-plan';
+import { UsagePlanProvider } from '@core/common/application/ports/providers/usage-plan-provider';
+import { PlanModule } from '@core/modules/plan/plan.module';
+import { PlanRepository } from '@core/modules/plan/application/ports/repositories/plan-repository';
+import { PrismaPlanRepository } from '../infra/database/prisma/repositories/prisma-plan-repository';
+import { PlanUsageRepository } from '@core/modules/plan/application/ports/repositories/plan-usage-repository';
+import { PrismaPlanUsageRepository } from '../infra/database/prisma/repositories/prisma-plan-usage-repository';
+import { UserPlanRepository } from '@core/modules/plan/application/ports/repositories/user-plan-repository';
+import { PrismaUserPlanRepository } from '../infra/database/prisma/repositories/prisma-user-plan-repository';
 
 @Module({
+  imports: [
+    {
+      module: PlanModule,
+      providers: [
+        {
+          provide: PlanRepository,
+          useClass: PrismaPlanRepository,
+        },
+        {
+          provide: PlanUsageRepository,
+          useClass: PrismaPlanUsageRepository,
+        },
+        {
+          provide: UserPlanRepository,
+          useClass: PrismaUserPlanRepository,
+        },
+      ],
+    },
+  ],
   providers: [
     {
       provide: HashProvider,
@@ -44,6 +72,11 @@ import { PaymentsProvider } from '@core/modules/payment/application/ports/provid
       provide: PaymentsProvider,
       useClass: StripeProvider,
     },
+
+    {
+      provide: UsagePlanProvider,
+      useClass: CustomerUsagePlanProvider,
+    },
     EnvService,
   ],
 
@@ -55,6 +88,7 @@ import { PaymentsProvider } from '@core/modules/payment/application/ports/provid
     EmailProvider,
     AddressFinderProvider,
     PaymentsProvider,
+    UsagePlanProvider,
   ],
 })
 export class ProviderModule {}

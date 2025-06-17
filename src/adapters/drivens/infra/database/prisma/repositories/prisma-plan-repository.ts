@@ -4,7 +4,7 @@ import { PlanMapping } from './mapping/plan-mapping';
 import { Injectable } from '@nestjs/common';
 
 import { Plan } from '@core/modules/plan/entities/plan';
-import { PlanRepository } from '@core/modules/plan/application/ports/providers/plan-repository';
+import { PlanRepository } from '@core/modules/plan/application/ports/repositories/plan-repository';
 
 @Injectable()
 export class PrismaPlanRepository implements PlanRepository {

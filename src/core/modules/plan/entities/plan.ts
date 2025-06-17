@@ -1,11 +1,20 @@
 import { Entity } from '@core/common/entities/entity';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { Optional } from '@core/common/entities/optional';
+import { ResourcesAllowed } from '../application/common/resources-allowed';
 
+export type ResourceConfig = {
+  label: string;
+  limit?: number;
+  active: boolean;
+};
+export type PlanResources = {
+  [key in ResourcesAllowed]: ResourceConfig;
+};
 export interface PlanProps {
   name: string;
   description: string | null;
-  resources: any;
+  resources: PlanResources;
   actived: boolean;
   price_month: number;
   price_year: number;

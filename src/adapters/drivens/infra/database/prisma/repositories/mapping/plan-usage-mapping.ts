@@ -6,11 +6,11 @@ export class PlanUsageMapping {
   static toDomain({
     id,
     user_plan_id,
+    user_id,
     resource,
     count,
     period,
     created_at,
-    updated_at,
   }: PrismaPlanUsage): PlanUsage {
     return PlanUsage.create(
       {
@@ -19,7 +19,7 @@ export class PlanUsageMapping {
         count,
         period,
         created_at,
-        updated_at,
+        user_id,
       },
       new UniqueEntityID(id),
     );
@@ -33,7 +33,7 @@ export class PlanUsageMapping {
       count: planUsage.count,
       period: planUsage.period,
       created_at: planUsage.created_at,
-      updated_at: planUsage.updated_at,
+      user_id: planUsage.user_id,
     };
   }
 }

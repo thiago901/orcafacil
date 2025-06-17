@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Either, left, right } from '@core/common/entities/either';
 
-import { PlanRepository } from '../ports/providers/plan-repository';
+import { PlanRepository } from '../ports/repositories/plan-repository';
 import { ResourceAlreadyExistsError } from '@core/modules/user/application/errors/resource-already-exists-error';
 import { Plan } from '../../entities/plan';
 import { ResourceNotFoundError } from '@core/common/errors/common/resource-not-found-error';

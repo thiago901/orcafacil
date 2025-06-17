@@ -13,38 +13,61 @@ export async function planSeed() {
       {
         id: 'free',
         name: 'Gratuito',
-        resources:
-          '{"searchHighlight": {"label": "Sem destaque nas buscas", "active": false}, "advancedAnalytics": {"label": "Sem analytics avançado", "active": false}, "proposalsPerMonth": {"label": "Até 5 propostas por mês", "limit": 5, "active": true}, "multiCompanySupport": {"label": "Sem múltiplas empresas", "active": false}}',
-        actived: true,
-        created_at: '2025-06-11T02:00:48.407Z',
-        updated_at: null,
-        price_month: 0.0,
-        price_year: 0.0,
         description: 'Ideal para começar',
+        price_month: 0,
+        price_year: 0,
+        price_id_month: null,
+        price_id_year: null,
+        resources: {
+          searchHighlight: {
+            label: 'Sem destaque nas buscas',
+            active: false,
+          },
+          advancedAnalytics: {
+            label: 'Sem analytics avançado',
+            active: false,
+          },
+          proposalsPerMonth: {
+            label: 'Até 5 propostas por mês',
+            limit: 5,
+            active: true,
+          },
+          multiCompanySupport: {
+            label: 'Sem múltiplas empresas',
+            active: false,
+          },
+        },
+        actived: true,
       },
       {
-        id: 'basic',
-        name: 'Básico',
-        resources:
-          '{"searchHighlight": {"label": "Sem destaque nas buscas", "active": false}, "advancedAnalytics": {"label": "Sem analytics avançado", "active": false}, "proposalsPerMonth": {"label": "Até 5 propostas por mês", "limit": 5, "active": true}, "multiCompanySupport": {"label": "Sem múltiplas empresas", "active": false}}',
-        actived: true,
-        created_at: '2025-06-11T02:00:48.407Z',
-        updated_at: null,
-        price_month: 19.9,
-        price_year: 210.0,
+        id: 'essential',
+        name: 'Essencial',
         description: 'Para profissionais ativos',
-      },
-      {
-        id: 'profissional',
-        name: 'Profissional',
-        resources:
-          '{"searchHighlight": {"label": "Sem destaque nas buscas", "active": false}, "advancedAnalytics": {"label": "Sem analytics avançado", "active": false}, "proposalsPerMonth": {"label": "Até 5 propostas por mês", "limit": 5, "active": true}, "multiCompanySupport": {"label": "Sem múltiplas empresas", "active": false}}',
+        price_month: 49.9,
+        price_year: 499.0,
+        price_id_month: 'price_month_essential_xyz', // stripe ID
+        price_id_year: 'price_year_essential_xyz',
+        resources: {
+          searchHighlight: {
+            label: 'Destaque nas buscas',
+            active: true,
+          },
+          advancedAnalytics: {
+            label: 'Analytics avançado ativado',
+            active: true,
+          },
+          proposalsPerMonth: {
+            label: 'Até 100 propostas por mês',
+            limit: 100,
+            active: true,
+          },
+          multiCompanySupport: {
+            label: 'Gerencie até 10 empresas',
+            limit: 10,
+            active: true,
+          },
+        },
         actived: true,
-        created_at: '2025-06-11T02:00:48.407Z',
-        updated_at: null,
-        price_month: 79.9,
-        price_year: 798.96,
-        description: 'Para profissionais ativos',
       },
     ],
   });

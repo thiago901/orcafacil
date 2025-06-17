@@ -56,32 +56,34 @@ model Plan {
 }
 
 model UserPlan {
-  id         String      @id @default(uuid())
+  id         String    @id @default(uuid())
   user_id    String
   plan_id    String
-  status     String      @default("active") // active, cancelled, expired, etc
-  plan_type  String      @default("monthly") // monthly, yearly
-  price      Float       @default(0)
-  start_date DateTime    @default(now())
+  plan_type  String    @default("monthly") // monthly, yearly
+  price      Float     @default(0)
+  status     String    @default("active") // active, cancelled, expired, etc
+  start_date DateTime  @default(now())
   end_date   DateTime?
-  
+
   user       User        @relation(fields: [user_id], references: [id])
   plan       Plan        @relation(fields: [plan_id], references: [id])
   plan_usage PlanUsage[]
+  created_at DateTime    @default(now())
 
   @@map("user_plans")
 }
 
 model PlanUsage {
-  id           String   @id @default(uuid())
+  id           String    @id @default(uuid())
   user_plan_id String
   resource     String
-  count        Int      @default(0)
-  period       DateTime
+  count        Int       @default(0)
+  period       DateTime?
 
-  user_plan UserPlan @relation(fields: [user_plan_id], references: [id])
-  User      User?    @relation(fields: [userId], references: [id])
-  userId    String?
+  user_plan  UserPlan @relation(fields: [user_plan_id], references: [id])
+  User       User     @relation(fields: [user_id], references: [id])
+  user_id    String
+  created_at DateTime @default(now())
 
   @@unique([user_plan_id, resource, period])
   @@map("plan_usage")
