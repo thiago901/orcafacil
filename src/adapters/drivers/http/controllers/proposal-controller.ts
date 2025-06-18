@@ -17,8 +17,6 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 import { LoggingInterceptor } from '../Interceptors/custom-logger-routes';
 
-import { Public } from '@adapters/drivens/infra/auth/public';
-
 import { ListProposalsByEstimateUseCase } from '@core/modules/proposal/application/use-case/list-proposals-by-estimate-use-case';
 import { ListProposalsByCompanyUseCase } from '@core/modules/proposal/application/use-case/list-proposals-by-company-use-casey';
 import { FindProposalsByIdUseCase } from '@core/modules/proposal/application/use-case/find-proposals-by-id-use-case';
@@ -30,6 +28,8 @@ import {
 import { ProposalMapping } from '../mapping/proposal-mapping';
 import { RejectProposalUseCase } from '@core/modules/proposal/application/use-case/reject-proposal-use-case';
 import { ApproveProposalUseCase } from '@core/modules/proposal/application/use-case/approve-proposal-use-case ';
+import { CurrentUser } from '@adapters/drivens/infra/auth/current-user-decorator';
+import { TokenPayload } from '@adapters/drivens/infra/auth/jwt.strategy';
 
 @ApiTags('Proposal')
 @ApiBearerAuth()
@@ -46,11 +46,16 @@ export class ProposalController {
   ) {}
 
   @Post()
-  @Public()
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createProposalSchema))
-  async create(@Body() body: CreateProposalProps) {
-    const result = await this.createProposalUseCase.execute(body);
+  async create(
+    @Body() body: CreateProposalProps,
+    @CurrentUser() user: TokenPayload,
+  ) {
+    const result = await this.createProposalUseCase.execute({
+      ...body,
+      user_id: user.sub,
+    });
     if (result.isLeft()) {
       throw new HttpException('result.value', HttpStatus.BAD_REQUEST);
     }

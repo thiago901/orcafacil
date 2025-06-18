@@ -13,12 +13,14 @@ import { EnvService } from '@adapters/drivens/infra/envs/env.service';
 import { ProposalsEmitter } from '@adapters/drivers/web-socket/emitters/proposals-emitter';
 import { NotificationRepository } from '@core/modules/notification/application/ports/repositories/notification-repository';
 import { Notification } from '@core/modules/notification/entities/notification';
+import { UsagePlanProvider } from '@core/common/application/ports/providers/usage-plan-provider';
 interface RequestProps {
   name: string;
   amount: number;
   company_id: string;
   description: string;
   estimate_request_id: string;
+  user_id: string;
 }
 
 type ResponseProps = Either<
@@ -38,6 +40,7 @@ export class CreateProposalUseCase {
     private readonly emailProvider: EmailProvider,
     private readonly proposalNotificationProvider: ProposalsEmitter,
     private readonly notificationRepository: NotificationRepository,
+    private readonly usagePlanProvider: UsagePlanProvider,
   ) {}
 
   async execute({
@@ -46,7 +49,12 @@ export class CreateProposalUseCase {
     company_id,
     description,
     estimate_request_id,
+    user_id,
   }: RequestProps): Promise<ResponseProps> {
+    await this.usagePlanProvider.checkAndConsumeFixed({
+      resource: 'proposalsPerMonth',
+      user_id: user_id,
+    });
     const proposal = Proposal.create({
       name,
       amount,

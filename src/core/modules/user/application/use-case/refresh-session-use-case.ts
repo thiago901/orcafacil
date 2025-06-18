@@ -43,6 +43,7 @@ export class RefreshSessionUseCase {
       company_id: user.company?.id.toString(),
       role: user.role,
       plan_id: user.plan?.plan_id,
+      active: user.active,
     });
 
     return right({ token });

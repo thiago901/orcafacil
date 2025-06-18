@@ -54,7 +54,6 @@ export class CompanyController {
   ) {}
 
   @Post('/')
-  @Public()
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createCompanySchema))
   async create(@Body() body: CreateCompanyProps) {
@@ -65,7 +64,6 @@ export class CompanyController {
     return { result: CompanyMapping.toView(result.value.company) };
   }
   @Put('/:id')
-  @Public()
   @UsePipes(new ZodValidationPipe(updateCompanySchema))
   async update(@Param('id') id: string, @Body() body: UpdateCompanyProps) {
     const result = await this.updateCompanyUseCase.execute({
@@ -79,6 +77,7 @@ export class CompanyController {
   }
 
   @Get('/:id')
+  @Public()
   @HttpCode(200)
   async findById(@Param('id') id: string) {
     const result = await this.findCompanyByIdUseCase.execute({ id });
@@ -123,7 +122,6 @@ export class CompanyController {
 
   @Patch('/:id/file')
   @UseInterceptors(FileInterceptor('file'))
-  @Public()
   async uploadFiles(
     @UploadedFile() file: Express.Multer.File,
     @Param('id') company_id: string,
