@@ -23,7 +23,7 @@ export interface EstimateRequestProps {
   email: string;
   description: string;
   category: string;
-  user_id: string | null;
+  user_id: string;
   address: AddressProp;
   proposals?: Proposal[];
   messages?: EstimateRequestMessage[];

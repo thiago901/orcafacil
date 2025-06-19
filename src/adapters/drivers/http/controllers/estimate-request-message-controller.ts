@@ -23,10 +23,10 @@ import {
   CreateEstimateRequestMessageProps,
   createEstimateRequestMessageSchema,
 } from './validations/create-estimate-request-message.validate';
-import { CurrentUser } from '@adapters/drivens/infra/auth/current-user-decorator';
-import { TokenPayload } from '@adapters/drivens/infra/auth/jwt.strategy';
+
 import { GetMessagesByEstimateRequestAndCompanyUseCase } from '@core/modules/estimate-request/application/use-case/get-messages-by-estimate-requests-and-company-use-case copy';
 import { GetAllMessagesGroupByCompanyUseCase } from '@core/modules/estimate-request/application/use-case/get-all-messages-group-by-company-use-case';
+import { GetAllMessagesGroupByIdUseCase } from '@core/modules/estimate-request/application/use-case/get-all-messages-by-id-use-case';
 
 @ApiTags('Estimate Request Message')
 @ApiBearerAuth()
@@ -38,15 +38,13 @@ export class EstimateRequestMessageController {
     private readonly getAllMessagesByEstimateRequestUseCase: GetAllMessagesByEstimateRequestUseCase,
     private readonly getMessagesByEstimateRequestAndCompanyUseCase: GetMessagesByEstimateRequestAndCompanyUseCase,
     private readonly getAllMessagesGroupByCompanyUseCase: GetAllMessagesGroupByCompanyUseCase,
+    private readonly getAllMessagesGroupByIdUseCase: GetAllMessagesGroupByIdUseCase,
   ) {}
 
   @Post()
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createEstimateRequestMessageSchema))
-  async create(
-    @Body() body: CreateEstimateRequestMessageProps,
-    @CurrentUser() user: TokenPayload,
-  ) {
+  async create(@Body() body: CreateEstimateRequestMessageProps) {
     const { company_id, content, estimate_request_id, sender, type } = body;
 
     const result = await this.createEstimateRequestMessageUseCase.execute({
@@ -55,7 +53,6 @@ export class EstimateRequestMessageController {
       estimate_request_id,
       sender,
       type,
-      user_id: user.sub,
     });
     if (result.isLeft()) {
       throw new HttpException('result.value', HttpStatus.BAD_REQUEST);
@@ -103,6 +100,36 @@ export class EstimateRequestMessageController {
     };
   }
 
+  @Get('/company/:company_id')
+  @HttpCode(200)
+  async findByEsitmateByCompany(@Param('company_id') company_id: string) {
+    const result = await this.getAllMessagesGroupByIdUseCase.execute({
+      id: company_id,
+      type: 'COMPANY',
+    });
+    if (result.isLeft()) {
+      throw new HttpException('result.value', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      result: result.value.estimate_request_messages,
+    };
+  }
+  @Get('/customer/:customer_id')
+  @HttpCode(200)
+  async findByEstimateByCustomer(@Param('customer_id') customer_id: string) {
+    const result = await this.getAllMessagesGroupByIdUseCase.execute({
+      id: customer_id,
+      type: 'CUSTOMER',
+    });
+    if (result.isLeft()) {
+      throw new HttpException('result.value', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      result: result.value.estimate_request_messages,
+    };
+  }
   @Get('/:estimate_request_id/company/:company_id')
   @HttpCode(200)
   async findByEstimateAndCompany(

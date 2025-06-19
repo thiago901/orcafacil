@@ -11,6 +11,7 @@ import { UserRepository } from '@core/modules/user/application/ports/repositorie
 import { ResourceNotFoundError } from '@core/common/errors/common/resource-not-found-error';
 
 import { ChatEmitter } from '@adapters/drivers/web-socket/emitters/chat-emitter';
+import { EstimateRequestRepository } from '../ports/repositories/estimate-request-repository';
 
 interface RequestProps {
   content: string;
@@ -18,7 +19,6 @@ interface RequestProps {
   sender: SenderType;
   type: string;
   company_id: string;
-  user_id: string;
 }
 
 type ResponseProps = Either<
@@ -34,6 +34,7 @@ export class CreateEstimateRequestMessageUseCase {
     private readonly estimateRequestMessageRepository: EstimateRequestMessageRepository,
     private readonly companyRepository: CompanyRepository,
     private readonly userRepository: UserRepository,
+    private readonly estimateRequestRepository: EstimateRequestRepository,
     private readonly realtimeMessageNotificationProvider: ChatEmitter,
   ) {}
 
@@ -42,12 +43,17 @@ export class CreateEstimateRequestMessageUseCase {
     estimate_request_id,
     sender,
     company_id,
-    user_id,
     type,
   }: RequestProps): Promise<ResponseProps> {
-    const user = await this.userRepository.findById(user_id);
+    const estimateRequest =
+      await this.estimateRequestRepository.findById(estimate_request_id);
+
     const company = await this.companyRepository.findById(company_id);
-    if (!user || !company) {
+    if (!estimateRequest || !company) {
+      throw new ResourceNotFoundError();
+    }
+    const user = await this.userRepository.findById(estimateRequest.user_id);
+    if (!user) {
       throw new ResourceNotFoundError();
     }
     const message = EstimateRequestMessage.create({
@@ -57,6 +63,7 @@ export class CreateEstimateRequestMessageUseCase {
       user_name: user.name,
       company_name: company.name,
       sender,
+      user_id: user.id.toString(),
       type,
     });
 
@@ -72,6 +79,7 @@ export class CreateEstimateRequestMessageUseCase {
           user_name: message.user_name,
           company_name: message.company_name,
           sender: message.sender,
+          read: message.read,
           type: message.type,
           created_at: message.created_at,
           updated_at: message.updated_at,

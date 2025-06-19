@@ -11,6 +11,26 @@ export class PrismaEstimateRequestMessageRepository
   implements EstimateRequestMessageRepository
 {
   constructor(private readonly prisma: PrismaService) {}
+  async findByCustomerId(
+    customer_id: string,
+  ): Promise<EstimateRequestMessage[]> {
+    const estimaterequest = await this.prisma.message.findMany({
+      where: { user_id: customer_id },
+    });
+
+    return estimaterequest.map((estimateRequestMessage) =>
+      EstimateRequestMessageMapping.toDomain(estimateRequestMessage),
+    );
+  }
+  async findByCompanyId(company_id: string): Promise<EstimateRequestMessage[]> {
+    const estimaterequest = await this.prisma.message.findMany({
+      where: { company_id },
+    });
+
+    return estimaterequest.map((estimateRequestMessage) =>
+      EstimateRequestMessageMapping.toDomain(estimateRequestMessage),
+    );
+  }
 
   async create(message: EstimateRequestMessage): Promise<void> {
     const data = EstimateRequestMessageMapping.toPrisma(message);

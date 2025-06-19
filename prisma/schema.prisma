@@ -123,7 +123,7 @@ model EstimateRequest {
   email                String
   description          String
   location             Unsupported("geography(Point,4326)")?
-  user_id              String?                               @map("user_id")
+  user_id              String                               @map("user_id")
   address_street       String
   address_number       String
   address_postal_code  String
@@ -154,6 +154,7 @@ model Message {
   type                String
   estimate_request_id String
   company_id          String
+  user_id             String
   company_name        String
   user_name           String
   read                Boolean?   @default(false)

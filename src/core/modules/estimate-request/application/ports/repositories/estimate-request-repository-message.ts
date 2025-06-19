@@ -6,6 +6,12 @@ export abstract class EstimateRequestMessageRepository {
   abstract findByEstimateId(
     estimate_request_id: string,
   ): Promise<EstimateRequestMessage[]>;
+  abstract findByCustomerId(
+    customer_id: string,
+  ): Promise<EstimateRequestMessage[]>;
+  abstract findByCompanyId(
+    company_id: string,
+  ): Promise<EstimateRequestMessage[]>;
   abstract findByEstimateIdAndCompanyId(
     estimate_request_id: string,
     company_id: string,

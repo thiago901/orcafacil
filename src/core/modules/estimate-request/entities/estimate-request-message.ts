@@ -11,6 +11,8 @@ export interface EstimateRequestMessageProps {
   estimate_request_id: string;
   company_id: string;
   company_name: string;
+
+  user_id: string;
   user_name: string;
   created_at: Date;
   updated_at: Date;
@@ -59,6 +61,9 @@ export class EstimateRequestMessage extends Entity<EstimateRequestMessageProps> 
 
   get estimate_request_id() {
     return this.props.estimate_request_id;
+  }
+  get user_id() {
+    return this.props.user_id;
   }
 
   get created_at() {
