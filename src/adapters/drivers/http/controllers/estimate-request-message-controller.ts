@@ -27,6 +27,7 @@ import {
 import { GetMessagesByEstimateRequestAndCompanyUseCase } from '@core/modules/estimate-request/application/use-case/get-messages-by-estimate-requests-and-company-use-case copy';
 import { GetAllMessagesGroupByCompanyUseCase } from '@core/modules/estimate-request/application/use-case/get-all-messages-group-by-company-use-case';
 import { GetAllMessagesGroupByIdUseCase } from '@core/modules/estimate-request/application/use-case/get-all-messages-by-id-use-case';
+import { GetAllMessagesGroupByEstimateIdCompanyIdUseCase } from '@core/modules/estimate-request/application/use-case/get-all-messages-group-by-estimate-id-and-company-id-use-case';
 
 @ApiTags('Estimate Request Message')
 @ApiBearerAuth()
@@ -39,6 +40,7 @@ export class EstimateRequestMessageController {
     private readonly getMessagesByEstimateRequestAndCompanyUseCase: GetMessagesByEstimateRequestAndCompanyUseCase,
     private readonly getAllMessagesGroupByCompanyUseCase: GetAllMessagesGroupByCompanyUseCase,
     private readonly getAllMessagesGroupByIdUseCase: GetAllMessagesGroupByIdUseCase,
+    private readonly getAllMessagesGroupByEstimateIdCompanyIdUseCase: GetAllMessagesGroupByEstimateIdCompanyIdUseCase,
   ) {}
 
   @Post()
@@ -97,6 +99,25 @@ export class EstimateRequestMessageController {
 
     return {
       result: result.value.estimate_request_messages,
+    };
+  }
+  @Get('/:estimate_request_id/company/:company_id')
+  @HttpCode(200)
+  async findByEstimateIdAndCompanyId(
+    @Param('estimate_request_id') estimate_request_id: string,
+    @Param('company_id') company_id: string,
+  ) {
+    const result =
+      await this.getAllMessagesGroupByEstimateIdCompanyIdUseCase.execute({
+        estimate_request_id,
+        company_id,
+      });
+    if (result.isLeft()) {
+      throw new HttpException('result.value', HttpStatus.NOT_FOUND);
+    }
+
+    return {
+      result: result.value.estimate_request_message,
     };
   }
 

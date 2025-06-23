@@ -1116,6 +1116,42 @@
         ]
       }
     },
+    "/estimate-requests-message/{estimate_request_id}/company/{company_id}": {
+      "get": {
+        "operationId": "EstimateRequestMessageController_findByEstimateAndCompany",
+        "parameters": [
+          {
+            "name": "estimate_request_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "company_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimate Request Message"
+        ]
+      }
+    },
     "/estimate-requests-message/company/{company_id}": {
       "get": {
         "operationId": "EstimateRequestMessageController_findByEsitmateByCompany",
@@ -1150,42 +1186,6 @@
         "parameters": [
           {
             "name": "customer_id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
-        "tags": [
-          "Estimate Request Message"
-        ]
-      }
-    },
-    "/estimate-requests-message/{estimate_request_id}/company/{company_id}": {
-      "get": {
-        "operationId": "EstimateRequestMessageController_findByEstimateAndCompany",
-        "parameters": [
-          {
-            "name": "estimate_request_id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "company_id",
             "required": true,
             "in": "path",
             "schema": {

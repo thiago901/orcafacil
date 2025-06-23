@@ -15,6 +15,7 @@ import { CreateEstimateUseCase } from './application/use-case/create-estimate-us
 import { GetAllEstimateByCompanyUseCase } from './application/use-case/get-all-estimate-by-company-use-case';
 import { GetAllEstimateByEstimateRequestUseCase } from './application/use-case/get-all-estimate-by-estimate-request-use-case';
 import { GetAllEstimateByIdUseCase } from './application/use-case/get-all-estimate-by-id-use-case';
+import { GetAllMessagesGroupByEstimateIdCompanyIdUseCase } from './application/use-case/get-all-messages-group-by-estimate-id-and-company-id-use-case';
 
 @Module({
   imports: [WebSocketModule],
@@ -35,6 +36,7 @@ import { GetAllEstimateByIdUseCase } from './application/use-case/get-all-estima
     GetAllEstimateByCompanyUseCase,
     GetAllEstimateByEstimateRequestUseCase,
     GetAllEstimateByIdUseCase,
+    GetAllMessagesGroupByEstimateIdCompanyIdUseCase,
   ],
   exports: [
     ListEstimateRequestsByUserUseCase,
@@ -52,6 +54,7 @@ import { GetAllEstimateByIdUseCase } from './application/use-case/get-all-estima
     GetAllEstimateByCompanyUseCase,
     GetAllEstimateByEstimateRequestUseCase,
     GetAllEstimateByIdUseCase,
+    GetAllMessagesGroupByEstimateIdCompanyIdUseCase,
   ],
 })
 export class EstimateRequestModule {}
