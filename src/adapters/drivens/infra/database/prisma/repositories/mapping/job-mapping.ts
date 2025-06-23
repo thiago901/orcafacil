@@ -65,6 +65,8 @@ export class JobMapping {
               name: proposal.name,
               amount: proposal.amount,
               company_id: proposal.company_id,
+              estimate_id: proposal.estimate_id,
+              expire_at: proposal.expire_at,
               description: proposal.description,
               estimate_request_id: proposal.estimate_request_id,
               approved_at: proposal.approved_at,

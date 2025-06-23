@@ -123,7 +123,7 @@ model EstimateRequest {
   email                String
   description          String
   location             Unsupported("geography(Point,4326)")?
-  user_id              String                               @map("user_id")
+  user_id              String                                @map("user_id")
   address_street       String
   address_number       String
   address_postal_code  String
@@ -145,6 +145,64 @@ model EstimateRequest {
   Job       Job[]
 
   @@map("estimate_request")
+}
+
+model Proposal {
+  id          String    @id @default(uuid())
+  name        String
+  amount      Float
+  description String
+  created_at  DateTime
+  updated_at  DateTime?
+  approved_at DateTime?
+  reject_at   DateTime?
+  expire_at   DateTime
+
+  estimate_id         String
+  estimate_request_id String
+  company_id          String
+
+  estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
+  estimate         Estimate        @relation(fields: [estimate_id], references: [id])
+  company          Company         @relation(fields: [company_id], references: [id])
+  job              Job?
+
+  @@map("proposals")
+}
+
+model Estimate {
+  id          String    @id @default(uuid())
+  company     Json
+  company_id     String
+  customer    Json
+  description String
+  total       Float
+  expire_at   DateTime
+  created_at  DateTime
+  updated_at  DateTime?
+
+  estimate_items EstimateItems[]
+  proposals      Proposal[]
+
+  @@map("estimates")
+}
+
+model EstimateItems {
+  id          String @id @default(uuid())
+  type        String
+  name        String
+  description String
+  unit        String
+  price       Float
+  quantity    Int
+  total       Float
+
+  estimate_id String
+  created_at  DateTime
+  updated_at  DateTime?
+  estimate    Estimate  @relation(fields: [estimate_id], references: [id])
+
+  @@map("estimate_items")
 }
 
 model Message {
@@ -246,25 +304,6 @@ model PostFile {
   updated_at DateTime? @map("updated_at")
 
   @@map("post_files")
-}
-
-model Proposal {
-  id                  String    @id @default(uuid())
-  name                String
-  amount              Int
-  description         String
-  estimate_request_id String    @map("estimate_request_id")
-  company_id          String    @map("company_id")
-  created_at          DateTime  @map("created_at")
-  updated_at          DateTime? @map("updated_at")
-  approved_at         DateTime? @map("approved_at")
-  reject_at           DateTime? @map("reject_at")
-
-  estimateRequest EstimateRequest? @relation(fields: [estimate_request_id], references: [id])
-  company         Company?         @relation(fields: [company_id], references: [id])
-  job             Job?
-
-  @@map("proposals")
 }
 
 model CompanyAddress {

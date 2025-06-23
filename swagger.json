@@ -1474,6 +1474,109 @@
           "Plan"
         ]
       }
+    },
+    "/estimates": {
+      "get": {
+        "operationId": "EstimateController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimates"
+        ]
+      }
+    },
+    "/estimates/company/{company_id}": {
+      "get": {
+        "operationId": "EstimateController_getAllByCompany",
+        "parameters": [
+          {
+            "name": "company_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimates"
+        ]
+      }
+    },
+    "/estimates/estimate_request/{estimate_request_id}": {
+      "get": {
+        "operationId": "EstimateController_getAllByEstimateRequest",
+        "parameters": [
+          {
+            "name": "estimate_request_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimates"
+        ]
+      }
+    },
+    "/estimates/{estimate_id}": {
+      "get": {
+        "operationId": "EstimateController_getAllById",
+        "parameters": [
+          {
+            "name": "estimate_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Estimates"
+        ]
+      }
     }
   },
   "info": {
@@ -1496,28 +1599,77 @@
       "CreateProposalProps": {
         "type": "object",
         "properties": {
-          "name": {
+          "description": {
             "type": "string"
-          },
-          "amount": {
-            "type": "number"
           },
           "company_id": {
             "type": "string"
           },
-          "description": {
-            "type": "string"
+          "customer": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "phone": {
+                "type": "string"
+              },
+              "email": {
+                "type": "string"
+              },
+              "document": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "phone",
+              "email",
+              "document"
+            ]
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                },
+                "quantity": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "type",
+                "description",
+                "unit",
+                "price",
+                "quantity"
+              ]
+            }
           },
           "estimate_request_id": {
             "type": "string"
-          }
+          },
+          "expire_at": {}
         },
         "required": [
-          "name",
-          "amount",
-          "company_id",
           "description",
-          "estimate_request_id"
+          "company_id",
+          "customer",
+          "items",
+          "estimate_request_id",
+          "expire_at"
         ]
       },
       "CreateUserProps": {

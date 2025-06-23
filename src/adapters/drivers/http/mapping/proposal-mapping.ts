@@ -13,6 +13,8 @@ export class ProposalMapping {
     reject_at,
     company,
     estimate_request,
+    estimate,
+    estimate_id,
   }: Proposal) {
     return {
       id: id.toString(),
@@ -24,6 +26,8 @@ export class ProposalMapping {
       estimate_request_id,
       updated_at,
       reject_at,
+      estimate,
+      estimate_id,
       estimate_request: estimate_request
         ? {
             id: estimate_request.id.toString(),

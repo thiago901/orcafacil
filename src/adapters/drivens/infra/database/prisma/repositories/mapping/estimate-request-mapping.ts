@@ -77,6 +77,9 @@ export class EstimateRequestMapping {
           Proposal.create(
             {
               name: proposal.name,
+              estimate_id: proposal.estimate_id,
+              expire_at: proposal.expire_at,
+              reject_at: proposal.reject_at,
               amount: proposal.amount,
               company_id: proposal.company_id,
               description: proposal.description,

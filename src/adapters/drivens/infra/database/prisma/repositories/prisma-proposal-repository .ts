@@ -5,6 +5,7 @@ import { Injectable } from '@nestjs/common';
 
 import { ProposalRepository } from '@core/modules/proposal/application/ports/repositories/proposal-repository';
 import { Proposal } from '@core/modules/proposal/entities/proposal';
+import { EstimateMapping } from './mapping/estimate-mapping';
 
 @Injectable()
 export class PrismaProposalRepository implements ProposalRepository {
@@ -27,7 +28,7 @@ export class PrismaProposalRepository implements ProposalRepository {
     const proposals = await this.prisma.proposal.findMany({
       where: { company_id },
       include: {
-        estimateRequest: true,
+        estimate_request: true,
       },
     });
 
@@ -36,7 +37,16 @@ export class PrismaProposalRepository implements ProposalRepository {
     );
   }
   async create(proposal: Proposal): Promise<void> {
-    const data = ProposalMapping.toPrisma(proposal);
+    const estimateData = proposal.estimate
+      ? EstimateMapping.toPrisma(proposal.estimate)
+      : null;
+
+    const createNesting = {
+      estimate: {
+        create: estimateData,
+      },
+    };
+    const data = ProposalMapping.toPrisma(proposal, createNesting);
 
     await this.prisma.proposal.create({
       data,

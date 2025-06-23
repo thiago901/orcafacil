@@ -61,6 +61,9 @@ import { PrismaPlanUsageRepository } from '@adapters/drivens/infra/database/pris
 import { UserPlanRepository } from '@core/modules/plan/application/ports/repositories/user-plan-repository';
 import { PrismaUserPlanRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-user-plan-repository';
 import { PlanRepository } from '@core/modules/plan/application/ports/repositories/plan-repository';
+import { PrismaEstimateRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-estimate-repository';
+import { EstimateRepository } from '@core/modules/estimate-request/application/ports/repositories/estimate-repository';
+import { EstimateController } from './controllers/estimate-controller';
 
 @Module({
   imports: [
@@ -145,6 +148,10 @@ import { PlanRepository } from '@core/modules/plan/application/ports/repositorie
           provide: RealtimeMessageNotificationProvider,
           useClass: ChatEmitter,
         },
+        {
+          provide: EstimateRepository,
+          useClass: PrismaEstimateRepository,
+        },
       ],
     },
     {
@@ -173,6 +180,10 @@ import { PlanRepository } from '@core/modules/plan/application/ports/repositorie
         {
           provide: NotificationRepository,
           useClass: PrismaNotificationRepository,
+        },
+        {
+          provide: EstimateRepository,
+          useClass: PrismaEstimateRepository,
         },
       ],
     },
@@ -249,6 +260,7 @@ import { PlanRepository } from '@core/modules/plan/application/ports/repositorie
     NotificationController,
     PaymentController,
     PlanController,
+    EstimateController,
   ],
 })
 export class HTTPModule {}
