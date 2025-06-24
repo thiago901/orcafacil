@@ -41,8 +41,8 @@ import { PrismaUserRepository } from '@adapters/drivens/infra/database/prisma/re
 import { RealtimeMessageNotificationProvider } from '@core/modules/estimate-request/application/ports/provider/realtime-message-notification';
 import { ChatEmitter } from '../web-socket/emitters/chat-emitter';
 import { WebSocketModule } from '../web-socket/web-socket.module';
-import { ProposalsEmitter } from '../web-socket/emitters/proposals-emitter';
-import { ProposalNotificationProvider } from '@core/modules/proposal/application/ports/providers/proposal-notification-provider';
+import { NotificationEmitter } from '../web-socket/emitters/proposals-emitter';
+
 import { NotificationModule } from '@core/modules/notification/notification.module';
 import { NotificationRepository } from '@core/modules/notification/application/ports/repositories/notification-repository';
 import { PrismaNotificationRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-notification-repository';
@@ -64,6 +64,9 @@ import { PlanRepository } from '@core/modules/plan/application/ports/repositorie
 import { PrismaEstimateRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-estimate-repository';
 import { EstimateRepository } from '@core/modules/estimate-request/application/ports/repositories/estimate-repository';
 import { EstimateController } from './controllers/estimate-controller';
+import { NotificationProvider } from '@core/modules/notification/application/ports/providers/notification-provider';
+import { PublishMessagingProvider } from '@core/common/application/ports/providers/publish-messaging.provider';
+import { RabbitMqPublishMessagingProvider } from '@adapters/drivens/providers/rabbitmq-publish-messaging.provider';
 
 @Module({
   imports: [
@@ -152,6 +155,10 @@ import { EstimateController } from './controllers/estimate-controller';
           provide: EstimateRepository,
           useClass: PrismaEstimateRepository,
         },
+        {
+          provide: PublishMessagingProvider,
+          useClass: RabbitMqPublishMessagingProvider,
+        },
       ],
     },
     {
@@ -174,8 +181,8 @@ import { EstimateController } from './controllers/estimate-controller';
           useClass: PrismaCompanyRepository,
         },
         {
-          provide: ProposalNotificationProvider,
-          useClass: ProposalsEmitter,
+          provide: NotificationProvider,
+          useClass: NotificationEmitter,
         },
         {
           provide: NotificationRepository,
@@ -193,6 +200,10 @@ import { EstimateController } from './controllers/estimate-controller';
         {
           provide: NotificationRepository,
           useClass: PrismaNotificationRepository,
+        },
+        {
+          provide: NotificationProvider,
+          useClass: NotificationEmitter,
         },
       ],
     },

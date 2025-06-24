@@ -1,12 +1,14 @@
 import {
-  ProposalNotificationProvider,
-  ProposalSendNotificationProps,
-} from '@core/modules/proposal/application/ports/providers/proposal-notification-provider';
+  NotificationProvider,
+  SendNotificationProps,
+} from '@core/modules/notification/application/ports/providers/notification-provider';
+
 import { Injectable } from '@nestjs/common';
 import { Server } from 'socket.io';
+import { getSocketServer } from '../server-socket';
 
 @Injectable()
-export class ProposalsEmitter implements ProposalNotificationProvider {
+export class NotificationEmitter implements NotificationProvider {
   private server: Server;
 
   setServer(server: Server) {
@@ -21,7 +23,7 @@ export class ProposalsEmitter implements ProposalNotificationProvider {
     event,
     payload,
     to,
-  }: ProposalSendNotificationProps): Promise<void> {
-    this.server.to(to).emit(event, payload);
+  }: SendNotificationProps): Promise<void> {
+    getSocketServer().to(to).emit(event, payload);
   }
 }

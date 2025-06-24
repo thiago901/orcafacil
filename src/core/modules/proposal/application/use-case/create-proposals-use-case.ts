@@ -10,7 +10,7 @@ import { EstimateRequestRepository } from '@core/modules/estimate-request/applic
 import { CompanyRepository } from '@core/modules/company/application/ports/repositories/company-repository';
 import { EnvService } from '@adapters/drivens/infra/envs/env.service';
 
-import { ProposalsEmitter } from '@adapters/drivers/web-socket/emitters/proposals-emitter';
+import { NotificationEmitter } from '@adapters/drivers/web-socket/emitters/proposals-emitter';
 import { NotificationRepository } from '@core/modules/notification/application/ports/repositories/notification-repository';
 import { Notification } from '@core/modules/notification/entities/notification';
 import { UsagePlanProvider } from '@core/common/application/ports/providers/usage-plan-provider';
@@ -62,7 +62,7 @@ export class CreateProposalUseCase {
 
     private readonly companyRepository: CompanyRepository,
     private readonly emailProvider: EmailProvider,
-    private readonly proposalNotificationProvider: ProposalsEmitter,
+    private readonly proposalNotificationProvider: NotificationEmitter,
     private readonly notificationRepository: NotificationRepository,
     private readonly usagePlanProvider: UsagePlanProvider,
   ) {}

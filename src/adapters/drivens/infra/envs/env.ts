@@ -23,6 +23,13 @@ export const schemaEnv = z.object({
   LOCATION_IQ_KEY: z.coerce.string(),
   STRIPE_WEBHOOK_SECRET: z.coerce.string(),
   STRIPE_SECRET_KEY: z.coerce.string(),
+  AMQP_QUEUES: z.object({
+    NOTIFICATION_QUEUE: z.object({
+      name: z.string(),
+      routing_keys: z.array(z.string()),
+    }),
+  }),
+  AMQP_URL: z.string(),
 });
 
 export type Env = z.infer<typeof schemaEnv>;

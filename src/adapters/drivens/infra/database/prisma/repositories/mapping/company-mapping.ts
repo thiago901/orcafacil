@@ -39,6 +39,7 @@ export class CompanyMapping {
         email,
         phone,
         website,
+        address_id: address_id,
         services: !services
           ? []
           : services.map((service) =>

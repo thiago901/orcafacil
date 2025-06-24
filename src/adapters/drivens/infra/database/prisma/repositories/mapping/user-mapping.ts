@@ -46,6 +46,7 @@ export class UserMapping {
                 avatar: company.avatar,
                 name: company.name,
                 owner_id: company.owner_id,
+                address_id: company.address_id,
                 ratting: Number(company.ratting),
                 about: company.about,
                 address: null,

@@ -5,6 +5,11 @@ import { Either, right } from '@core/common/entities/either';
 
 type RequestProps = {
   categories?: string[];
+  location?: {
+    lat: string;
+    long: string;
+    meters: number;
+  };
 };
 type ResponseProps = Either<
   null,
@@ -17,8 +22,14 @@ type ResponseProps = Either<
 export class ListAllCompaniesUseCase {
   constructor(private readonly companyRepository: CompanyRepository) {}
 
-  async execute({ categories }: RequestProps): Promise<ResponseProps> {
-    const companies = await this.companyRepository.getAll({ categories });
+  async execute({
+    categories,
+    location,
+  }: RequestProps): Promise<ResponseProps> {
+    const companies = await this.companyRepository.getAll({
+      categories,
+      location,
+    });
 
     return right({ companies });
   }

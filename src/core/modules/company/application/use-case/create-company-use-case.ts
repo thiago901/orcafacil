@@ -57,6 +57,17 @@ export class CreateCompanyUseCase {
       state: address.state,
       street: address.address,
     });
+
+    const company_address = CompanyAddress.create({
+      address: address.address,
+      city: address.city,
+      country: address.country,
+      state: address.state,
+      zip: address.zip,
+      latitude: Number(addressData.lat) || 0,
+      longitude: Number(addressData.lon) || 0,
+      name: address.name,
+    });
     const company = Company.create({
       avatar: null,
       name,
@@ -64,18 +75,10 @@ export class CreateCompanyUseCase {
       ratting: 0,
       about,
       email,
+      address_id: company_address.id.toString(),
       phone,
       website,
-      address: CompanyAddress.create({
-        address: address.address,
-        city: address.city,
-        country: address.country,
-        state: address.state,
-        zip: address.zip,
-        latitude: Number(addressData.lat) || 0,
-        longitude: Number(addressData.lon) || 0,
-        name: address.name,
-      }),
+      address: company_address,
       services: [],
     });
 

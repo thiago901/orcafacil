@@ -75,6 +75,7 @@ export class ProposalMapping {
             {
               about: company.about,
               address: null,
+              address_id: company.address_id,
               avatar: company.avatar,
               name: company.name,
               owner_id: company.owner_id,

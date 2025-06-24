@@ -2,6 +2,11 @@ import { Company } from '@core/modules/company/entities/company';
 
 export type GetAllCompaniesProps = {
   categories?: string[];
+  location?: {
+    lat: string;
+    long: string;
+    meters: number;
+  };
 };
 export abstract class CompanyRepository {
   abstract create(user: Company): Promise<void>;

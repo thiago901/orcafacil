@@ -12,6 +12,7 @@ import { ProviderModule } from '@adapters/drivens/providers/provider.module';
 import { AuthModule } from '@adapters/drivens/infra/auth/auth.module';
 import { join } from 'node:path';
 import { WebSocketModule } from '@adapters/drivers/web-socket/web-socket.module';
+import { RMQModule } from '@adapters/drivers/rmq/rmq.module';
 
 @Module({
   imports: [
@@ -26,11 +27,15 @@ import { WebSocketModule } from '@adapters/drivers/web-socket/web-socket.module'
     EnvModule,
     HTTPModule,
     AuthModule,
+
     ConfigModule.forRoot({
-      validate: (env) => schemaEnv.parse(env),
+      validate: (env) => {
+        env.AMQP_QUEUES = JSON.parse(env.AMQP_QUEUES);
+        return schemaEnv.parse(env);
+      },
       isGlobal: true,
     }),
-
+    RMQModule,
     {
       module: DatabaseModule,
       global: true,

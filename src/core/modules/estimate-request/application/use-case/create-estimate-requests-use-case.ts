@@ -3,6 +3,7 @@ import { EstimateRequestRepository } from '../ports/repositories/estimate-reques
 import { Injectable } from '@nestjs/common';
 import { Either, right } from '@core/common/entities/either';
 import { AddressFinderProvider } from '@core/common/application/ports/providers/address-finder';
+import { PublishMessagingProvider } from '@core/common/application/ports/providers/publish-messaging.provider';
 
 interface RequestProps {
   user_id: string;
@@ -32,6 +33,7 @@ export class CreateEstimateRequestUseCase {
   constructor(
     private readonly estimateRequestRepository: EstimateRequestRepository,
     private readonly addressFinderProvider: AddressFinderProvider,
+    private readonly publishMessagingProvider: PublishMessagingProvider,
   ) {}
 
   async execute({
@@ -79,6 +81,24 @@ export class CreateEstimateRequestUseCase {
 
     await this.estimateRequestRepository.save(estimateRequest);
 
+    await this.publishMessagingProvider.publish({
+      data: {
+        pattern: 'estimate_request:created',
+        data: {
+          category: estimateRequest.category,
+          estimate_request_id: estimateRequest.id.toString(),
+          location: {
+            lat: estimateRequest.address.latitude,
+            long: estimateRequest.address.longitude,
+            meters: 2000,
+          },
+        },
+      },
+      options: {
+        exchange: 'amq.direct',
+        routingKey: 'estimate_request:created',
+      },
+    });
     return right({ estimateRequest });
   }
 }

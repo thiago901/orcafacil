@@ -92,6 +92,7 @@ export class GetAllMessagesGroupByEstimateIdCompanyIdUseCase {
         company: {
           id: messages[0].company_id,
           name: messages[0].company_name,
+          avatar: messages[0].company_name,
         },
         user: {
           id: messages[0].user_id,

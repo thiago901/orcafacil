@@ -8,6 +8,7 @@ import {
   AddressFinderProviderResponse,
 } from '@core/common/application/ports/providers/address-finder';
 import { ResourceNotFoundError } from '@core/common/errors/common/resource-not-found-error';
+import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 
 type RequestProps = {
   id: string;
@@ -67,21 +68,25 @@ export class UpdateCompanyUseCase {
     }
     company.about = about ? about : company.about;
     company.address = address
-      ? CompanyAddress.create({
-          address: address.address,
-          city: address.city,
-          country: address.country,
-          state: address.state,
-          zip: address.zip,
-          latitude: Number(addressData.lat) || 0,
-          longitude: Number(addressData.lon) || 0,
-          name: address.name,
-        })
+      ? CompanyAddress.create(
+          {
+            address: address.address,
+            city: address.city,
+            country: address.country,
+            state: address.state,
+            zip: address.zip,
+            latitude: Number(addressData.lat) || 0,
+            longitude: Number(addressData.lon) || 0,
+            name: address.name,
+          },
+          new UniqueEntityID(company.address_id),
+        )
       : company.address;
     company.email = email ? email : company.email;
     company.name = name ? name : company.name;
     company.phone = phone ? phone : company.phone;
     company.website = website ? website : company.website;
+
     await this.companyRepository.save(company);
     return right({ company });
   }

@@ -8,6 +8,7 @@ import {
   GetAllCompaniesProps,
 } from '@core/modules/company/application/ports/repositories/company-repository';
 import { Company } from '@core/modules/company/entities/company';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class PrismaCompanyRepository implements CompanyRepository {
@@ -19,9 +20,13 @@ export class PrismaCompanyRepository implements CompanyRepository {
       avatar,
       id,
       name,
+      address,
+      email,
+      phone,
+      address_id,
+      website,
       owner_id,
       ratting,
-
       updated_at,
       created_at,
     } = data;
@@ -31,6 +36,9 @@ export class PrismaCompanyRepository implements CompanyRepository {
         avatar,
         id,
         name,
+        email,
+        phone,
+        website,
         owner_id,
         ratting,
         updated_at,
@@ -38,6 +46,24 @@ export class PrismaCompanyRepository implements CompanyRepository {
       },
       where: { id },
     });
+    await this.prisma.companyAddress.update({
+      data: {
+        address: address.address,
+        city: address.city,
+        country: address.country,
+        latitude: address.latitude,
+        longitude: address.longitude,
+        name: address.name,
+        state: address.state,
+        zip: address.zip,
+      },
+      where: { id: address_id },
+    });
+    await this.prisma.$executeRawUnsafe(`
+      UPDATE "company_address"
+      SET "location" = ST_SetSRID(ST_MakePoint("longitude", "latitude"), 4326)::geography
+      WHERE "id" = '${data.address_id}';
+    `);
   }
   async create(company: Company): Promise<void> {
     const data = CompanyMapping.toPrisma(company);
@@ -89,30 +115,50 @@ export class PrismaCompanyRepository implements CompanyRepository {
     await this.prisma.$executeRawUnsafe(`
       UPDATE "company_address"
       SET "location" = ST_SetSRID(ST_MakePoint("longitude", "latitude"), 4326)::geography
-      WHERE "id" = '${data.id}';
+      WHERE "id" = '${data.address_id}';
     `);
   }
-  async getAll({ categories }: GetAllCompaniesProps): Promise<Company[]> {
+  async getAll({
+    categories,
+    location,
+  }: GetAllCompaniesProps): Promise<Company[]> {
     const where = categories
       ? {
-          where: {
-            services: {
-              some: {
-                category_name: {
-                  in: categories,
-                },
+          services: {
+            some: {
+              category_name: {
+                in: categories,
               },
             },
           },
         }
-      : null;
+      : {};
+    if (location) {
+      const nearbyIds = await this.prisma.$queryRaw<
+        Array<{ id: string }>
+      >(Prisma.sql`
+        SELECT "id"
+        FROM "company_address"
+        WHERE ST_DWithin(
+          "location",
+          ST_SetSRID(ST_MakePoint(${Number(location.long)}, ${Number(location.lat)}), 4326)::geography,
+          ${Number(location.meters)}
+        )
+      `);
+      where['address_id'] = {
+        in: nearbyIds.map((item) => item.id),
+      };
+    }
 
     const users = await this.prisma.company.findMany({
       include: {
         address: true,
         services: true,
       },
-      ...where,
+      // ...where,
+      where: {
+        ...where,
+      },
     });
 
     return users.map((company) => CompanyMapping.toDomain(company));

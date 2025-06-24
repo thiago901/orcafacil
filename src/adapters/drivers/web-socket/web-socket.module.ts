@@ -3,7 +3,7 @@ import { EventsGateway } from './gateway.events';
 import { ChatMessageHandler } from './listeners/ChatMessage';
 import { SocketService } from './web-socket.service';
 import { ChatEmitter } from './emitters/chat-emitter';
-import { ProposalsEmitter } from './emitters/proposals-emitter';
+import { NotificationEmitter } from './emitters/proposals-emitter';
 
 @Module({
   imports: [],
@@ -12,8 +12,8 @@ import { ProposalsEmitter } from './emitters/proposals-emitter';
     ChatMessageHandler,
     SocketService,
     ChatEmitter,
-    ProposalsEmitter,
+    NotificationEmitter,
   ],
-  exports: [ChatEmitter, SocketService, ProposalsEmitter],
+  exports: [ChatEmitter, SocketService, NotificationEmitter],
 })
 export class WebSocketModule {}

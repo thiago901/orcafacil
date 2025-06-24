@@ -13,10 +13,11 @@ import { Server, Socket } from 'socket.io';
 import { ChatMessageHandler } from './listeners/ChatMessage';
 import { SocketService } from './web-socket.service';
 import { ChatEmitter } from './emitters/chat-emitter';
-import { ProposalsEmitter } from './emitters/proposals-emitter';
+import { NotificationEmitter } from './emitters/proposals-emitter';
+import { setSocketServer } from './server-socket';
 @WebSocketGateway(0, {
   cors: {
-    origin: 'https://orcafacilweb.vercel.app',
+    origin: 'https://orcalink.com.br',
   },
   transports: ['websocket'],
 })
@@ -28,14 +29,15 @@ export class EventsGateway
     private readonly chatMessageHandler: ChatMessageHandler,
     private readonly socketService: SocketService,
     private readonly chatEmitter: ChatEmitter,
-    private readonly proposalsEmitter: ProposalsEmitter,
+    private readonly notificationEmitter: NotificationEmitter,
   ) {}
 
   @WebSocketServer() io: Server;
   afterInit(server: Server) {
     this.logger.log('Initialized');
     this.chatEmitter.setServer(server);
-    this.proposalsEmitter.setServer(server);
+    setSocketServer(server);
+    this.notificationEmitter.setServer(server);
     this.socketService.setServer(server);
   }
 
