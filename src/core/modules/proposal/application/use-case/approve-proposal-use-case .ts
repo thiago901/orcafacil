@@ -32,6 +32,8 @@ export class ApproveProposalUseCase {
       company_id: proposal.company_id,
       proposal_id: proposal.id.toString(),
       estimate_request_id: proposal.estimate_request_id,
+      estimate_id: proposal.estimate_id,
+      status: 'BACKLOG',
     });
     await this.jobRepository.create(job);
     return right(null);

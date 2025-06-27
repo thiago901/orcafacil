@@ -78,7 +78,10 @@ import { PrismaUserRepository } from '../infra/database/prisma/repositories/pris
       provide: PaymentsProvider,
       useClass: StripeProvider,
     },
-
+    {
+      provide: UserRepository,
+      useClass: PrismaUserRepository,
+    },
     {
       provide: UsagePlanProvider,
       useClass: CustomerUsagePlanProvider,

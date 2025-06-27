@@ -56,7 +56,13 @@ export class EstimateRequest extends Entity<EstimateRequestProps> {
   get phone() {
     return this.props.phone;
   }
+  set phone(phone: string) {
+    this.props.phone = phone;
+  }
 
+  set email(email: string) {
+    this.props.email = email;
+  }
   get email() {
     return this.props.email;
   }

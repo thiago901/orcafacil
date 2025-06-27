@@ -35,6 +35,8 @@ import { UploadEstimateRequestFilesUseCase } from '@core/modules/estimate-reques
 import { ListEstimateRequestFilesUseCase } from '@core/modules/estimate-request/application/use-case/list-estimate-requests-files-use-case';
 import { EstimateRequestFilesMapping } from '../mapping/estimate-request-files-mapping';
 import { FindEstimateRequestsByIdUseCase } from '@core/modules/estimate-request/application/use-case/find-estimate-requests-by-id-use-case';
+import { CurrentUser } from '@adapters/drivens/infra/auth/current-user-decorator';
+import { TokenPayload } from '@adapters/drivens/infra/auth/jwt.strategy';
 
 @ApiTags('Estimate Request')
 @ApiBearerAuth()
@@ -91,11 +93,16 @@ export class EstimateRequestController {
       },
     };
   }
+
   @Get('/:id')
   @HttpCode(200)
-  async findById(@Param('id') id: string) {
+  async findOwnById(
+    @CurrentUser() user: TokenPayload,
+    @Param('id') id: string,
+  ) {
     const result = await this.findEstimateRequestsByIdUseCase.execute({
       id,
+      user_id: user.sub,
     });
     if (result.isLeft()) {
       throw new HttpException('result.value', HttpStatus.NOT_FOUND);
@@ -109,6 +116,7 @@ export class EstimateRequestController {
   @Get()
   @HttpCode(200)
   async listAll(
+    @CurrentUser() user: TokenPayload,
     @Query('latitude') latitude: number,
     @Query('longitude') longitude: number,
     @Query('radiusInMeters') radiusInMeters: number,
@@ -118,6 +126,7 @@ export class EstimateRequestController {
 
     const result = await this.listEstimateRequestsUseCase.execute({
       latitude,
+      user_id: user.sub,
       longitude,
       radius_in_meters: radiusInMeters,
       category: category

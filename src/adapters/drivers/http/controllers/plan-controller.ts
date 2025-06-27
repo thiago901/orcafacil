@@ -26,6 +26,7 @@ import {
   subscribePlanSchema,
 } from './validations/subscribe-plan.validate';
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+import { TokenPayload } from '@adapters/drivens/infra/auth/jwt.strategy';
 
 @ApiTags('Plan')
 @ApiBearerAuth()
@@ -63,13 +64,13 @@ export class PlanController {
   @UsePipes(new ZodValidationPipe(subscribePlanSchema))
   async subscribe(
     @Param('plan_id') plan_id: string,
-    @CurrentUser() user_id: string,
+    @CurrentUser() user: TokenPayload,
     @Body() body: SubscribePlanProps,
   ) {
     const result = await this.subscribePlanUseCase.execute({
       plan_id,
       plan_type: body.plan_type,
-      user_id,
+      user_id: user.sub,
     });
     if (result.isLeft()) {
       throw new HttpException(result.value.message, HttpStatus.UNAUTHORIZED);

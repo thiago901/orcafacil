@@ -9,14 +9,19 @@ export class JobMapping {
     updated_at,
     proposal,
     estimate_request,
+    estimate_request_id,
+    estimate_id,
+    status,
   }: Job) {
     return {
       id: id.toString(),
-
+      estimate_request_id,
       created_at,
       company_id,
       proposal_id,
       updated_at,
+      estimate_id,
+      status,
       proposal: proposal
         ? {
             id: proposal.id.toString(),

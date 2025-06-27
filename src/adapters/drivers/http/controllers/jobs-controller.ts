@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  Patch,
   Post,
   UseInterceptors,
   UsePipes,
@@ -23,6 +24,7 @@ import {
 } from './validations/create-job.validate';
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 import { GetJobByIdUseCase } from '@core/modules/job/application/use-case/get-jobs-by-id-use-case';
+import { UpdateStatusJobUseCase } from '@core/modules/job/application/use-case/update-status-job-use-case';
 
 @ApiTags('Jobs')
 @ApiBearerAuth()
@@ -33,6 +35,7 @@ export class JobsController {
     private readonly listJobsByCompanyUseCase: ListJobsByCompanyUseCase,
     private readonly createJobUseCase: CreateJobUseCase,
     private readonly getJobByIdUseCase: GetJobByIdUseCase,
+    private readonly updateStatusJobUseCase: UpdateStatusJobUseCase,
   ) {}
 
   @Get('/company/:company_id')
@@ -59,11 +62,26 @@ export class JobsController {
   @Post('/')
   @UsePipes(new ZodValidationPipe(createJobSchema))
   async createJob(@Body() body: CreateJobProps) {
-    const { company_id, proposal_id, estimate_request_id } = body;
+    const { company_id, proposal_id, estimate_request_id, estimate_id } = body;
     const result = await this.createJobUseCase.execute({
       company_id,
       proposal_id,
       estimate_request_id,
+      estimate_id,
+    });
+    if (result.isLeft()) {
+      throw new HttpException('result.value', HttpStatus.BAD_REQUEST);
+    }
+    return {
+      result: JobMapping.toView(result.value.job),
+    };
+  }
+  @Patch('/status/:id/:status')
+  @UsePipes(new ZodValidationPipe(createJobSchema))
+  async updateStatus(@Param('status') status: string, @Param('id') id: string) {
+    const result = await this.updateStatusJobUseCase.execute({
+      id,
+      status,
     });
     if (result.isLeft()) {
       throw new HttpException('result.value', HttpStatus.BAD_REQUEST);

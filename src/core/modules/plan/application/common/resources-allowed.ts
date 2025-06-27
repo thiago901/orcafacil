@@ -1,1 +1,4 @@
-export type ResourcesAllowed = 'proposalsPerMonth' | 'multiCompanySupport';
+export type ResourcesAllowed =
+  | 'proposalsPerMonth'
+  | 'multiCompanySupport'
+  | 'visualizeCustomerContacts';

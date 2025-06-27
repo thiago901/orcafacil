@@ -46,6 +46,7 @@ export class PrismaEstimateRequestRepository
     long,
     radius_in_meters,
     category,
+    options,
   }: GetAllByGeoLocationProps): Promise<EstimateRequest[]> {
     const nearbyIds = await this.prisma.$queryRaw<
       Array<{ id: string }>
@@ -78,6 +79,9 @@ export class PrismaEstimateRequestRepository
       },
       include: {
         proposals: true,
+      },
+      omit: {
+        ...options?.omit,
       },
     });
 

@@ -173,7 +173,7 @@ model Proposal {
 model Estimate {
   id          String    @id @default(uuid())
   company     Json
-  company_id     String
+  company_id  String
   customer    Json
   description String
   total       Float
@@ -183,6 +183,7 @@ model Estimate {
 
   estimate_items EstimateItems[]
   proposals      Proposal[]
+  Job            Job[]
 
   @@map("estimates")
 }
@@ -354,10 +355,13 @@ model Job {
   company_id          String @map("company_id")
   proposal_id         String @unique @map("proposal_id")
   estimate_request_id String @map("estimate_request_id")
+  estimate_id         String @map("estimate_id")
+  status              String @default("BACKLOG")
 
   company          Company         @relation(fields: [company_id], references: [id])
   proposal         Proposal        @relation(fields: [proposal_id], references: [id])
   estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
+  estimate         Estimate        @relation(fields: [estimate_id], references: [id])
 
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")

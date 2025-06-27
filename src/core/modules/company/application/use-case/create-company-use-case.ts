@@ -1,10 +1,11 @@
 import { Company } from '@core/modules/company/entities/company';
 import { CompanyRepository } from '../ports/repositories/company-repository';
 import { Injectable } from '@nestjs/common';
-import { Either, right } from '@core/common/entities/either';
+import { Either, left, right } from '@core/common/entities/either';
 import { CompanyAddress } from '../../entities/company-address';
 import { AddressFinderProvider } from '@core/common/application/ports/providers/address-finder';
 import { UsagePlanProvider } from '@core/common/application/ports/providers/usage-plan-provider';
+import { ResourceExceededError } from '@core/modules/plan/application/errors/resource-exceeded-error';
 
 type RequestProps = {
   name: string;
@@ -23,7 +24,7 @@ type RequestProps = {
   };
 };
 type ResponseProps = Either<
-  null,
+  ResourceExceededError,
   {
     company: Company;
   }
@@ -46,11 +47,13 @@ export class CreateCompanyUseCase {
     about,
     address,
   }: RequestProps): Promise<ResponseProps> {
-    await this.usagePlanProvider.checkAndConsumeFixed({
+    const isAllowed = await this.usagePlanProvider.checkAndConsumeFixed({
       resource: 'multiCompanySupport',
       user_id: owner_id,
     });
-
+    if (!isAllowed) {
+      return left(new ResourceExceededError('multiCompanySupport'));
+    }
     const addressData = await this.addressFinderProvider.find({
       city: address.city,
       postal_code: address.zip,

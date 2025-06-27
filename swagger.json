@@ -762,7 +762,7 @@
     },
     "/estimate-requests/{id}": {
       "get": {
-        "operationId": "EstimateRequestController_findById",
+        "operationId": "EstimateRequestController_findOwnById",
         "parameters": [
           {
             "name": "id",
@@ -971,6 +971,42 @@
         },
         "responses": {
           "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Jobs"
+        ]
+      }
+    },
+    "/jobs/status/{id}/{status}": {
+      "patch": {
+        "operationId": "JobsController_updateStatus",
+        "parameters": [
+          {
+            "name": "status",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
             "description": ""
           }
         },
@@ -2008,12 +2044,17 @@
           "estimate_request_id": {
             "type": "string",
             "format": "uuid"
+          },
+          "estimate_id": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "required": [
           "company_id",
           "proposal_id",
-          "estimate_request_id"
+          "estimate_request_id",
+          "estimate_id"
         ]
       },
       "CreateEstimateRequestMessageProps": {

@@ -32,6 +32,12 @@ export class PlanUsageUseCase {
     if (!user_plan) {
       return left(new ResourceNotFoundError('User plan not found'));
     }
+    if (!user_plan.plan?.resources[resource]) {
+      return left(new ResourceNotFoundError('Something wrong with your plan'));
+    }
+    if (!user_plan.plan?.resources[resource].active) {
+      return left(new ResourceNotFoundError('Something wrong with your plan'));
+    }
     const period = startOfMonth(now);
 
     let usage = await this.planUsageRepository.findByUserPlanAndPeriod({
@@ -42,7 +48,7 @@ export class PlanUsageUseCase {
 
     if (usage) {
       usage.count += 1;
-      const limit = user_plan.plan?.resources[resource].limit;
+      const limit = user_plan.plan?.resources[resource]?.limit;
       if (limit && usage.count > limit) {
         return left(new ResourceExceededError(resource));
       }

@@ -1,7 +1,7 @@
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { EstimateRequest } from '@core/modules/estimate-request/entities/estimate-request';
 
-import { Job } from '@core/modules/job/entities/job';
+import { Job, JobStatus } from '@core/modules/job/entities/job';
 import { Proposal } from '@core/modules/proposal/entities/proposal';
 
 import {
@@ -23,14 +23,18 @@ export class JobMapping {
     updated_at,
     estimate_request,
     proposal,
+    status,
+    estimate_id,
   }: JobComplete) {
     return Job.create(
       {
         company_id,
         proposal_id,
         created_at,
+        status: status as JobStatus,
         updated_at,
         estimate_request_id,
+        estimate_id,
         estimate_request:
           estimate_request &&
           EstimateRequest.create(
@@ -87,6 +91,8 @@ export class JobMapping {
       company_id: job.company_id,
       proposal_id: job.proposal_id,
       estimate_request_id: job.estimate_request_id,
+      estimate_id: job.estimate_id,
+      status: job.status,
       created_at: job.created_at,
       updated_at: job.updated_at,
     };
