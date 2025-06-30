@@ -67,6 +67,11 @@ import { EstimateController } from './controllers/estimate-controller';
 import { NotificationProvider } from '@core/modules/notification/application/ports/providers/notification-provider';
 import { PublishMessagingProvider } from '@core/common/application/ports/providers/publish-messaging.provider';
 import { RabbitMqPublishMessagingProvider } from '@adapters/drivens/providers/rabbitmq-publish-messaging.provider';
+import { CompanyReviewController } from './controllers/review-controller';
+import { CompanyReviewRepository } from '@core/modules/company/application/ports/repositories/company-review-repository';
+import { PrismaCompanyReviewReviewRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-company-review-repository';
+import { PrismaCompanyReviewFileRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-company-review-file-repository';
+import { CompanyReviewFileRepository } from '@core/modules/company/application/ports/repositories/company-review-file-repository';
 
 @Module({
   imports: [
@@ -105,6 +110,14 @@ import { RabbitMqPublishMessagingProvider } from '@adapters/drivens/providers/ra
         {
           provide: CompanyRepository,
           useClass: PrismaCompanyRepository,
+        },
+        {
+          provide: CompanyReviewRepository,
+          useClass: PrismaCompanyReviewReviewRepository,
+        },
+        {
+          provide: CompanyReviewFileRepository,
+          useClass: PrismaCompanyReviewFileRepository,
         },
         {
           provide: CompanyServiceRepository,
@@ -258,6 +271,7 @@ import { RabbitMqPublishMessagingProvider } from '@adapters/drivens/providers/ra
 
   controllers: [
     InfoController,
+    CompanyReviewController,
     ProposalController,
     UserController,
     CompanyController,
