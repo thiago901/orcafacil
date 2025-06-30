@@ -10,12 +10,9 @@ export class MessageCronService {
   handleUnreadMessages() {
     this.logger.log('🕒 Verificando mensagens não visualizadas...');
 
-    // 1. Buscar mensagens com status "enviada" e tempo > 5 min
-    // 2. Verificar se o usuário já visualizou
-    // 3. Se não, notificar (push, email, etc)
-
-    // Exemplo fake:
-    // const unread = await this.messageRepository.findUnseenOlderThan(5);
-    // unread.forEach(msg => this.notificationService.notifyUser(msg.userId));
+    // 1. Buscar mensagens não lidas que forram criadas > 5 min
+    // 2. buscar usuários dessas mensagens
+    // 3. pegar o email desses usuários
+    // 4. enviar email para esses usuários
   }
 }
