@@ -8,6 +8,10 @@ import { ListAllCompaniesCategoriesUseCase } from './application/use-case/list-a
 import { CreateCompanyServiceUseCase } from './application/use-case/create-company-service-use-case';
 import { UploadProfileImageUseCase } from './application/use-case/upload-profile-image-use-case';
 import { UpdateCompanyUseCase } from './application/use-case/update-company-use-case';
+import { CreateCompanyReviewUseCase } from './application/use-case/create-company-review-use-case';
+import { ListCompanyReviewByUserUseCase } from './application/use-case/list-all-review-by-user-use-case';
+import { ListCompanyReviewByCompanyUseCase } from './application/use-case/list-all-review-by-company-use-case';
+import { UploadReviewImageUseCase } from './application/use-case/upload-review-image-use-case';
 
 @Module({
   imports: [],
@@ -22,6 +26,10 @@ import { UpdateCompanyUseCase } from './application/use-case/update-company-use-
     CreateCompanyServiceUseCase,
     UploadProfileImageUseCase,
     UpdateCompanyUseCase,
+    CreateCompanyReviewUseCase,
+    ListCompanyReviewByUserUseCase,
+    ListCompanyReviewByCompanyUseCase,
+    UploadReviewImageUseCase,
   ],
   exports: [
     CreateCompanyUseCase,
@@ -33,6 +41,10 @@ import { UpdateCompanyUseCase } from './application/use-case/update-company-use-
     CreateCompanyServiceUseCase,
     UploadProfileImageUseCase,
     UpdateCompanyUseCase,
+    CreateCompanyReviewUseCase,
+    ListCompanyReviewByUserUseCase,
+    ListCompanyReviewByCompanyUseCase,
+    UploadReviewImageUseCase,
   ],
 })
 export class CompanyModule {}

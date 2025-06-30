@@ -33,6 +33,7 @@ model User {
 
   user_plans UserPlan[]
   plan_usage PlanUsage[]
+  reviews    CompanyReview[]
 
   @@map("users")
 }
@@ -249,8 +250,6 @@ model File {
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
 
-  postFiles PostFile[]
-
   @@map("files")
 }
 
@@ -258,14 +257,14 @@ model Post {
   id         String    @id @default(uuid())
   title      String
   body       String    @db.Text
-  user_id    String    @map("user_id")
-  company_id String    @map("company_id")
+  user_id    String
+  company_id String
   status     String
-  created_at DateTime  @map("created_at")
-  updated_at DateTime? @map("updated_at")
+  created_at DateTime
+  updated_at DateTime?
 
-  postFiles PostFile[]
-  tags      Tag[]
+  post_files PostFile[]
+  tags       Tag[]
 
   @@map("posts")
 }
@@ -293,13 +292,13 @@ model Tag {
 }
 
 model PostFile {
-  id         String @id @default(uuid())
-  post_id    String @map("post_id")
-  file_id    String @map("files_id")
-  company_id String @map("company_id")
+  id         String  @id @default(uuid())
+  post_id    String
+  company_id String
+  before_url String?
+  url        String
 
   post Post @relation(fields: [post_id], references: [id])
-  file File @relation(fields: [file_id], references: [id])
 
   created_at DateTime  @map("created_at")
   updated_at DateTime? @map("updated_at")
@@ -344,10 +343,39 @@ model Company {
 
   address CompanyAddress @relation(fields: [address_id], references: [id])
 
-  created_at DateTime  @map("created_at")
-  updated_at DateTime? @map("updated_at")
+  created_at DateTime        @map("created_at")
+  updated_at DateTime?       @map("updated_at")
+  reviews    CompanyReview[]
 
   @@map("company")
+}
+
+model CompanyReview {
+  id         String   @id @default(uuid())
+  rating     Int
+  title      String
+  comment    String?
+  company_id String
+  user_id    String
+  created_at DateTime @default(now())
+
+  company Company             @relation(fields: [company_id], references: [id])
+  user    User                @relation(fields: [user_id], references: [id])
+  files   CompanyReviewFile[]
+
+  @@unique([company_id, user_id])
+  @@map("company_reviews")
+}
+
+model CompanyReviewFile {
+  id                String   @id @default(uuid())
+  company_review_id String
+  url               String
+  created_at        DateTime @default(now())
+
+  company_review CompanyReview @relation(fields: [company_review_id], references: [id])
+
+  @@map("company_reviews_files")
 }
 
 model Job {

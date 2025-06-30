@@ -50,6 +50,9 @@ export class Company extends Entity<CompanyProps> {
   get ratting() {
     return this.props.ratting;
   }
+  set ratting(ratting: number) {
+    this.props.ratting = ratting;
+  }
 
   get owner_id() {
     return this.props.owner_id;

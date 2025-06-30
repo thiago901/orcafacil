@@ -13,7 +13,7 @@ import { AuthModule } from '@adapters/drivens/infra/auth/auth.module';
 import { join } from 'node:path';
 import { WebSocketModule } from '@adapters/drivers/web-socket/web-socket.module';
 import { RMQModule } from '@adapters/drivers/rmq/rmq.module';
-
+import { ScheduleModule } from '@nestjs/schedule';
 @Module({
   imports: [
     ServeStaticModule.forRoot({
@@ -23,6 +23,7 @@ import { RMQModule } from '@adapters/drivers/rmq/rmq.module';
         index: false,
       },
     }),
+    ScheduleModule.forRoot(),
     WebSocketModule,
     EnvModule,
     HTTPModule,
