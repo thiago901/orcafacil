@@ -21,9 +21,16 @@ export class ApproveProposalUseCase {
   ) {}
 
   async execute({ id }: RequestProps): Promise<ResponseProps> {
-    const proposal = await this.proposalRepository.findById(id);
+    const proposal = await this.proposalRepository.findById(id, {
+      relations: {
+        estimate_request: true,
+      },
+    });
 
     if (!proposal) {
+      return left(new ResourceNotFoundError());
+    }
+    if (!proposal.estimate_request) {
       return left(new ResourceNotFoundError());
     }
     proposal.approved_at = new Date();
@@ -33,6 +40,7 @@ export class ApproveProposalUseCase {
       proposal_id: proposal.id.toString(),
       estimate_request_id: proposal.estimate_request_id,
       estimate_id: proposal.estimate_id,
+      user_id: proposal.estimate_request.user_id,
       status: 'BACKLOG',
     });
     await this.jobRepository.create(job);

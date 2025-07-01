@@ -72,6 +72,8 @@ import { CompanyReviewRepository } from '@core/modules/company/application/ports
 import { PrismaCompanyReviewReviewRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-company-review-repository';
 import { PrismaCompanyReviewFileRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-company-review-file-repository';
 import { CompanyReviewFileRepository } from '@core/modules/company/application/ports/repositories/company-review-file-repository';
+import { EmailProvider } from '@core/common/application/ports/providers/email-provider';
+import { ResendEmailProvider } from '@adapters/drivens/providers/resend-email-provider';
 
 @Module({
   imports: [
@@ -102,6 +104,18 @@ import { CompanyReviewFileRepository } from '@core/modules/company/application/p
           provide: JobRepository,
           useClass: PrismaJobsRepository,
         },
+        {
+          provide: EmailProvider,
+          useClass: ResendEmailProvider,
+        },
+        {
+          provide: UserRepository,
+          useClass: PrismaUserRepository,
+        },
+        {
+          provide: NotificationRepository,
+          useClass: PrismaNotificationRepository,
+        },
       ],
     },
     {
@@ -130,6 +144,10 @@ import { CompanyReviewFileRepository } from '@core/modules/company/application/p
         {
           provide: AddressFinderProvider,
           useClass: LocationiqProvider,
+        },
+        {
+          provide: JobRepository,
+          useClass: PrismaJobsRepository,
         },
       ],
     },

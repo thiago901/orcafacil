@@ -15,6 +15,138 @@
         ]
       }
     },
+    "/reviews": {
+      "post": {
+        "operationId": "CompanyReviewController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCompanyReviewProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Review"
+        ]
+      }
+    },
+    "/reviews/{id}": {
+      "get": {
+        "operationId": "CompanyReviewController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Review"
+        ]
+      }
+    },
+    "/reviews/users": {
+      "get": {
+        "operationId": "CompanyReviewController_listAllByUser",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Review"
+        ]
+      }
+    },
+    "/reviews/company/{id}": {
+      "get": {
+        "operationId": "CompanyReviewController_listAllByCompany",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Review"
+        ]
+      }
+    },
+    "/reviews/{id}/file": {
+      "patch": {
+        "operationId": "CompanyReviewController_uploadFiles",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Review"
+        ]
+      }
+    },
     "/proposals": {
       "post": {
         "operationId": "ProposalController_create",
@@ -1632,6 +1764,33 @@
       }
     },
     "schemas": {
+      "CreateCompanyReviewProps": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          },
+          "job_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 1,
+            "exclusiveMinimum": false,
+            "maximum": 5,
+            "exclusiveMaximum": false
+          }
+        },
+        "required": [
+          "title",
+          "job_id",
+          "rating"
+        ]
+      },
       "CreateProposalProps": {
         "type": "object",
         "properties": {
@@ -2048,13 +2207,18 @@
           "estimate_id": {
             "type": "string",
             "format": "uuid"
+          },
+          "customer_id": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "required": [
           "company_id",
           "proposal_id",
           "estimate_request_id",
-          "estimate_id"
+          "estimate_id",
+          "customer_id"
         ]
       },
       "CreateEstimateRequestMessageProps": {

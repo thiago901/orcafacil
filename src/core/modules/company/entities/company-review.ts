@@ -13,6 +13,7 @@ export interface CompanyReviewProps {
   comment?: string | null;
   company_id: string;
   user_id: string;
+  job_id: string;
   files?: CompanyReviewFile[];
   created_at: Date;
 
@@ -49,6 +50,9 @@ export class CompanyReview extends Entity<CompanyReviewProps> {
   }
   get user_id() {
     return this.props.user_id;
+  }
+  get job_id() {
+    return this.props.job_id;
   }
   get files() {
     return this.props.files;

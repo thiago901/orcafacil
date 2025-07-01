@@ -19,6 +19,12 @@ import { NotificationRepository } from '@core/modules/notification/application/p
 import { PrismaNotificationRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-notification-repository';
 import { NotificationProvider } from '@core/modules/notification/application/ports/providers/notification-provider';
 import { NotificationEmitter } from '../web-socket/emitters/proposals-emitter';
+import { CompanyReviewRepository } from '@core/modules/company/application/ports/repositories/company-review-repository';
+import { PrismaCompanyReviewReviewRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-company-review-repository';
+import { CompanyReviewFileRepository } from '@core/modules/company/application/ports/repositories/company-review-file-repository';
+import { PrismaCompanyReviewFileRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-company-review-file-repository';
+import { PrismaJobsRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-jobs-repository';
+import { JobRepository } from '@core/modules/job/application/ports/repositories/job-repository';
 
 @Module({
   imports: [
@@ -44,6 +50,14 @@ import { NotificationEmitter } from '../web-socket/emitters/proposals-emitter';
           useClass: PrismaCompanyRepository,
         },
         {
+          provide: CompanyReviewRepository,
+          useClass: PrismaCompanyReviewReviewRepository,
+        },
+        {
+          provide: CompanyReviewFileRepository,
+          useClass: PrismaCompanyReviewFileRepository,
+        },
+        {
           provide: CompanyServiceRepository,
           useClass: PrismaCompanyServiceRepository,
         },
@@ -54,6 +68,10 @@ import { NotificationEmitter } from '../web-socket/emitters/proposals-emitter';
         {
           provide: AddressFinderProvider,
           useClass: LocationiqProvider,
+        },
+        {
+          provide: JobRepository,
+          useClass: PrismaJobsRepository,
         },
       ],
     },

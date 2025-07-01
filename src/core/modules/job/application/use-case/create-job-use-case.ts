@@ -8,6 +8,7 @@ interface RequestProps {
   proposal_id: string;
   estimate_request_id: string;
   estimate_id: string;
+  customer_id: string;
 }
 
 type ResponseProps = Either<
@@ -26,10 +27,12 @@ export class CreateJobUseCase {
     proposal_id,
     estimate_request_id,
     estimate_id,
+    customer_id,
   }: RequestProps): Promise<ResponseProps> {
     const job = Job.create({
       company_id,
       proposal_id,
+      user_id: customer_id,
       estimate_request_id,
       estimate_id,
       status: 'BACKLOG',

@@ -62,12 +62,19 @@ export class JobsController {
   @Post('/')
   @UsePipes(new ZodValidationPipe(createJobSchema))
   async createJob(@Body() body: CreateJobProps) {
-    const { company_id, proposal_id, estimate_request_id, estimate_id } = body;
+    const {
+      company_id,
+      proposal_id,
+      estimate_request_id,
+      estimate_id,
+      customer_id,
+    } = body;
     const result = await this.createJobUseCase.execute({
       company_id,
       proposal_id,
       estimate_request_id,
       estimate_id,
+      customer_id,
     });
     if (result.isLeft()) {
       throw new HttpException('result.value', HttpStatus.BAD_REQUEST);

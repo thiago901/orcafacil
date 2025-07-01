@@ -3,7 +3,10 @@ import { ProposalMapping } from './mapping/proposal-mapping';
 
 import { Injectable } from '@nestjs/common';
 
-import { ProposalRepository } from '@core/modules/proposal/application/ports/repositories/proposal-repository';
+import {
+  ProposalRepository,
+  ProposalRepositoryOptions,
+} from '@core/modules/proposal/application/ports/repositories/proposal-repository';
 import { Proposal } from '@core/modules/proposal/entities/proposal';
 import { EstimateMapping } from './mapping/estimate-mapping';
 
@@ -61,9 +64,13 @@ export class PrismaProposalRepository implements ProposalRepository {
     });
   }
 
-  async findById(id: string): Promise<Proposal | null> {
+  async findById(
+    id: string,
+    options?: ProposalRepositoryOptions,
+  ): Promise<Proposal | null> {
     const proposal = await this.prisma.proposal.findUnique({
       where: { id },
+      include: options?.relations,
     });
 
     if (!proposal) {

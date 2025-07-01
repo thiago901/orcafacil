@@ -6,6 +6,7 @@ export const createJobSchema = z.object({
   proposal_id: z.string().uuid(),
   estimate_request_id: z.string().uuid(),
   estimate_id: z.string().uuid(),
+  customer_id: z.string().uuid(),
 });
 
 export class CreateJobProps extends createZodDto(createJobSchema) {}

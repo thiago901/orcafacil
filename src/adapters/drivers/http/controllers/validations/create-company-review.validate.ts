@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const createCompanyReviewSchema = z.object({
   title: z.string(),
   comment: z.string().optional(),
-  company_id: z.string().uuid(),
+  job_id: z.string().uuid(),
   rating: z.number().min(1).max(5),
 });
 

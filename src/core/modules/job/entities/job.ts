@@ -11,6 +11,7 @@ export interface JobProps {
   proposal_id: string;
   estimate_request_id: string;
   estimate_id: string;
+  user_id: string;
   created_at: Date;
   updated_at: Date | null;
   proposal?: Proposal;
@@ -52,6 +53,9 @@ export class Job extends Entity<JobProps> {
 
   get proposal_id() {
     return this.props.proposal_id;
+  }
+  get user_id() {
+    return this.props.user_id;
   }
   get created_at() {
     return this.props.created_at;

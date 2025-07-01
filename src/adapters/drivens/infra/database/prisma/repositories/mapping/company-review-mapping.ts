@@ -13,10 +13,12 @@ export class CompanyReviewMapping {
     rating,
     title,
     user_id,
+    job_id,
   }: PrismaEntity) {
     return CompanyReview.create(
       {
         comment,
+        job_id,
         company_id,
         created_at,
         rating,
@@ -36,6 +38,7 @@ export class CompanyReviewMapping {
       rating: entity.rating,
       title: entity.title,
       user_id: entity.user_id,
+      job_id: entity.job_id,
     };
   }
 }

@@ -49,17 +49,13 @@ export class CompanyReviewController {
   @Post('/')
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createCompanyReviewSchema))
-  async create(
-    @Body() body: CreateCompanyReviewProps,
-    @CurrentUser() user: TokenPayload,
-  ) {
-    const { comment, company_id, rating, title } = body;
+  async create(@Body() body: CreateCompanyReviewProps) {
+    const { comment, rating, title, job_id } = body;
     const result = await this.createCompanyReviewUseCase.execute({
       comment,
-      company_id,
       rating,
       title,
-      user_id: user.sub,
+      job_id,
     });
     if (result.isLeft()) {
       throw new HttpException('result.value', HttpStatus.BAD_REQUEST);

@@ -6,12 +6,14 @@ import { CompanyReviewRepository } from '../ports/repositories/company-review-re
 import { CompanyRepository } from '../ports/repositories/company-repository';
 import { ResourceNotFoundError } from '@core/common/errors/common/resource-not-found-error';
 
+import { JobRepository } from '@core/modules/job/application/ports/repositories/job-repository';
+
 type RequestProps = {
   title: string;
   comment?: string;
-  company_id: string;
+
+  job_id: string;
   rating: number;
-  user_id: string;
 };
 type ResponseProps = Either<
   ResourceNotFoundError,
@@ -25,26 +27,33 @@ export class CreateCompanyReviewUseCase {
   constructor(
     private readonly companyReviewRepository: CompanyReviewRepository,
     private readonly companyRepository: CompanyRepository,
+    private readonly JobRepository: JobRepository,
   ) {}
 
   async execute({
     comment,
-    company_id,
+
     rating,
-    user_id,
     title,
+    job_id,
   }: RequestProps): Promise<ResponseProps> {
-    const company = await this.companyRepository.findById(company_id);
+    const job = await this.JobRepository.findById(job_id);
+
+    if (!job) {
+      return left(new ResourceNotFoundError());
+    }
+    const company = await this.companyRepository.findById(job.company_id);
 
     if (!company) {
-      return left(new ResourceNotFoundError('Company not found'));
+      return left(new ResourceNotFoundError());
     }
     const review = CompanyReview.create({
       comment,
       title,
-      company_id,
+      job_id,
+      company_id: company.id.toString(),
       rating,
-      user_id,
+      user_id: job.user_id,
     });
     await this.companyReviewRepository.create(review);
 
