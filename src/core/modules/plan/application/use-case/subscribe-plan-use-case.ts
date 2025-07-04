@@ -53,7 +53,7 @@ export class SubscribePlanUseCase {
       price: plan_type === 'monthly' ? plan.price_month : plan.price_year,
       status: 'active',
       start_date: now,
-      end_date: duration,
+      end_date: plan_id === 'free' ? null : duration,
     });
 
     await this.userPlanRepository.create(user_plan);

@@ -1769,6 +1769,25 @@
           "Estimates"
         ]
       }
+    },
+    "/subscriptions/user": {
+      "get": {
+        "operationId": "SubscriptionsController_getByUserId",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Subscriptions"
+        ]
+      }
     }
   },
   "info": {

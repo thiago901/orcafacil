@@ -4,6 +4,7 @@ import { GetAllPlansUseCase } from './application/use-case/get-all-plan-by-id-us
 import { SubscribePlanUseCase } from './application/use-case/subscribe-plan-use-case';
 import { PlanUsageUseCase } from './application/use-case/plan-usage-use-case';
 import { UpdateSubscribePlanUseCase } from './application/use-case/update-subscribe-plan-use-case';
+import { FindSubscriptionByUserIdUseCase } from './application/use-case/find-subsctiption-by-user-id-use-case';
 
 @Module({
   imports: [],
@@ -14,6 +15,7 @@ import { UpdateSubscribePlanUseCase } from './application/use-case/update-subscr
     SubscribePlanUseCase,
     PlanUsageUseCase,
     UpdateSubscribePlanUseCase,
+    FindSubscriptionByUserIdUseCase,
   ],
   exports: [
     GetAllPlansUseCase,
@@ -21,6 +23,7 @@ import { UpdateSubscribePlanUseCase } from './application/use-case/update-subscr
     SubscribePlanUseCase,
     PlanUsageUseCase,
     UpdateSubscribePlanUseCase,
+    FindSubscriptionByUserIdUseCase,
   ],
 })
 export class PlanModule {}

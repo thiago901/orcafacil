@@ -15,6 +15,13 @@ export class PrismaUserPlanRepository implements UserPlanRepository {
 
     return userPlan ? UserPlanMapping.toDomain(userPlan) : null;
   }
+  async findByUser(user_id: string): Promise<UserPlan | null> {
+    const userPlan = await this.prisma.userPlan.findFirst({
+      where: { user_id, status: 'active' },
+    });
+
+    return userPlan ? UserPlanMapping.toDomain(userPlan) : null;
+  }
 
   async findActiveByUserId(userId: string): Promise<UserPlan | null> {
     const userPlan = await this.prisma.userPlan.findFirst({

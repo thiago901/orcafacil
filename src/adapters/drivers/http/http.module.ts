@@ -74,6 +74,7 @@ import { PrismaCompanyReviewFileRepository } from '@adapters/drivens/infra/datab
 import { CompanyReviewFileRepository } from '@core/modules/company/application/ports/repositories/company-review-file-repository';
 import { EmailProvider } from '@core/common/application/ports/providers/email-provider';
 import { ResendEmailProvider } from '@adapters/drivens/providers/resend-email-provider';
+import { SubscriptionsController } from './controllers/subscriptions-controller';
 
 @Module({
   imports: [
@@ -304,6 +305,7 @@ import { ResendEmailProvider } from '@adapters/drivens/providers/resend-email-pr
     PaymentController,
     PlanController,
     EstimateController,
+    SubscriptionsController,
   ],
 })
 export class HTTPModule {}
