@@ -14,6 +14,7 @@ export interface UserProps {
   updated_at: Date;
   company?: Company | null;
   role: string;
+  customer_id_from_payment_provider: string | null;
   plan?: UserPlan | null;
   active: boolean;
 }
@@ -50,6 +51,13 @@ export class User extends Entity<UserProps> {
   set avatar(avatar: string | null) {
     this.props.avatar = avatar;
     this.touch();
+  }
+
+  get customer_id_from_payment_provider() {
+    return this.props.customer_id_from_payment_provider;
+  }
+  set customer_id_from_payment_provider(id: string | null) {
+    this.props.customer_id_from_payment_provider = id;
   }
   get email() {
     return this.props.email;

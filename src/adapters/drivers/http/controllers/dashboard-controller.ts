@@ -25,7 +25,6 @@ export class DashboardController {
   @Public()
   async getDashboard(@Param('company_id') company_id: string) {
     const userId = company_id;
-    console.log('userId', userId);
 
     const company = await this.prisma.company.findFirst({
       where: { id: userId },

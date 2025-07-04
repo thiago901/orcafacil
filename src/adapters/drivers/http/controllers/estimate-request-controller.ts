@@ -122,8 +122,6 @@ export class EstimateRequestController {
     @Query('radiusInMeters') radiusInMeters: number,
     @Query('category[]') category?: string[],
   ) {
-    console.log('category', category);
-
     const result = await this.listEstimateRequestsUseCase.execute({
       latitude,
       user_id: user.sub,

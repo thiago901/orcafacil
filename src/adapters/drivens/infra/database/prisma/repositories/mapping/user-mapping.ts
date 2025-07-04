@@ -26,6 +26,7 @@ export class UserMapping {
     company,
     role,
     user_plans,
+    customer_id_from_payment_provider,
     active,
   }: UserComplete) {
     return User.create(
@@ -33,6 +34,7 @@ export class UserMapping {
         email,
         created_at,
         updated_at: updated_at ? updated_at : undefined,
+        customer_id_from_payment_provider,
         name,
         password,
         avatar,
@@ -73,6 +75,7 @@ export class UserMapping {
       name: user.name,
       role: user.role,
       password: user.password,
+      customer_id_from_payment_provider: user.customer_id_from_payment_provider,
       phone: user.phone,
       active: user.active,
     };

@@ -28,7 +28,7 @@ export class SubscribePlanUseCase {
     plan_type,
   }: RequestProps): Promise<ResponseProps> {
     const now = new Date();
-    const user = await this.userRepository.findByEmail(user_id);
+    const user = await this.userRepository.findById(user_id);
     if (!user) {
       return left(new ResourceNotFoundError('User not found'));
     }

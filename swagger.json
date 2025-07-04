@@ -1535,6 +1535,30 @@
         ]
       }
     },
+    "/payments/cancel/subscription": {
+      "delete": {
+        "operationId": "PaymentController_cancelSubscription",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelSubscriptionProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Payment"
+        ]
+      }
+    },
     "/payments/webhooks/stripe": {
       "post": {
         "operationId": "PaymentController_handleStripeWebhook",
@@ -2300,6 +2324,18 @@
         "required": [
           "customer_id",
           "price_id"
+        ]
+      },
+      "CancelSubscriptionProps": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": [
+          "email"
         ]
       },
       "SubscribePlanProps": {

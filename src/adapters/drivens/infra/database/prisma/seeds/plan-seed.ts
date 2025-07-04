@@ -44,8 +44,8 @@ export async function planSeed() {
       description: 'Para profissionais ativos',
       price_month: 49.9,
       price_year: 499.0,
-      price_id_month: 'price_month_essential_xyz', // stripe ID
-      price_id_year: 'price_year_essential_xyz',
+      price_id_month: 'price_1Rb37mQitTm5wxzyrliyO07t',
+      price_id_year: 'price_1Rb338QitTm5wxzy4EbVKwpa',
       resources: {
         searchHighlight: {
           label: 'Destaque nas buscas',

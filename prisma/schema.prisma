@@ -16,17 +16,18 @@ datasource db {
 }
 
 model User {
-  id               String            @id @default(uuid())
-  name             String
-  email            String
-  phone            String
-  password         String
-  avatar           String?
-  created_at       DateTime          @map("created_at")
-  updated_at       DateTime?         @map("updated_at")
-  estimateRequests EstimateRequest[]
-  role             String            @default("customer")
-  active           Boolean           @default(false)
+  id                                String            @id @default(uuid())
+  name                              String
+  email                             String
+  phone                             String
+  password                          String
+  avatar                            String?
+  customer_id_from_payment_provider String?
+  created_at                        DateTime          @map("created_at")
+  updated_at                        DateTime?         @map("updated_at")
+  estimateRequests                  EstimateRequest[]
+  role                              String            @default("customer")
+  active                            Boolean           @default(false)
 
   companies Company[]
   UserToken UserToken[]
@@ -385,7 +386,7 @@ model Job {
   id                  String @id @default(uuid())
   company_id          String @map("company_id")
   proposal_id         String @unique @map("proposal_id")
-  user_id             String 
+  user_id             String
   estimate_request_id String @map("estimate_request_id")
   estimate_id         String @map("estimate_id")
   status              String @default("BACKLOG")

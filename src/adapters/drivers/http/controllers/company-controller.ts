@@ -126,8 +126,6 @@ export class CompanyController {
     @UploadedFile() file: Express.Multer.File,
     @Param('id') company_id: string,
   ) {
-    console.log('file', file);
-
     if (!file) {
       throw new BadRequestException('Nenhum arquivo enviado!');
     }

@@ -14,6 +14,8 @@ import { EnvService } from '@adapters/drivens/infra/envs/env.service';
 import { UserPlanRepository } from '@core/modules/plan/application/ports/repositories/user-plan-repository';
 import { UserPlan } from '@core/modules/plan/entities/user-plan';
 
+import { PaymentsProvider } from '@core/modules/payment/application/ports/providers/payments-provider';
+
 interface RequestProps {
   name: string;
   email: string;
@@ -33,6 +35,8 @@ export class CreateUserUseCase {
     private readonly userTokenRepository: UserTokenRepository,
     private readonly userPlanRepository: UserPlanRepository,
     private readonly emailProvider: EmailProvider,
+    private readonly paymentsProvider: PaymentsProvider,
+
     private readonly env: EnvService,
   ) {}
 
@@ -52,6 +56,7 @@ export class CreateUserUseCase {
       active: false,
       avatar: avatar ? avatar : null,
       password: await this.hashProvider.hash(password),
+      customer_id_from_payment_provider: null,
     });
 
     try {
@@ -79,6 +84,12 @@ export class CreateUserUseCase {
         used: false,
         user_id: user.id.toString(),
       });
+      if (user.role === 'company') {
+        const result = await this.paymentsProvider.createCustomer(email);
+
+        user.customer_id_from_payment_provider = result.id;
+        await this.userRepository.save(user);
+      }
       await this.userTokenRepository.create(user_token);
       await this.emailProvider.send({
         to: user.email,

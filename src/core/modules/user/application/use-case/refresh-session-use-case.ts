@@ -44,6 +44,7 @@ export class RefreshSessionUseCase {
       role: user.role,
       plan_id: user.plan?.plan_id,
       active: user.active,
+      avatar: user.avatar,
     });
 
     return right({ token });

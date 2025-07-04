@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Headers,
   HttpCode,
   Post,
@@ -28,6 +29,13 @@ import Stripe from 'stripe';
 import { PrismaService } from '@adapters/drivens/infra/database/prisma/prisma.service';
 import { Public } from '@adapters/drivens/infra/auth/public';
 import { SubscribePlanUseCase } from '@core/modules/plan/application/use-case/subscribe-plan-use-case';
+import {
+  CancelSubscriptionProps,
+  cancelSubscriptionSchema,
+} from './validations/cancel-subscription.validate';
+import { CancelSubscriptionUseCase } from '@core/modules/payment/application/use-case/cancel-subscription-use-case';
+
+import { UpdateSubscribePlanUseCase } from '@core/modules/plan/application/use-case/update-subscribe-plan-use-case';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-05-28.basil',
@@ -41,6 +49,9 @@ export class PaymentController {
     private readonly createCustomerUseCase: CreateCustomerUseCase,
     private readonly createPaymentSessionUseCase: CreatePaymentSessionUseCase,
     private readonly subscribePlanUseCase: SubscribePlanUseCase,
+    private readonly updateSubscribePlanUseCase: UpdateSubscribePlanUseCase,
+    private readonly cancelSubscriptionUseCase: CancelSubscriptionUseCase,
+
     private readonly prismaService: PrismaService,
   ) {}
 
@@ -63,7 +74,15 @@ export class PaymentController {
   @UsePipes(new ZodValidationPipe(createPaymentSessionSchema))
   async createSession(@Body() body: CreatePaymentSessionProps) {
     const session = await this.createPaymentSessionUseCase.execute(body);
-    console.log('session', session);
+
+    return {
+      result: session.value,
+    };
+  }
+  @Delete('/cancel/subscription')
+  @UsePipes(new ZodValidationPipe(cancelSubscriptionSchema))
+  async cancelSubscription(@Body() body: CancelSubscriptionProps) {
+    const session = await this.cancelSubscriptionUseCase.execute(body);
 
     return {
       result: session.value,
@@ -87,18 +106,7 @@ export class PaymentController {
       console.error('Webhook signature verification failed.');
       throw new BadRequestException(`Webhook Error: `);
     }
-    // try {
-    //   event = stripe.webhooks.constructEvent(
-    //     req.body as any,
-    //     signature,
-    //     process.env.STRIPE_WEBHOOK_SECRET!,
-    //   );
-    // } catch (err) {
-    //   console.error('Webhook signature verification failed.', err.message);
-    //   throw new BadRequestException(`Webhook Error: ${err.message}`);
-    // }
 
-    // Lida com o evento
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
@@ -111,21 +119,32 @@ export class PaymentController {
         const lookup_key =
           sessionWithLineItems.line_items?.data[0]?.price?.lookup_key;
 
-        const customerEmail = session.customer_details?.email;
+        const stripeCustomerId = session.customer as string;
 
-        if (!customerEmail || !priceId) break;
+        if (!stripeCustomerId || !priceId) break;
 
-        // Buscar o plano usando o price_id
+        // 🔍 Buscar usuário pelo stripe_customer_id
+        const usuario = await this.prismaService.user.findFirst({
+          where: { customer_id_from_payment_provider: stripeCustomerId },
+        });
+
+        if (!usuario) {
+          console.warn(
+            `Usuário não encontrado com customer_id ${stripeCustomerId}`,
+          );
+          break;
+        }
+
+        // 🔍 Buscar plano
         let whereClause: any = {};
         if (lookup_key === 'monthly') {
           whereClause = { price_id_month: priceId };
         } else if (lookup_key === 'yearly') {
           whereClause = { price_id_year: priceId };
         }
+
         const plan = await this.prismaService.plan.findFirst({
-          where: {
-            ...whereClause,
-          }, // ajuste esse campo conforme seu model
+          where: whereClause,
         });
 
         if (!plan) {
@@ -133,21 +152,58 @@ export class PaymentController {
           break;
         }
 
-        // Atualiza o usuário
+        // ✅ Atualiza o usuário com o novo plano
         await this.subscribePlanUseCase.execute({
           plan_id: plan.id,
-          user_id: customerEmail, // Aqui você deve ter o ID do usuário, não o email
+          user_id: usuario.id,
           plan_type: lookup_key as 'monthly' | 'yearly',
         });
-        // await this.prismaService.user.updateMany({
-        //   where: { email: customerEmail },
-        //   data: {},
-        // });
 
         console.log(
-          `Plano atualizado para o usuário ${customerEmail}: ${plan.name}`,
+          `Plano atualizado para o usuário ${usuario.email}: ${plan.name}`,
         );
         break;
+      }
+      case 'customer.subscription.updated': {
+        const subscription = event.data.object as Stripe.Subscription;
+
+        const customerId = subscription.customer;
+
+        const end_date = subscription.cancel_at;
+        const user = await this.prismaService.user.findFirst({
+          where: {
+            customer_id_from_payment_provider: String(customerId),
+          },
+        });
+
+        if (user) {
+          await this.updateSubscribePlanUseCase.execute({
+            user_id: user?.id,
+            end_date: end_date ? new Date(end_date * 1000) : undefined,
+          });
+        }
+      }
+      case 'customer.subscription.deleted': {
+        const subscription = event.data.object as Stripe.Subscription;
+
+        const customerId = subscription.customer; // pode ser o ID do Stripe ou o email, depende do seu fluxo
+
+        const status = subscription.status;
+
+        if (status === 'canceled') {
+          const user = await this.prismaService.user.findFirst({
+            where: {
+              customer_id_from_payment_provider: String(customerId),
+            },
+          });
+          if (user) {
+            await this.subscribePlanUseCase.execute({
+              plan_id: 'free',
+              plan_type: 'monthly',
+              user_id: user.id,
+            });
+          }
+        }
       }
     }
     return {

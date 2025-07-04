@@ -60,6 +60,8 @@ export class EstimateRequestMapping {
                 phone: user.phone,
                 role: user.role,
                 active: user.active,
+                customer_id_from_payment_provider:
+                  user.customer_id_from_payment_provider,
               },
               new UniqueEntityID(user.id),
             ),
