@@ -39,6 +39,11 @@ import { UploadProfileImageUseCase } from '@core/modules/user/application/use-ca
 import { CurrentUser } from '@adapters/drivens/infra/auth/current-user-decorator';
 import { TokenPayload } from '@adapters/drivens/infra/auth/jwt.strategy';
 import { ActivateUserUseCase } from '@core/modules/user/application/use-case/acivate-user-use-case';
+import { SendMessageSupportUseCase } from '@core/modules/user/application/use-case/send-message-support-use-case';
+import {
+  CreateSupportMessageProps,
+  createSupportMessageSchema,
+} from './validations/create-support-message.validate';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -53,6 +58,7 @@ export class UserController {
     private readonly listAllUsersUseCase: ListAllUsersUseCase,
     private readonly uploadProfileImageUseCase: UploadProfileImageUseCase,
     private readonly activateUserUseCase: ActivateUserUseCase,
+    private readonly sendMessageSupportUseCase: SendMessageSupportUseCase,
   ) {}
 
   @Post('/')
@@ -65,6 +71,24 @@ export class UserController {
       throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
     }
     return { result: UserMapping.toView(result.value.user) };
+  }
+  @Post('/support')
+  @UsePipes(new ZodValidationPipe(createSupportMessageSchema))
+  async createSupportMessage(
+    @CurrentUser() user: TokenPayload,
+    @Body() body: CreateSupportMessageProps,
+  ) {
+    const { body: content, label, title } = body;
+    const result = await this.sendMessageSupportUseCase.execute({
+      user_id: user.sub,
+      body: content,
+      label,
+      title,
+    });
+    if (result.isLeft()) {
+      throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
+    }
+    return { result: null };
   }
 
   @Put('/:id')

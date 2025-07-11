@@ -75,6 +75,8 @@ import { CompanyReviewFileRepository } from '@core/modules/company/application/p
 import { EmailProvider } from '@core/common/application/ports/providers/email-provider';
 import { ResendEmailProvider } from '@adapters/drivens/providers/resend-email-provider';
 import { SubscriptionsController } from './controllers/subscriptions-controller';
+import { SupportProvider } from '@core/common/application/ports/providers/suport-provider';
+import { GitHubIssuesSuportProvider } from '@adapters/drivens/providers/github-issues-suport-provider';
 
 @Module({
   imports: [
@@ -95,6 +97,10 @@ import { SubscriptionsController } from './controllers/subscriptions-controller'
         {
           provide: UserPlanRepository,
           useClass: PrismaUserPlanRepository,
+        },
+        {
+          provide: SupportProvider,
+          useClass: GitHubIssuesSuportProvider,
         },
       ],
     },

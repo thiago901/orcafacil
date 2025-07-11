@@ -9,6 +9,7 @@ import { UpdateUserUseCase } from './application/use-case/update-user-use-case';
 import { UploadProfileImageUseCase } from './application/use-case/upload-profile-image-use-case';
 import { RefreshSessionUseCase } from './application/use-case/refresh-session-use-case';
 import { ActivateUserUseCase } from './application/use-case/acivate-user-use-case';
+import { SendMessageSupportUseCase } from './application/use-case/send-message-support-use-case';
 
 @Module({
   imports: [],
@@ -25,6 +26,7 @@ import { ActivateUserUseCase } from './application/use-case/acivate-user-use-cas
     UploadProfileImageUseCase,
     RefreshSessionUseCase,
     ActivateUserUseCase,
+    SendMessageSupportUseCase,
   ],
   exports: [
     CreateSessionUseCase,
@@ -37,6 +39,7 @@ import { ActivateUserUseCase } from './application/use-case/acivate-user-use-cas
     UploadProfileImageUseCase,
     RefreshSessionUseCase,
     ActivateUserUseCase,
+    SendMessageSupportUseCase,
   ],
 })
 export class UserModule {}
