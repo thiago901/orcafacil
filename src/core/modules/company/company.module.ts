@@ -12,7 +12,8 @@ import { CreateCompanyReviewUseCase } from './application/use-case/create-compan
 import { ListCompanyReviewByUserUseCase } from './application/use-case/list-all-review-by-user-use-case';
 import { ListCompanyReviewByCompanyUseCase } from './application/use-case/list-all-review-by-company-use-case';
 import { UploadReviewImageUseCase } from './application/use-case/upload-review-image-use-case';
-import { FindCompanyReviewByIdUseCase } from './application/use-case/find-review-by-id-use-case copy';
+import { FindCompanyReviewByIdUseCase } from './application/use-case/find-review-by-id-use-case';
+import { FindCompanyByLocationUseCase } from './application/use-case/find-companies-by-location-use-case';
 
 @Module({
   imports: [],
@@ -32,6 +33,7 @@ import { FindCompanyReviewByIdUseCase } from './application/use-case/find-review
     ListCompanyReviewByCompanyUseCase,
     UploadReviewImageUseCase,
     FindCompanyReviewByIdUseCase,
+    FindCompanyByLocationUseCase,
   ],
   exports: [
     CreateCompanyUseCase,
@@ -48,6 +50,7 @@ import { FindCompanyReviewByIdUseCase } from './application/use-case/find-review
     ListCompanyReviewByCompanyUseCase,
     UploadReviewImageUseCase,
     FindCompanyReviewByIdUseCase,
+    FindCompanyByLocationUseCase,
   ],
 })
 export class CompanyModule {}

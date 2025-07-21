@@ -38,6 +38,11 @@ import {
   updateCompanySchema,
 } from './validations/update-company.validate';
 import { UpdateCompanyUseCase } from '@core/modules/company/application/use-case/update-company-use-case';
+import {
+  FindCompanyLocationProps,
+  findCompanyLocationSchema,
+} from './validations/find-company-location.validate';
+import { FindCompanyByLocationUseCase } from '@core/modules/company/application/use-case/find-companies-by-location-use-case';
 
 @ApiTags('Company')
 @ApiBearerAuth()
@@ -51,6 +56,7 @@ export class CompanyController {
     private readonly listAllCompaniesByOwnerUseCase: ListAllCompaniesByOwnerUseCase,
     private readonly uploadProfileImageUseCase: UploadProfileImageUseCase,
     private readonly updateCompanyUseCase: UpdateCompanyUseCase,
+    private readonly findCompanyByLocationUseCase: FindCompanyByLocationUseCase,
   ) {}
 
   @Post('/')
@@ -120,6 +126,22 @@ export class CompanyController {
     return { result: result.value.companies.map(CompanyMapping.toView) };
   }
 
+  @Post('/location')
+  @Public()
+  @UsePipes(new ZodValidationPipe(findCompanyLocationSchema))
+  @HttpCode(200)
+  async listCompaniesByGeolocation(@Body() body: FindCompanyLocationProps) {
+    const result = await this.findCompanyByLocationUseCase.execute(body);
+    if (result.isLeft()) {
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return {
+      result: result.value.companies.map(CompanyMapping.toView),
+    };
+  }
   @Patch('/:id/file')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFiles(

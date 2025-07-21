@@ -29,7 +29,7 @@ import { TokenPayload } from '@adapters/drivens/infra/auth/jwt.strategy';
 import { CompanyReviewMapping } from '../mapping/company-review-mapping';
 import { ListCompanyReviewByCompanyUseCase } from '@core/modules/company/application/use-case/list-all-review-by-company-use-case';
 import { ListCompanyReviewByUserUseCase } from '@core/modules/company/application/use-case/list-all-review-by-user-use-case';
-import { FindCompanyReviewByIdUseCase } from '@core/modules/company/application/use-case/find-review-by-id-use-case copy';
+import { FindCompanyReviewByIdUseCase } from '@core/modules/company/application/use-case/find-review-by-id-use-case';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { UploadReviewImageUseCase } from '@core/modules/company/application/use-case/upload-review-image-use-case';
 
