@@ -77,6 +77,8 @@ import { ResendEmailProvider } from '@adapters/drivens/providers/resend-email-pr
 import { SubscriptionsController } from './controllers/subscriptions-controller';
 import { SupportProvider } from '@core/common/application/ports/providers/suport-provider';
 import { GitHubIssuesSuportProvider } from '@adapters/drivens/providers/github-issues-suport-provider';
+import { CustomerRepository } from '@core/modules/user/application/ports/repositories/customers-repository';
+import { PrismaCustomerRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-customer-repository';
 
 @Module({
   imports: [
@@ -89,6 +91,10 @@ import { GitHubIssuesSuportProvider } from '@adapters/drivens/providers/github-i
         {
           provide: UserRepository,
           useClass: PrismaUserRepository,
+        },
+        {
+          provide: CustomerRepository,
+          useClass: PrismaCustomerRepository,
         },
         {
           provide: UserTokenRepository,

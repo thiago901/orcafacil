@@ -36,6 +36,15 @@ import {
 import { CancelSubscriptionUseCase } from '@core/modules/payment/application/use-case/cancel-subscription-use-case';
 
 import { UpdateSubscribePlanUseCase } from '@core/modules/plan/application/use-case/update-subscribe-plan-use-case';
+import { PaymentsCustomerProvider } from '@core/modules/payment/application/ports/providers/payments-customer-provider';
+import {
+  CreateUserPaymentSessionProps,
+  createUserPaymentSessionSchema,
+} from './validations/create-user-payment-session.validate';
+import {
+  CreateUserPaymentCustomerProps,
+  createUserPaymentCustomerSchema,
+} from './validations/create-user-payment-customer.validate';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-05-28.basil',
@@ -51,6 +60,7 @@ export class PaymentController {
     private readonly subscribePlanUseCase: SubscribePlanUseCase,
     private readonly updateSubscribePlanUseCase: UpdateSubscribePlanUseCase,
     private readonly cancelSubscriptionUseCase: CancelSubscriptionUseCase,
+    private readonly paymentsCustomerProvider: PaymentsCustomerProvider,
 
     private readonly prismaService: PrismaService,
   ) {}
@@ -210,6 +220,38 @@ export class PaymentController {
       result: {
         received: true,
       },
+    };
+  }
+
+  @Post('/customer/session')
+  @HttpCode(200)
+  @Public()
+  @UsePipes(new ZodValidationPipe(createUserPaymentSessionSchema))
+  async createUserSession(@Body() body: CreateUserPaymentSessionProps) {
+    const session = await this.paymentsCustomerProvider.createPayment({
+      amount: body.amount,
+      customer_id: body.customer_id,
+    });
+
+    return {
+      result: session,
+    };
+  }
+  @Post('/customer/asaas')
+  @HttpCode(200)
+  @Public()
+  @UsePipes(new ZodValidationPipe(createUserPaymentCustomerSchema))
+  async createUserCustomer(@Body() body: CreateUserPaymentCustomerProps) {
+    const { doc, email, phone, name } = body;
+    const session = await this.paymentsCustomerProvider.createCustomer({
+      doc,
+      email,
+      phone,
+      name,
+    });
+
+    return {
+      result: session,
     };
   }
 }

@@ -30,6 +30,8 @@ import { UserRepository } from '@core/modules/user/application/ports/repositorie
 import { PrismaUserRepository } from '../infra/database/prisma/repositories/prisma-user-repository';
 import { GitHubIssuesSuportProvider } from './github-issues-suport-provider';
 import { SupportProvider } from '@core/common/application/ports/providers/suport-provider';
+import { PaymentsCustomerProvider } from '@core/modules/payment/application/ports/providers/payments-customer-provider';
+import { AsaasProvider } from './assas-provider';
 
 @Module({
   imports: [
@@ -92,6 +94,10 @@ import { SupportProvider } from '@core/common/application/ports/providers/suport
       provide: SupportProvider,
       useClass: GitHubIssuesSuportProvider,
     },
+    {
+      provide: PaymentsCustomerProvider,
+      useClass: AsaasProvider,
+    },
     EnvService,
   ],
 
@@ -105,6 +111,7 @@ import { SupportProvider } from '@core/common/application/ports/providers/suport
     PaymentsProvider,
     UsagePlanProvider,
     SupportProvider,
+    PaymentsCustomerProvider,
   ],
 })
 export class ProviderModule {}

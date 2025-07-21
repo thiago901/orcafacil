@@ -36,8 +36,24 @@ model User {
   plan_usage PlanUsage[]
   reviews    CompanyReview[]
   job        Job[]
+  customer   Customer[]
 
   @@map("users")
+}
+
+model Customer {
+  id         String    @id @default(uuid())
+  name       String
+  email      String
+  phone      String
+  document   String
+  user_id    String
+  created_at DateTime  @default(now()) @map("created_at")
+  updated_at DateTime? @map("updated_at")
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("customers")
 }
 
 model Plan {

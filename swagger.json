@@ -1640,6 +1640,54 @@
         ]
       }
     },
+    "/payments/customer/session": {
+      "post": {
+        "operationId": "PaymentController_createUserSession",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserPaymentSessionProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Payment"
+        ]
+      }
+    },
+    "/payments/customer/asaas": {
+      "post": {
+        "operationId": "PaymentController_createUserCustomer",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserPaymentCustomerProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Payment"
+        ]
+      }
+    },
     "/plans/{plan_id}": {
       "get": {
         "operationId": "PlanController_getById",
@@ -2482,6 +2530,44 @@
         },
         "required": [
           "email"
+        ]
+      },
+      "CreateUserPaymentSessionProps": {
+        "type": "object",
+        "properties": {
+          "customer_id": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "customer_id",
+          "amount"
+        ]
+      },
+      "CreateUserPaymentCustomerProps": {
+        "type": "object",
+        "properties": {
+          "doc": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "doc",
+          "email",
+          "phone",
+          "name"
         ]
       },
       "SubscribePlanProps": {
