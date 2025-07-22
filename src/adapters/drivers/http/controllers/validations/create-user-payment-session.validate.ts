@@ -2,8 +2,7 @@ import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 
 export const createUserPaymentSessionSchema = z.object({
-  customer_id: z.string(),
-  amount: z.number(),
+  proposal_id: z.string().uuid(),
 });
 
 export class CreateUserPaymentSessionProps extends createZodDto(

@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import {
   CreateCustomerProps,
   CreatePaymentProps,
+  CreatePaymentResponse,
+  FindCustomerResponse,
   PaymentsCustomerProvider,
 } from '@core/modules/payment/application/ports/providers/payments-customer-provider';
 import axios from 'axios';
@@ -12,7 +14,10 @@ export class AsaasProvider implements PaymentsCustomerProvider {
   private readonly API_URL = 'https://api-sandbox.asaas.com/v3';
   private readonly API_KEY = process.env.ASAAS_API_KEY; // coloque no .env
 
-  async createPayment({ amount, customer_id }: CreatePaymentProps) {
+  async createPayment({
+    amount,
+    customer_id,
+  }: CreatePaymentProps): Promise<CreatePaymentResponse> {
     const { data } = await axios.post(
       `${this.API_URL}/payments`,
       {
@@ -30,15 +35,47 @@ export class AsaasProvider implements PaymentsCustomerProvider {
         },
       },
     );
-    return data;
+    return {
+      session_url: data.invoiceUrl,
+    };
   }
 
-  async createCustomer({ email, doc, phone, name }: CreateCustomerProps) {
+  async createCustomer({
+    email,
+    document,
+    phone,
+    name,
+    customer_id,
+  }: CreateCustomerProps) {
     const { data } = await axios.post(
       `${this.API_URL}/customers`,
-      { name, email, cpfCnpj: doc, phone },
+      { name, email, cpfCnpj: document, phone, externalReference: customer_id },
       { headers: { access_token: this.API_KEY } },
     );
     return data;
+  }
+  async findCustomer(document: string): Promise<FindCustomerResponse | null> {
+    const response = await axios.get(
+      `${this.API_URL}/customers?cpfCnpj=${document}`,
+      {
+        headers: {
+          access_token: this.API_KEY,
+        },
+      },
+    );
+    const { data } = response.data;
+    if (!data || !data.length) {
+      return null;
+    }
+
+    const { email, externalReference, id, name, phone } = data[0];
+    return {
+      document,
+      email,
+      externalReference,
+      id,
+      name,
+      phone,
+    };
   }
 }

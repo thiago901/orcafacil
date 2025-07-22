@@ -51,7 +51,12 @@ export class PrismaUserRepository implements UserRepository {
     options?: UserRepositoryOptions,
   ): Promise<User | null> {
     const user = await this.prisma.user.findFirst({
-      where: { email },
+      where: {
+        email: {
+          equals: email,
+          mode: 'insensitive',
+        },
+      },
       include: options?.relations
         ? {
             ...options.relations,

@@ -1688,6 +1688,20 @@
         ]
       }
     },
+    "/payments/customer/asaas/webhook": {
+      "post": {
+        "operationId": "PaymentController_asaaswebhook",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Payment"
+        ]
+      }
+    },
     "/plans/{plan_id}": {
       "get": {
         "operationId": "PlanController_getById",
@@ -2023,6 +2037,10 @@
             "type": "string",
             "minLength": 2
           },
+          "document": {
+            "type": "string",
+            "minLength": 2
+          },
           "email": {
             "type": "string",
             "format": "email"
@@ -2048,6 +2066,7 @@
         },
         "required": [
           "name",
+          "document",
           "email",
           "password",
           "phone",
@@ -2535,16 +2554,13 @@
       "CreateUserPaymentSessionProps": {
         "type": "object",
         "properties": {
-          "customer_id": {
-            "type": "string"
-          },
-          "amount": {
-            "type": "number"
+          "proposal_id": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "required": [
-          "customer_id",
-          "amount"
+          "proposal_id"
         ]
       },
       "CreateUserPaymentCustomerProps": {
@@ -2561,13 +2577,18 @@
           },
           "name": {
             "type": "string"
+          },
+          "customer_id": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "required": [
           "doc",
           "email",
           "phone",
-          "name"
+          "name",
+          "customer_id"
         ]
       },
       "SubscribePlanProps": {
