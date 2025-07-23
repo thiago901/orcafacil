@@ -79,6 +79,10 @@ import { SupportProvider } from '@core/common/application/ports/providers/suport
 import { GitHubIssuesSuportProvider } from '@adapters/drivens/providers/github-issues-suport-provider';
 import { CustomerRepository } from '@core/modules/user/application/ports/repositories/customers-repository';
 import { PrismaCustomerRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-customer-repository';
+import { ScheduledVisitModule } from '@core/modules/scheduled-visit/scheduled-visit.module';
+import { ScheduledVisitRepository } from '@core/modules/scheduled-visit/application/ports/repositories/schedule-visit.repository';
+import { PrismaScheduledVisitRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-scheduled-visit.repository';
+import { ScheduledVisitController } from './controllers/scheduled-visit-controller';
 
 @Module({
   imports: [
@@ -298,6 +302,15 @@ import { PrismaCustomerRepository } from '@adapters/drivens/infra/database/prism
         },
       ],
     },
+    {
+      module: ScheduledVisitModule,
+      providers: [
+        {
+          provide: ScheduledVisitRepository,
+          useClass: PrismaScheduledVisitRepository,
+        },
+      ],
+    },
   ],
 
   controllers: [
@@ -318,6 +331,7 @@ import { PrismaCustomerRepository } from '@adapters/drivens/infra/database/prism
     PlanController,
     EstimateController,
     SubscriptionsController,
+    ScheduledVisitController,
   ],
 })
 export class HTTPModule {}

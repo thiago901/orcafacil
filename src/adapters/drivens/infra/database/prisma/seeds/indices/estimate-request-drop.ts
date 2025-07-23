@@ -16,6 +16,9 @@ export async function estimate_request_geolocation() {
   //   WHERE "location" IS NULL;
   // `);
   await prisma.$executeRawUnsafe(`
+    CREATE EXTENSION IF NOT EXISTS postgis;
+  `);
+  await prisma.$executeRawUnsafe(`
     DROP INDEX IF EXISTS estimate_request_location_gist;
   `);
   await prisma.$executeRawUnsafe(`

@@ -287,6 +287,7 @@ export class PaymentController {
   @Public()
   async asaaswebhook(@Body() body: any) {
     console.log('body', body);
+    const { event } = body;
 
     return {
       result: true,

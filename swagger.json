@@ -1908,6 +1908,183 @@
           "Subscriptions"
         ]
       }
+    },
+    "/visits": {
+      "post": {
+        "operationId": "ScheduledVisitController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateScheduledVisitDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
+    "/visits/{id}": {
+      "get": {
+        "operationId": "ScheduledVisitController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
+    "/visits/company/{company_id}": {
+      "get": {
+        "operationId": "ScheduledVisitController_listPending",
+        "parameters": [
+          {
+            "name": "company_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
+    "/visits/customer/{customer_id}/suggestions": {
+      "get": {
+        "operationId": "ScheduledVisitController_listSuggestions",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
+    "/visits/{id}/confirm": {
+      "patch": {
+        "operationId": "ScheduledVisitController_confirm",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
+    "/visits/{id}/suggest-new-date/{date}": {
+      "patch": {
+        "operationId": "ScheduledVisitController_suggestNewDate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
     }
   },
   "info": {
@@ -2604,6 +2781,33 @@
         },
         "required": [
           "plan_type"
+        ]
+      },
+      "CreateScheduledVisitDto": {
+        "type": "object",
+        "properties": {
+          "estimate_request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "company_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "customer_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scheduled_at": {},
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "estimate_request_id",
+          "company_id",
+          "customer_id",
+          "scheduled_at"
         ]
       }
     }

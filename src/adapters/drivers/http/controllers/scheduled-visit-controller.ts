@@ -1,0 +1,132 @@
+// scheduled-visit.controller.ts
+import {
+  Body,
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  UseInterceptors,
+  UsePipes,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+
+import { LoggingInterceptor } from '../interceptors/custom-logger-routes';
+import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
+
+import {
+  CreateScheduledVisitDto,
+  createScheduledVisitSchema,
+} from './validations/scheduled-visit.validate';
+import { CreateScheduledVisitUseCase } from '@core/modules/scheduled-visit/application/use-case/create-schedule-visit-use-case';
+import { ConfirmScheduledVisitUseCase } from '@core/modules/scheduled-visit/application/use-case/confirm-scheduled-visit-use-case';
+import { SuggestNewDateUseCase } from '@core/modules/scheduled-visit/application/use-case/suggest-new-date-use-case';
+import { GetScheduledVisitByIdUseCase } from '@core/modules/scheduled-visit/application/use-case/get-scheduled-visit-by-id.use-case';
+import { ListPendingVisitsByCompanyUseCase } from '@core/modules/scheduled-visit/application/use-case/list-pending-visits-by-company.use-case';
+
+@ApiTags('ScheduledVisits')
+@ApiBearerAuth()
+@Controller('/visits')
+@UseInterceptors(LoggingInterceptor)
+export class ScheduledVisitController {
+  constructor(
+    private readonly createVisitUseCase: CreateScheduledVisitUseCase,
+    private readonly confirmVisitUseCase: ConfirmScheduledVisitUseCase,
+    private readonly suggestVisitUseCase: SuggestNewDateUseCase,
+    private readonly getVisitByIdUseCase: GetScheduledVisitByIdUseCase,
+    private readonly listPendingUseCase: ListPendingVisitsByCompanyUseCase,
+    private readonly listSuggestedUseCase: ListPendingVisitsByCompanyUseCase,
+  ) {}
+
+  @Post('/')
+  @UsePipes(new ZodValidationPipe(createScheduledVisitSchema))
+  async create(@Body() body: CreateScheduledVisitDto) {
+    const {
+      company_id,
+      customer_id,
+      estimate_request_id,
+      scheduled_at,
+      notes,
+    } = body;
+    const result = await this.createVisitUseCase.execute({
+      company_id,
+      customer_id,
+      estimate_request_id,
+      scheduled_at,
+      notes,
+    });
+
+    if (result.isLeft()) {
+      throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
+    }
+
+    return { result: result.value.visit };
+  }
+
+  @Get('/:id')
+  async findById(@Param('id') id: string) {
+    const result = await this.getVisitByIdUseCase.execute({ id });
+
+    if (result.isLeft()) {
+      throw new HttpException(result.value.message, HttpStatus.NOT_FOUND);
+    }
+
+    return { result: result.value.visit };
+  }
+
+  @Get('/company/:company_id')
+  async listPending(@Param('company_id') company_id: string) {
+    const result = await this.listPendingUseCase.execute({ company_id });
+
+    if (result.isLeft()) {
+      throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
+    }
+
+    return { result: result.value.visits };
+  }
+
+  @Get('/customer/:customer_id/suggestions')
+  async listSuggestions(@Param('customer_id') customer_id: string) {
+    const result = await this.listSuggestedUseCase.execute({
+      company_id: customer_id,
+    });
+
+    if (result.isLeft()) {
+      throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
+    }
+
+    return { result: result.value.visits };
+  }
+
+  @Patch('/:id/confirm')
+  async confirm(@Param('id') id: string) {
+    const result = await this.confirmVisitUseCase.execute({ visit_id: id });
+
+    if (result.isLeft()) {
+      throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
+    }
+
+    return { result: result.value.visit };
+  }
+
+  @Patch('/:id/suggest-new-date/:date')
+  async suggestNewDate(@Param('id') id: string, @Param('date') date: string) {
+    const newDate = new Date(date);
+    if (isNaN(newDate.getTime())) {
+      throw new HttpException('Invalid date format', HttpStatus.BAD_REQUEST);
+    }
+
+    const result = await this.suggestVisitUseCase.execute({
+      visit_id: id,
+      suggested_at: newDate,
+    });
+
+    if (result.isLeft()) {
+      throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
+    }
+
+    return { result: result.value.visit };
+  }
+}

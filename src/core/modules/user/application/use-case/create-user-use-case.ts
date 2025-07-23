@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Either, right, left } from '@core/common/entities/either';
 import { User } from '../../entities/user';
 import { UserRepository } from '../ports/repositories/user-repository';
@@ -83,14 +83,6 @@ export class CreateUserUseCase {
       });
       await this.customerRepository.create(customer);
 
-      await this.paymentsCustomerProvider.createCustomer({
-        document: customer.document,
-        email: customer.email,
-        name: customer.name,
-        phone: customer.phone,
-        customer_id: customer.id.toString(),
-      });
-
       const user_plan = UserPlan.create({
         status: 'active',
         user_id: user.id.toString(),
@@ -128,6 +120,20 @@ export class CreateUserUseCase {
           verificationLink: `${this.env.get('WEB_APPLICATION_URL')}/user/activation/${user_token.token}`,
         },
       });
+
+      const hasCustomer =
+        await this.paymentsCustomerProvider.findCustomer(document);
+      if (!hasCustomer) {
+        this.paymentsCustomerProvider
+          .createCustomer({
+            document: customer.document,
+            email: customer.email,
+            name: customer.name,
+            phone: customer.phone,
+            customer_id: customer.id.toString(),
+          })
+          .catch((err) => Logger.error(err));
+      }
 
       return right({ user });
     } catch (error: any) {
