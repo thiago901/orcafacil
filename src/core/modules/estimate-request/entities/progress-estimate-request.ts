@@ -4,6 +4,7 @@ import { Optional } from '@core/common/entities/optional';
 
 export type ProgressEstimateRequestType =
   | 'CREATED'
+  | 'PROPOSALS_WAITING'
   | 'PROPOSALS_RECEIVED'
   | 'PROPOSALS_ACCEPTED'
   | 'VISIT_REQUESTED'

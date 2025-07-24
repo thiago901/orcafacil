@@ -2085,6 +2085,60 @@
           "ScheduledVisits"
         ]
       }
+    },
+    "/progress-estimate-requests/estimate_request/{id}": {
+      "get": {
+        "operationId": "ProgressEstimateRequestController_findAllByEstimateReques",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Progress Estimate Request"
+        ]
+      },
+      "post": {
+        "operationId": "ProgressEstimateRequestController_create",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Progress Estimate Request"
+        ]
+      }
     }
   },
   "info": {

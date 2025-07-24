@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Either, right } from '@core/common/entities/either';
 import { AddressFinderProvider } from '@core/common/application/ports/providers/address-finder';
 import { PublishMessagingProvider } from '@core/common/application/ports/providers/publish-messaging.provider';
+import { CreateProgressEstimateUseCase } from './create-progress-estimate-use-case';
 
 interface RequestProps {
   user_id: string;
@@ -34,6 +35,7 @@ export class CreateEstimateRequestUseCase {
     private readonly estimateRequestRepository: EstimateRequestRepository,
     private readonly addressFinderProvider: AddressFinderProvider,
     private readonly publishMessagingProvider: PublishMessagingProvider,
+    private readonly createProgressEstimateUseCase: CreateProgressEstimateUseCase,
   ) {}
 
   async execute({
@@ -98,6 +100,12 @@ export class CreateEstimateRequestUseCase {
         exchange: 'amq.direct',
         routingKey: 'estimate_request:created',
       },
+    });
+    await this.createProgressEstimateUseCase.execute({
+      description: `Solicitação de orçamento de ${estimateRequest.category} criada`,
+      estimate_request_id: estimateRequest.id.toString(),
+      title: 'Orçamento Criado',
+      type: 'CREATED',
     });
     return right({ estimateRequest });
   }

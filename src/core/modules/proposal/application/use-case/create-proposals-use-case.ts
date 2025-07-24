@@ -22,6 +22,7 @@ import {
   EstimateItemsTypeUnitProps,
 } from '@core/modules/estimate-request/entities/estimate-item';
 import { WatchedEstimateItem } from '@core/modules/estimate-request/entities/watched-estimate-item';
+
 interface RequestProps {
   user_id: string;
   description: string;
@@ -59,7 +60,6 @@ export class CreateProposalUseCase {
     private readonly env: EnvService,
     private readonly estimateRequestRepository: EstimateRequestRepository,
     private readonly estimateRepository: EstimateRepository,
-
     private readonly companyRepository: CompanyRepository,
     private readonly emailProvider: EmailProvider,
     private readonly proposalNotificationProvider: NotificationEmitter,

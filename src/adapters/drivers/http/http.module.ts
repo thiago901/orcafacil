@@ -83,6 +83,9 @@ import { ScheduledVisitModule } from '@core/modules/scheduled-visit/scheduled-vi
 import { ScheduledVisitRepository } from '@core/modules/scheduled-visit/application/ports/repositories/schedule-visit.repository';
 import { PrismaScheduledVisitRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-scheduled-visit.repository';
 import { ScheduledVisitController } from './controllers/scheduled-visit-controller';
+import { ProgressEstimateRequestRepository } from '@core/modules/estimate-request/application/ports/repositories/progress-estimate-request-repository';
+import { PrismaProgressEstimateRequestRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-progress-estimate-request-repository';
+import { ProgressEstimateRequestController } from './controllers/progress-estimate-request-controller';
 
 @Module({
   imports: [
@@ -206,6 +209,10 @@ import { ScheduledVisitController } from './controllers/scheduled-visit-controll
         {
           provide: PublishMessagingProvider,
           useClass: RabbitMqPublishMessagingProvider,
+        },
+        {
+          provide: ProgressEstimateRequestRepository,
+          useClass: PrismaProgressEstimateRequestRepository,
         },
       ],
     },
@@ -332,6 +339,7 @@ import { ScheduledVisitController } from './controllers/scheduled-visit-controll
     EstimateController,
     SubscriptionsController,
     ScheduledVisitController,
+    ProgressEstimateRequestController,
   ],
 })
 export class HTTPModule {}
