@@ -1,19 +1,18 @@
 import { Either, left, right } from '@core/common/entities/either';
-import { ScheduledVisitRepository } from '../ports/repositories/schedule-visit.repository';
 import { Injectable } from '@nestjs/common';
+import { ScheduledVisitRepository } from '../ports/repositories/schedule-visit.repository';
 import { ResourceNotFoundError } from '@core/common/errors/common/resource-not-found-error';
-import { ScheduledVisit } from '../../entities/scheduled-visit';
 import { ProgressEstimateRequestProvider } from '@core/modules/estimate-request/application/ports/provider/progress-estimate-request';
+import { ScheduledVisit } from '../../entities/scheduled-visit';
 
-// CONFIRM
-interface ConfirmVisitRequest {
+interface FinishedVisitUseCaseRequest {
   visit_id: string;
 }
 
-type ConfirmVisitResponse = Either<Error, { visit: ScheduledVisit }>;
+type FinishedVisitUseCaseResponse = Either<Error, { visit: ScheduledVisit }>;
 
 @Injectable()
-export class ConfirmScheduledVisitUseCase {
+export class FinishedVisitUseCase {
   constructor(
     private readonly repository: ScheduledVisitRepository,
     private readonly progressEstimateRequestProvider: ProgressEstimateRequestProvider,
@@ -21,22 +20,29 @@ export class ConfirmScheduledVisitUseCase {
 
   async execute({
     visit_id,
-  }: ConfirmVisitRequest): Promise<ConfirmVisitResponse> {
+  }: FinishedVisitUseCaseRequest): Promise<FinishedVisitUseCaseResponse> {
     const visit = await this.repository.findById(visit_id);
 
-    if (!visit) {
+    if (!visit || !visit.suggested_at) {
       return left(new ResourceNotFoundError());
     }
 
-    visit.status = 'CONFIRMED';
+    visit.status = 'COMPLETED';
+
     await this.repository.save(visit);
+
     await this.progressEstimateRequestProvider.execute({
       type: 'VISIT_CONFIRMED',
       estimate_request_id: visit.estimate_request_id,
-      title: 'Data de Visíta confirmada',
-      description: `A data foi confirmidad, aguarde contado do prestador`,
+      title: 'Visita Completa',
+      description: `A visita foi finalizada`,
     });
-
+    await this.progressEstimateRequestProvider.execute({
+      type: 'PAYMENT_REQUESTED',
+      estimate_request_id: visit.estimate_request_id,
+      title: 'Aguardamos Pagamento',
+      description: `Estamos aguardando pagamento para prosseguir`,
+    });
     return right({ visit });
   }
 }

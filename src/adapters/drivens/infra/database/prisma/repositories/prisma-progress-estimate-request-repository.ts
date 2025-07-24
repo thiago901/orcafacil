@@ -11,6 +11,20 @@ export class PrismaProgressEstimateRequestRepository
   implements ProgressEstimateRequestRepository
 {
   constructor(private readonly prisma: PrismaService) {}
+  async save(
+    progressEstimateRequest: ProgressEstimateRequest,
+  ): Promise<ProgressEstimateRequest> {
+    const data = ProgressEstimateRequestMapping.toPrisma(
+      progressEstimateRequest,
+    );
+    await this.prisma.progressEstimateRequest.update({
+      data,
+      where: {
+        id: data.id,
+      },
+    });
+    return progressEstimateRequest;
+  }
   async create(
     progressEstimateRequest: ProgressEstimateRequest,
   ): Promise<ProgressEstimateRequest> {

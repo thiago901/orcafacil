@@ -7,6 +7,7 @@ import { ConfirmScheduledVisitUseCase } from './application/use-case/confirm-sch
 import { ListPendingVisitsByCompanyUseCase } from './application/use-case/list-pending-visits-by-company.use-case';
 import { GetScheduledVisitByIdUseCase } from './application/use-case/get-scheduled-visit-by-id.use-case';
 import { ListSuggestedVisitsByCustomerUseCase } from './application/use-case/list-suggested-visits-by-customer.use-case';
+import { FinishedVisitUseCase } from './application/use-case/finished-visit-use-case';
 
 @Module({
   imports: [],
@@ -20,6 +21,7 @@ import { ListSuggestedVisitsByCustomerUseCase } from './application/use-case/lis
     ListPendingVisitsByCompanyUseCase,
     GetScheduledVisitByIdUseCase,
     ListSuggestedVisitsByCustomerUseCase,
+    FinishedVisitUseCase,
   ],
   exports: [
     AcceptSuggestedDateUseCase,
@@ -30,6 +32,7 @@ import { ListSuggestedVisitsByCustomerUseCase } from './application/use-case/lis
     ListPendingVisitsByCompanyUseCase,
     GetScheduledVisitByIdUseCase,
     ListSuggestedVisitsByCustomerUseCase,
+    FinishedVisitUseCase,
   ],
 })
 export class ScheduledVisitModule {}

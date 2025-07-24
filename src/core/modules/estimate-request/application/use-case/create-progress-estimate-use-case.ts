@@ -1,28 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { Either, right } from '@core/common/entities/either';
+import { right } from '@core/common/entities/either';
 
 import { ProgressEstimateRequestRepository } from '../ports/repositories/progress-estimate-request-repository';
+import { ProgressEstimateRequest } from '../../entities/progress-estimate-request';
 import {
-  ProgressEstimateRequest,
-  ProgressEstimateRequestType,
-} from '../../entities/progress-estimate-request';
-
-interface RequestProps {
-  description: string;
-  estimate_request_id: string;
-  title: string;
-  type: ProgressEstimateRequestType;
-}
-
-type ResponseProps = Either<
-  null,
-  {
-    progressEstimateRequest: ProgressEstimateRequest;
-  }
->;
+  ProgressEstimateRequestProvider,
+  RequestProps,
+  ResponseProps,
+} from '../ports/provider/progress-estimate-request';
 
 @Injectable()
-export class CreateProgressEstimateUseCase {
+export class CreateProgressEstimateUseCase
+  implements ProgressEstimateRequestProvider
+{
   constructor(
     private readonly progressEstimateRequestRepository: ProgressEstimateRequestRepository,
   ) {}

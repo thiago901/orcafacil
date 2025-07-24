@@ -41,13 +41,18 @@ export class ProgressEstimateRequest extends Entity<EstimateRequestProps> {
   get title() {
     return this.props.title;
   }
-
+  set title(title: string) {
+    this.props.title = title;
+  }
   get estimate_request_id() {
     return this.props.estimate_request_id;
   }
 
   get description() {
     return this.props.description;
+  }
+  set description(description: string) {
+    this.props.description = description;
   }
 
   get type() {

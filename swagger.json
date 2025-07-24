@@ -2086,6 +2086,34 @@
         ]
       }
     },
+    "/visits/{id}/complete": {
+      "post": {
+        "operationId": "ScheduledVisitController_finisedVisit",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
     "/progress-estimate-requests/estimate_request/{id}": {
       "get": {
         "operationId": "ProgressEstimateRequestController_findAllByEstimateReques",
@@ -2246,6 +2274,10 @@
                 "quantity"
               ]
             }
+          },
+          "is_required_visit": {
+            "type": "boolean",
+            "default": false
           },
           "estimate_request_id": {
             "type": "string"

@@ -18,6 +18,7 @@ export interface ProposalProps {
   estimate_request_id: string;
   estimate_id: string;
   company_id: string;
+  is_required_visit: boolean;
 
   company?: Company;
   estimate_request?: EstimateRequest | null;
@@ -58,6 +59,9 @@ export class Proposal extends Entity<ProposalProps> {
 
   get company_id() {
     return this.props.company_id;
+  }
+  get is_required_visit() {
+    return this.props.is_required_visit;
   }
 
   get created_at() {

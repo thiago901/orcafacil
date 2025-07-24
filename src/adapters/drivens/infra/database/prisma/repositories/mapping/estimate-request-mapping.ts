@@ -89,6 +89,7 @@ export class EstimateRequestMapping {
               approved_at: proposal.approved_at,
               created_at: proposal.created_at,
               updated_at: proposal.updated_at,
+              is_required_visit: proposal.is_required_visit,
             },
             new UniqueEntityID(proposal.id),
           ),

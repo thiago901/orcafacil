@@ -6,6 +6,7 @@ import { ResourceNotFoundError } from '@core/common/errors/common/resource-not-f
 
 import { JobRepository } from '@core/modules/job/application/ports/repositories/job-repository';
 import { Job } from '@core/modules/job/entities/job';
+import { ProgressEstimateRequestProvider } from '@core/modules/estimate-request/application/ports/provider/progress-estimate-request';
 
 interface RequestProps {
   id: string;
@@ -18,6 +19,7 @@ export class ApproveProposalUseCase {
   constructor(
     private readonly proposalRepository: ProposalRepository,
     private readonly jobRepository: JobRepository,
+    private readonly progressEstimateRequestProvider: ProgressEstimateRequestProvider,
   ) {}
 
   async execute({ id }: RequestProps): Promise<ResponseProps> {
@@ -35,6 +37,22 @@ export class ApproveProposalUseCase {
     }
     proposal.approved_at = new Date();
     await this.proposalRepository.save(proposal);
+
+    await this.progressEstimateRequestProvider.execute({
+      type: 'PROPOSALS_ACCEPTED',
+      estimate_request_id: proposal.estimate_request_id,
+      description: `Você aceitou uma proposta`,
+      title: 'Proposta Aceita',
+    });
+
+    if (proposal.is_required_visit) {
+      await this.progressEstimateRequestProvider.execute({
+        type: 'VISIT_REQUESTED',
+        estimate_request_id: proposal.estimate_request_id,
+        title: 'Agendamento de Visita',
+        description: `Para esse serviço é necessario uma visíta em loco`,
+      });
+    }
     const job = Job.create({
       company_id: proposal.company_id,
       proposal_id: proposal.id.toString(),

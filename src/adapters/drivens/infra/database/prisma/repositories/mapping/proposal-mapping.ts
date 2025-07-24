@@ -29,6 +29,7 @@ export class ProposalMapping {
     estimate_request,
     estimate_id,
     expire_at,
+    is_required_visit,
   }: ProposalComplete) {
     return Proposal.create(
       {
@@ -43,6 +44,7 @@ export class ProposalMapping {
         reject_at,
         estimate_id,
         expire_at,
+        is_required_visit,
 
         estimate_request: !estimate_request
           ? null
@@ -105,6 +107,7 @@ export class ProposalMapping {
       reject_at: proposal.reject_at,
       estimate_id: proposal.estimate_id,
       expire_at: proposal.expire_at,
+      is_required_visit: proposal.is_required_visit,
     };
   }
 }

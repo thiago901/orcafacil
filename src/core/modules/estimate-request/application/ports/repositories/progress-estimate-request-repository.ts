@@ -8,4 +8,7 @@ export abstract class ProgressEstimateRequestRepository {
   abstract findByEstimateRequest(
     estimate_request_id: string,
   ): Promise<ProgressEstimateRequest[]>;
+  abstract save(
+    progressEstimateRequest: ProgressEstimateRequest,
+  ): Promise<ProgressEstimateRequest>;
 }

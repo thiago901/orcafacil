@@ -237,6 +237,7 @@ model Proposal {
   estimate_id         String
   estimate_request_id String
   company_id          String
+  is_required_visit Boolean @default(false)
 
   estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
   estimate         Estimate        @relation(fields: [estimate_id], references: [id])

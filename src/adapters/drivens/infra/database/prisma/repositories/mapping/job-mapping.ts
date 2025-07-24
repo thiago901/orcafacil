@@ -79,6 +79,7 @@ export class JobMapping {
               created_at: proposal.created_at,
               reject_at: proposal.reject_at,
               updated_at: proposal.updated_at,
+              is_required_visit: proposal.is_required_visit,
             },
             new UniqueEntityID(proposal_id),
           ),

@@ -25,6 +25,7 @@ import { ConfirmScheduledVisitUseCase } from '@core/modules/scheduled-visit/appl
 import { SuggestNewDateUseCase } from '@core/modules/scheduled-visit/application/use-case/suggest-new-date-use-case';
 import { GetScheduledVisitByIdUseCase } from '@core/modules/scheduled-visit/application/use-case/get-scheduled-visit-by-id.use-case';
 import { ListPendingVisitsByCompanyUseCase } from '@core/modules/scheduled-visit/application/use-case/list-pending-visits-by-company.use-case';
+import { FinishedVisitUseCase } from '@core/modules/scheduled-visit/application/use-case/finished-visit-use-case';
 
 @ApiTags('ScheduledVisits')
 @ApiBearerAuth()
@@ -38,6 +39,7 @@ export class ScheduledVisitController {
     private readonly getVisitByIdUseCase: GetScheduledVisitByIdUseCase,
     private readonly listPendingUseCase: ListPendingVisitsByCompanyUseCase,
     private readonly listSuggestedUseCase: ListPendingVisitsByCompanyUseCase,
+    private readonly finishedVisitUseCase: FinishedVisitUseCase,
   ) {}
 
   @Post('/')
@@ -121,6 +123,18 @@ export class ScheduledVisitController {
     const result = await this.suggestVisitUseCase.execute({
       visit_id: id,
       suggested_at: newDate,
+    });
+
+    if (result.isLeft()) {
+      throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
+    }
+
+    return { result: result.value.visit };
+  }
+  @Post('/:id/complete')
+  async finisedVisit(@Param('id') id: string) {
+    const result = await this.finishedVisitUseCase.execute({
+      visit_id: id,
     });
 
     if (result.isLeft()) {

@@ -20,7 +20,7 @@ export const createProposalSchema = z.object({
       quantity: z.coerce.number(),
     }),
   ),
-
+  is_required_visit: z.boolean().default(false),
   estimate_request_id: z.string(),
   expire_at: z.coerce.date(),
 });

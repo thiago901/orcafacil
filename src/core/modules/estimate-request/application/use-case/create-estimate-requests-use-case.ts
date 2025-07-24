@@ -83,6 +83,19 @@ export class CreateEstimateRequestUseCase {
 
     await this.estimateRequestRepository.save(estimateRequest);
 
+    await this.createProgressEstimateUseCase.execute({
+      type: 'CREATED',
+      estimate_request_id: estimateRequest.id.toString(),
+      description: `Solicitação de orçamento de ${estimateRequest.category} criada`,
+      title: 'Orçamento Criado',
+    });
+    await this.createProgressEstimateUseCase.execute({
+      type: 'PROPOSALS_WAITING',
+      estimate_request_id: estimateRequest.id.toString(),
+      description: 'Estamos contatando os prestadores',
+      title: 'Aguardando Propostas',
+    });
+
     await this.publishMessagingProvider.publish({
       data: {
         pattern: 'estimate_request:created',

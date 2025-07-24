@@ -86,6 +86,8 @@ import { ScheduledVisitController } from './controllers/scheduled-visit-controll
 import { ProgressEstimateRequestRepository } from '@core/modules/estimate-request/application/ports/repositories/progress-estimate-request-repository';
 import { PrismaProgressEstimateRequestRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-progress-estimate-request-repository';
 import { ProgressEstimateRequestController } from './controllers/progress-estimate-request-controller';
+import { CreateProgressEstimateUseCase } from '@core/modules/estimate-request/application/use-case/create-progress-estimate-use-case';
+import { ProgressEstimateRequestProvider } from '@core/modules/estimate-request/application/ports/provider/progress-estimate-request';
 
 @Module({
   imports: [
@@ -247,6 +249,14 @@ import { ProgressEstimateRequestController } from './controllers/progress-estima
           provide: EstimateRepository,
           useClass: PrismaEstimateRepository,
         },
+        {
+          provide: ProgressEstimateRequestProvider,
+          useClass: CreateProgressEstimateUseCase,
+        },
+        {
+          provide: ProgressEstimateRequestRepository,
+          useClass: PrismaProgressEstimateRequestRepository,
+        },
       ],
     },
     {
@@ -315,6 +325,14 @@ import { ProgressEstimateRequestController } from './controllers/progress-estima
         {
           provide: ScheduledVisitRepository,
           useClass: PrismaScheduledVisitRepository,
+        },
+        {
+          provide: ProgressEstimateRequestProvider,
+          useClass: CreateProgressEstimateUseCase,
+        },
+        {
+          provide: ProgressEstimateRequestRepository,
+          useClass: PrismaProgressEstimateRequestRepository,
         },
       ],
     },
