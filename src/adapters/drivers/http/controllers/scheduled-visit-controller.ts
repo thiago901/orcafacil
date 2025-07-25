@@ -29,7 +29,7 @@ import { FinishedVisitUseCase } from '@core/modules/scheduled-visit/application/
 
 @ApiTags('ScheduledVisits')
 @ApiBearerAuth()
-@Controller('/visits')
+@Controller('/scheduled-visits')
 @UseInterceptors(LoggingInterceptor)
 export class ScheduledVisitController {
   constructor(

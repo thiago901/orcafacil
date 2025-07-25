@@ -1909,7 +1909,7 @@
         ]
       }
     },
-    "/visits": {
+    "/scheduled-visits": {
       "post": {
         "operationId": "ScheduledVisitController_create",
         "parameters": [],
@@ -1938,7 +1938,7 @@
         ]
       }
     },
-    "/visits/{id}": {
+    "/scheduled-visits/{id}": {
       "get": {
         "operationId": "ScheduledVisitController_findById",
         "parameters": [
@@ -1966,7 +1966,7 @@
         ]
       }
     },
-    "/visits/company/{company_id}": {
+    "/scheduled-visits/company/{company_id}": {
       "get": {
         "operationId": "ScheduledVisitController_listPending",
         "parameters": [
@@ -1994,7 +1994,7 @@
         ]
       }
     },
-    "/visits/customer/{customer_id}/suggestions": {
+    "/scheduled-visits/customer/{customer_id}/suggestions": {
       "get": {
         "operationId": "ScheduledVisitController_listSuggestions",
         "parameters": [
@@ -2022,7 +2022,7 @@
         ]
       }
     },
-    "/visits/{id}/confirm": {
+    "/scheduled-visits/{id}/confirm": {
       "patch": {
         "operationId": "ScheduledVisitController_confirm",
         "parameters": [
@@ -2050,7 +2050,7 @@
         ]
       }
     },
-    "/visits/{id}/suggest-new-date/{date}": {
+    "/scheduled-visits/{id}/suggest-new-date/{date}": {
       "patch": {
         "operationId": "ScheduledVisitController_suggestNewDate",
         "parameters": [
@@ -2086,7 +2086,7 @@
         ]
       }
     },
-    "/visits/{id}/complete": {
+    "/scheduled-visits/{id}/complete": {
       "post": {
         "operationId": "ScheduledVisitController_finisedVisit",
         "parameters": [
