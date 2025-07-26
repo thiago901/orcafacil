@@ -4,6 +4,7 @@ import { ScheduledVisitRepository } from '../ports/repositories/schedule-visit.r
 import { ResourceNotFoundError } from '@core/common/errors/common/resource-not-found-error';
 import { ScheduledVisit } from '../../entities/scheduled-visit';
 import { ProgressEstimateRequestProvider } from '@core/modules/estimate-request/application/ports/provider/progress-estimate-request';
+import { format } from 'date-fns';
 
 // SUGGEST
 interface SuggestNewDateRequest {
@@ -37,7 +38,7 @@ export class SuggestNewDateUseCase {
       type: 'VISIT_SUGGESTED',
       estimate_request_id: visit.estimate_request_id,
       title: 'Sugestão de data',
-      description: `Infelizmente o prestador não pode atender na data solicitada, por isso sugeriu outra data`,
+      description: `Infelizmente o prestador não pode atender na data solicitada, por isso sugeriu o dia <strong>${format(suggested_at, 'dd/MM/yyy')}</strong>`,
     });
 
     return right({ visit });

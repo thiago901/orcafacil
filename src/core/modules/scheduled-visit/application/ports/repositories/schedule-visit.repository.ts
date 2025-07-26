@@ -12,7 +12,7 @@ export abstract class ScheduledVisitRepository {
   abstract findConflictingVisit(
     data: FindConflictingVisitProps,
   ): Promise<ScheduledVisit | null>;
-  abstract findPendingByCompany(company_id: string): Promise<ScheduledVisit[]>;
+  abstract findAllByCompany(company_id: string): Promise<ScheduledVisit[]>;
   abstract findSuggestedByCustomer(
     customer_id: string,
   ): Promise<ScheduledVisit[]>;

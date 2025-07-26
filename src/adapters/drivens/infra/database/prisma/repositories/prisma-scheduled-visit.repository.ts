@@ -57,11 +57,11 @@ export class PrismaScheduledVisitRepository
     return visit ? ScheduledVisitMapping.toDomain(visit) : null;
   }
 
-  async findPendingByCompany(company_id: string): Promise<ScheduledVisit[]> {
+  async findAllByCompany(company_id: string): Promise<ScheduledVisit[]> {
     const visits = await this.prisma.scheduledVisit.findMany({
       where: {
         company_id,
-        status: 'PENDING',
+        // status: 'PENDING',
       },
     });
 

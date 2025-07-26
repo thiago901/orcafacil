@@ -26,6 +26,7 @@ import { SuggestNewDateUseCase } from '@core/modules/scheduled-visit/application
 import { GetScheduledVisitByIdUseCase } from '@core/modules/scheduled-visit/application/use-case/get-scheduled-visit-by-id.use-case';
 import { ListPendingVisitsByCompanyUseCase } from '@core/modules/scheduled-visit/application/use-case/list-pending-visits-by-company.use-case';
 import { FinishedVisitUseCase } from '@core/modules/scheduled-visit/application/use-case/finished-visit-use-case';
+import { ScheduledVisitMapping } from '../mapping/schedule-visit-mapping';
 
 @ApiTags('ScheduledVisits')
 @ApiBearerAuth()
@@ -86,7 +87,7 @@ export class ScheduledVisitController {
       throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
     }
 
-    return { result: result.value.visits };
+    return { result: result.value.visits.map(ScheduledVisitMapping.toView) };
   }
 
   @Get('/customer/:customer_id/suggestions')
@@ -110,7 +111,7 @@ export class ScheduledVisitController {
       throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
     }
 
-    return { result: result.value.visit };
+    return { result: ScheduledVisitMapping.toView(result.value.visit) };
   }
 
   @Patch('/:id/suggest-new-date/:date')

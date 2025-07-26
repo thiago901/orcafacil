@@ -6,6 +6,7 @@ import { UserRepository } from '../ports/repositories/user-repository';
 import { HashProvider } from '../ports/providers/hash-provider';
 import { TokenProvider } from '../ports/providers/token-provider';
 import { InvalidCredentialsError } from '../errors/invalid-credentials-error';
+import { CustomerRepository } from '../ports/repositories/customers-repository';
 
 interface RequestProps {
   email: string;
@@ -20,12 +21,14 @@ export class CreateSessionUseCase {
     private readonly userRepository: UserRepository,
     private readonly hashProvider: HashProvider,
     private readonly tokenProvider: TokenProvider,
+    private readonly customerRepository: CustomerRepository,
   ) {}
 
   async execute({ email, password }: RequestProps): Promise<ResponseProps> {
     const user = await this.userRepository.findByEmail(email, {
       relations: {
         companies: true,
+
         user_plans: {
           where: {
             status: 'active',
@@ -37,7 +40,12 @@ export class CreateSessionUseCase {
     if (!user) {
       return left(new InvalidCredentialsError());
     }
-
+    const customer = await this.customerRepository.findByUserId(
+      user.id.toString(),
+    );
+    if (!customer) {
+      return left(new InvalidCredentialsError());
+    }
     const passwordMatch = await this.hashProvider.compare(
       password,
       user.password,
@@ -57,6 +65,7 @@ export class CreateSessionUseCase {
       plan_id: user.plan?.plan_id,
       active: user.active,
       avatar: user.avatar,
+      customer_id: customer.id.toString(),
     });
 
     return right({ token });

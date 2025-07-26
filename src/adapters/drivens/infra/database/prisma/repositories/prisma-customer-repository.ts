@@ -69,6 +69,25 @@ export class PrismaCustomerRepository implements CustomerRepository {
 
     return CustomerMapping.toDomain(customer);
   }
+  async findByUserId(
+    user_id: string,
+    options?: CustomerRepositoryOptions,
+  ): Promise<Customer | null> {
+    const customer = await this.prisma.customer.findFirst({
+      where: { user_id },
+      include: options?.relations
+        ? {
+            ...options.relations,
+          }
+        : {},
+    });
+
+    if (!customer) {
+      return null;
+    }
+
+    return CustomerMapping.toDomain(customer);
+  }
   async findByEmail(
     email: string,
     options?: CustomerRepositoryOptions,
