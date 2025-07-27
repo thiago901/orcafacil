@@ -26,7 +26,6 @@ export class FinishedVisitUseCase {
     if (!visit || !visit.suggested_at) {
       return left(new ResourceNotFoundError());
     }
-
     visit.status = 'COMPLETED';
 
     await this.repository.save(visit);
@@ -36,12 +35,16 @@ export class FinishedVisitUseCase {
       estimate_request_id: visit.estimate_request_id,
       title: 'Visita Completa',
       description: `A visita foi finalizada`,
+      props: {},
+      proposal_id: '',
     });
     await this.progressEstimateRequestProvider.execute({
       type: 'PAYMENT_REQUESTED',
       estimate_request_id: visit.estimate_request_id,
       title: 'Aguardamos Pagamento',
       description: `Estamos aguardando pagamento para prosseguir`,
+      props: {},
+      proposal_id: '',
     });
     return right({ visit });
   }

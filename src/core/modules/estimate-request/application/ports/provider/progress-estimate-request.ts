@@ -9,6 +9,8 @@ export interface RequestProps {
   estimate_request_id: string;
   title: string;
   type: ProgressEstimateRequestType;
+  props: any;
+  proposal_id: string;
 }
 
 export type ResponseProps = Either<

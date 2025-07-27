@@ -5,6 +5,7 @@ export const createScheduledVisitSchema = z.object({
   estimate_request_id: z.string().uuid(),
   company_id: z.string().uuid(),
   customer_id: z.string().uuid(),
+  proposal_id: z.string().uuid(),
   scheduled_at: z.coerce.date(),
   notes: z.string().optional(),
 });

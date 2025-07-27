@@ -164,22 +164,22 @@ export class CreateProposalUseCase {
         estimate_request_id,
       );
 
-    if (!!hasProgresses.length) {
-      const proposalsReceived = hasProgresses.find(
-        (p) => p.type === 'PROPOSALS_RECEIVED',
-      );
-      if (!!proposalsReceived) {
-        proposalsReceived.description = `Você recebeu uma proposta`;
-        proposalsReceived.title = 'Propostas Recebidas';
-        await this.progressEstimateRequestRepository.save(proposalsReceived);
-      } else {
-        await this.progressEstimateRequestProvider.execute({
-          type: 'PROPOSALS_RECEIVED',
-          estimate_request_id,
-          description: `Você recebeu uma proposta`,
-          title: 'Proposta Recebida',
-        });
-      }
+    const proposalsReceived = hasProgresses.find(
+      (p) => p.type === 'PROPOSALS_RECEIVED',
+    );
+    if (!!proposalsReceived) {
+      proposalsReceived.description = `Você recebeu uma proposta`;
+      proposalsReceived.title = 'Propostas Recebidas';
+      await this.progressEstimateRequestRepository.save(proposalsReceived);
+    } else {
+      await this.progressEstimateRequestProvider.execute({
+        type: 'PROPOSALS_RECEIVED',
+        estimate_request_id,
+        description: `Você recebeu uma proposta`,
+        title: 'Proposta Recebida',
+        props: {},
+        proposal_id: proposal.id.toString(),
+      });
     }
 
     await this.emailProvider.send({

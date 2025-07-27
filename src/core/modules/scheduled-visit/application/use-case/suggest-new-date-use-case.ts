@@ -10,6 +10,7 @@ import { format } from 'date-fns';
 interface SuggestNewDateRequest {
   visit_id: string;
   suggested_at: Date;
+  is_customer: boolean;
 }
 
 type SuggestNewDateResponse = Either<Error, { visit: ScheduledVisit }>;
@@ -24,6 +25,7 @@ export class SuggestNewDateUseCase {
   async execute({
     visit_id,
     suggested_at,
+    is_customer,
   }: SuggestNewDateRequest): Promise<SuggestNewDateResponse> {
     const visit = await this.repository.findById(visit_id);
 
@@ -32,14 +34,31 @@ export class SuggestNewDateUseCase {
     }
 
     visit.suggested_at = suggested_at;
-    visit.status = 'SUGGESTED';
+    visit.status = is_customer ? 'PENDING' : 'SUGGESTED';
     await this.repository.save(visit);
-    await this.progressEstimateRequestProvider.execute({
-      type: 'VISIT_SUGGESTED',
-      estimate_request_id: visit.estimate_request_id,
-      title: 'Sugestão de data',
-      description: `Infelizmente o prestador não pode atender na data solicitada, por isso sugeriu o dia <strong>${format(suggested_at, 'dd/MM/yyy')}</strong>`,
-    });
+    if (!is_customer) {
+      await this.progressEstimateRequestProvider.execute({
+        type: 'VISIT_SUGGESTED',
+        estimate_request_id: visit.estimate_request_id,
+        title: 'Sugestão de data',
+        description: `Infelizmente o prestador não pode atender na data solicitada, por isso sugeriu o dia <strong>${format(suggested_at, 'dd/MM/yyy')}</strong>`,
+        proposal_id: visit.proposal_id,
+        props: {
+          visit_id,
+        },
+      });
+    } else {
+      await this.progressEstimateRequestProvider.execute({
+        type: 'VISIT_CREATED',
+        estimate_request_id: visit.estimate_request_id,
+        title: 'Sugestão de data enviada',
+        description: `Aguarde o retorno do prestador`,
+        proposal_id: visit.proposal_id,
+        props: {
+          visit_id,
+        },
+      });
+    }
 
     return right({ visit });
   }

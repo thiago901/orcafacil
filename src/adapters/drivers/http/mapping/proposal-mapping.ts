@@ -15,6 +15,7 @@ export class ProposalMapping {
     estimate_request,
     estimate,
     estimate_id,
+    progress_estimate_requests,
   }: Proposal) {
     return {
       id: id.toString(),
@@ -48,6 +49,15 @@ export class ProposalMapping {
         name: company?.name,
         ratting: company?.ratting,
       },
+      progress_estimate_requests: progress_estimate_requests?.map((item) => ({
+        title: item.title,
+        estimate_request_id: item.estimate_request_id,
+        description: item.description,
+        type: item.type,
+        created_at: item.created_at,
+        proposal_id: item.proposal_id,
+        proporties: item.proporties,
+      })),
     };
   }
 }

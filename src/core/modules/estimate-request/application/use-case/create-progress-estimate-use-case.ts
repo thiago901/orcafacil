@@ -22,12 +22,16 @@ export class CreateProgressEstimateUseCase
     description,
     title,
     type,
+    props,
+    proposal_id,
   }: RequestProps): Promise<ResponseProps> {
     const progressEstimateRequest = ProgressEstimateRequest.create({
       description,
       estimate_request_id,
       title,
       type,
+      props,
+      proposal_id,
     });
 
     await this.progressEstimateRequestRepository.create(

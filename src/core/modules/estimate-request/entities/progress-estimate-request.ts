@@ -7,9 +7,11 @@ export type ProgressEstimateRequestType =
   | 'PROPOSALS_WAITING'
   | 'PROPOSALS_RECEIVED'
   | 'PROPOSALS_ACCEPTED'
+  | 'VISIT_CREATED'
   | 'VISIT_REQUESTED'
   | 'VISIT_CONFIRMED'
   | 'VISIT_SUGGESTED'
+  | 'VISIT_WAITING'
   | 'VISIT_COMPLETED'
   | 'PAYMENT_REQUESTED'
   | 'PAYMENT_COMPLETED'
@@ -19,8 +21,10 @@ export type ProgressEstimateRequestType =
 export interface EstimateRequestProps {
   estimate_request_id: string;
   title: string;
+  proposal_id: string;
   description: string;
   type: ProgressEstimateRequestType;
+  props: object | null;
   created_at: Date;
 }
 
@@ -61,5 +65,11 @@ export class ProgressEstimateRequest extends Entity<EstimateRequestProps> {
 
   get created_at() {
     return this.props.created_at;
+  }
+  get proporties() {
+    return this.props.props;
+  }
+  get proposal_id() {
+    return this.props.proposal_id;
   }
 }

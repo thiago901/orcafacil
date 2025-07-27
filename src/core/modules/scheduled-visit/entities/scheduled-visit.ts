@@ -9,6 +9,7 @@ export interface ScheduledVisitProps {
   scheduled_at: Date;
   suggested_at?: Date | null;
   notes?: string | null;
+  proposal_id: string;
   status:
     | 'PENDING'
     | 'CONFIRMED'
@@ -64,6 +65,9 @@ export class ScheduledVisit extends Entity<ScheduledVisitProps> {
     this.touch();
   }
 
+  get proposal_id() {
+    return this.props.proposal_id;
+  }
   get notes() {
     return this.props.notes;
   }

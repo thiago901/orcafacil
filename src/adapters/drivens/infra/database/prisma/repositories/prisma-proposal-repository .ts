@@ -20,6 +20,7 @@ export class PrismaProposalRepository implements ProposalRepository {
       where: { estimate_request_id },
       include: {
         company: true,
+        progress_estimate_request: true,
       },
     });
 

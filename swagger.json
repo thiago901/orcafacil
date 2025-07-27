@@ -2086,6 +2086,42 @@
         ]
       }
     },
+    "/scheduled-visits/{id}/suggest-new-date/{date}/customer": {
+      "patch": {
+        "operationId": "ScheduledVisitController_suggestNewDateCustomer",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
     "/scheduled-visits/{id}/complete": {
       "post": {
         "operationId": "ScheduledVisitController_finisedVisit",
@@ -2884,6 +2920,10 @@
             "type": "string",
             "format": "uuid"
           },
+          "proposal_id": {
+            "type": "string",
+            "format": "uuid"
+          },
           "scheduled_at": {},
           "notes": {
             "type": "string"
@@ -2893,6 +2933,7 @@
           "estimate_request_id",
           "company_id",
           "customer_id",
+          "proposal_id",
           "scheduled_at"
         ]
       }

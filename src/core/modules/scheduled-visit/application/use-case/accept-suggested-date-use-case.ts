@@ -37,7 +37,19 @@ export class AcceptSuggestedDateUseCase {
       type: 'VISIT_CONFIRMED',
       estimate_request_id: visit.estimate_request_id,
       title: 'Data de Visíta confirmada',
-      description: `A data foi confirmidad, aguarde contado do prestador`,
+      description: `A data foi confirmada, aguarde contado do prestador`,
+      props: {},
+      proposal_id: visit.proposal_id,
+    });
+    await this.progressEstimateRequestProvider.execute({
+      type: 'VISIT_WAITING',
+      estimate_request_id: visit.estimate_request_id,
+      title: 'Prestador finalizou a visita?',
+      description: `O prestador já finalizou`,
+      props: {
+        scheduled_date: visit.suggested_at || visit.scheduled_at,
+      },
+      proposal_id: visit.proposal_id,
     });
     return right(null);
   }

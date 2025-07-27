@@ -83,18 +83,21 @@ export class CreateEstimateRequestUseCase {
 
     await this.estimateRequestRepository.save(estimateRequest);
 
-    await this.createProgressEstimateUseCase.execute({
-      type: 'CREATED',
-      estimate_request_id: estimateRequest.id.toString(),
-      description: `Solicitação de orçamento de ${estimateRequest.category} criada`,
-      title: 'Orçamento Criado',
-    });
-    await this.createProgressEstimateUseCase.execute({
-      type: 'PROPOSALS_WAITING',
-      estimate_request_id: estimateRequest.id.toString(),
-      description: 'Estamos contatando os prestadores',
-      title: 'Aguardando Propostas',
-    });
+    // await this.createProgressEstimateUseCase.execute({
+    //   type: 'CREATED',
+    //   estimate_request_id: estimateRequest.id.toString(),
+    //   description: `Solicitação de orçamento de ${estimateRequest.category} criada`,
+    //   title: 'Orçamento Criado',
+    //   props: {},
+    //   proposal_id
+    // });
+    // await this.createProgressEstimateUseCase.execute({
+    //   type: 'PROPOSALS_WAITING',
+    //   estimate_request_id: estimateRequest.id.toString(),
+    //   description: 'Estamos contatando os prestadores',
+    //   title: 'Aguardando Propostas',
+    //   props: {},
+    // });
 
     await this.publishMessagingProvider.publish({
       data: {
@@ -114,12 +117,14 @@ export class CreateEstimateRequestUseCase {
         routingKey: 'estimate_request:created',
       },
     });
-    await this.createProgressEstimateUseCase.execute({
-      description: `Solicitação de orçamento de ${estimateRequest.category} criada`,
-      estimate_request_id: estimateRequest.id.toString(),
-      title: 'Orçamento Criado',
-      type: 'CREATED',
-    });
+    // await this.createProgressEstimateUseCase.execute({
+    //   description: `Solicitação de orçamento de ${estimateRequest.category} criada`,
+    //   estimate_request_id: estimateRequest.id.toString(),
+    //   title: 'Orçamento Criado',
+    //   type: 'CREATED',
+
+    //   props: {},
+    // });
     return right({ estimateRequest });
   }
 }

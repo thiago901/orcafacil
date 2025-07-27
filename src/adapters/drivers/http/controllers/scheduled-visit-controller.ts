@@ -52,6 +52,7 @@ export class ScheduledVisitController {
       estimate_request_id,
       scheduled_at,
       notes,
+      proposal_id,
     } = body;
     const result = await this.createVisitUseCase.execute({
       company_id,
@@ -59,6 +60,7 @@ export class ScheduledVisitController {
       estimate_request_id,
       scheduled_at,
       notes,
+      proposal_id,
     });
 
     if (result.isLeft()) {
@@ -124,6 +126,29 @@ export class ScheduledVisitController {
     const result = await this.suggestVisitUseCase.execute({
       visit_id: id,
       suggested_at: newDate,
+      is_customer: false,
+    });
+
+    if (result.isLeft()) {
+      throw new HttpException(result.value.message, HttpStatus.BAD_REQUEST);
+    }
+
+    return { result: result.value.visit };
+  }
+  @Patch('/:id/suggest-new-date/:date/customer')
+  async suggestNewDateCustomer(
+    @Param('id') id: string,
+    @Param('date') date: string,
+  ) {
+    const newDate = new Date(date);
+    if (isNaN(newDate.getTime())) {
+      throw new HttpException('Invalid date format', HttpStatus.BAD_REQUEST);
+    }
+
+    const result = await this.suggestVisitUseCase.execute({
+      visit_id: id,
+      suggested_at: newDate,
+      is_customer: true,
     });
 
     if (result.isLeft()) {

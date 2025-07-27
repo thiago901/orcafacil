@@ -1,7 +1,9 @@
+import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { ScheduledVisit } from '@core/modules/scheduled-visit/entities/scheduled-visit';
+import { ScheduledVisit as PrismaScheduledVisit } from '@prisma/client';
 
 export class ScheduledVisitMapping {
-  static toDomain(raw: any): ScheduledVisit {
+  static toDomain(raw: PrismaScheduledVisit): ScheduledVisit {
     return ScheduledVisit.create(
       {
         customer_id: raw.customer_id,
@@ -11,11 +13,11 @@ export class ScheduledVisitMapping {
         notes: raw.notes,
         status: raw.status,
         suggested_at: raw.suggested_at,
-
+        proposal_id: raw.proposal_id,
         created_at: raw.created_at,
         updated_at: raw.updated_at,
       },
-      raw.id,
+      new UniqueEntityID(raw.id),
     );
   }
 
@@ -30,6 +32,7 @@ export class ScheduledVisitMapping {
       status: visit.status,
       suggested_at: visit.suggested_at,
       created_at: visit.created_at,
+      proposal_id: visit.proposal_id,
     };
   }
 }

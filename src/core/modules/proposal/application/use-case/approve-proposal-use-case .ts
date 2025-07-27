@@ -43,14 +43,25 @@ export class ApproveProposalUseCase {
       estimate_request_id: proposal.estimate_request_id,
       description: `Você aceitou uma proposta`,
       title: 'Proposta Aceita',
+      proposal_id: proposal.id.toString(),
+      props: {
+        proposal_id: proposal.id.toString(),
+      },
     });
 
-    if (proposal.is_required_visit) {
+    if (true) {
       await this.progressEstimateRequestProvider.execute({
         type: 'VISIT_REQUESTED',
         estimate_request_id: proposal.estimate_request_id,
         title: 'Agendamento de Visita',
         description: `Para esse serviço é necessario uma visíta em loco`,
+        proposal_id: proposal.id.toString(),
+        props: {
+          company: {
+            id: proposal.company_id,
+            name: proposal.company?.name || null,
+          },
+        },
       });
     }
     const job = Job.create({

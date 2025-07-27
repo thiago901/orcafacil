@@ -52,6 +52,8 @@ export class ProgressEstimateRequestController {
       estimate_request_id: id,
       title: 'Novo titulo',
       type: 'PROPOSALS_WAITING',
+      props: {},
+      proposal_id: '',
     });
     if (result.isLeft()) {
       throw new HttpException(result.value || 'error', HttpStatus.NOT_FOUND);

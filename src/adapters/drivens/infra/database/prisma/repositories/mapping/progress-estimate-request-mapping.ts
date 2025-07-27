@@ -12,6 +12,8 @@ export class ProgressEstimateRequestMapping {
     id,
     title,
     type,
+    props,
+    proposal_id,
   }: ProgressEstimateRequestComplete) {
     return ProgressEstimateRequest.create(
       {
@@ -20,6 +22,8 @@ export class ProgressEstimateRequestMapping {
         estimate_request_id,
         title,
         type,
+        props: props as any,
+        proposal_id,
       },
       new UniqueEntityID(id),
     );
@@ -33,6 +37,8 @@ export class ProgressEstimateRequestMapping {
       estimate_request_id: progressEstimateRequest.estimate_request_id,
       title: progressEstimateRequest.title,
       type: progressEstimateRequest.type,
+      proposal_id: progressEstimateRequest.proposal_id,
+      props: progressEstimateRequest.proporties as any,
     };
   }
 }

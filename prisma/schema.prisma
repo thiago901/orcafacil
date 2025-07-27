@@ -62,16 +62,19 @@ model ScheduledVisit {
   customer_id         String
   company_id          String
   estimate_request_id String
+  proposal_id         String     
   scheduled_at        DateTime
   status              VisitStatus @default(PENDING)
   suggested_at        DateTime?
   notes               String?
-  created_at          DateTime    @default(now())
-  updated_at          DateTime    @updatedAt
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   customer         Customer        @relation(fields: [customer_id], references: [id])
   estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
   company          Company         @relation(fields: [company_id], references: [id])
+  proposal         Proposal        @relation(fields: [proposal_id], references: [id])
 
   @@map("scheduled_visits")
 }
@@ -198,30 +201,37 @@ model EstimateRequest {
 }
 
 model ProgressEstimateRequest {
-  id                  String          @id @default(uuid())
+  id                  String                      @id @default(uuid())
   estimate_request_id String
-  type ProgressEstimateRequestType
-  title String
-  description String
-  estimate_request    EstimateRequest @relation(fields: [estimate_request_id], references: [id])
-  created_at   DateTime  @map("created_at")
+  type                ProgressEstimateRequestType
+  title               String
+  description         String
+  props               Json?
+  created_at          DateTime                    @map("created_at")
+  proposal_id         String
+
+  estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
+  proposal         Proposal        @relation(fields: [proposal_id], references: [id])
+
   @@map("progress_estimate_request")
 }
+
 enum ProgressEstimateRequestType {
   CREATED
   PROPOSALS_WAITING
   PROPOSALS_RECEIVED
   PROPOSALS_ACCEPTED
+  VISIT_CREATED
   VISIT_REQUESTED
   VISIT_CONFIRMED
   VISIT_SUGGESTED
+  VISIT_WAITING
   VISIT_COMPLETED
   PAYMENT_REQUESTED
   PAYMENT_COMPLETED
   WAITING
   FINISHED
 }
-
 
 model Proposal {
   id          String    @id @default(uuid())
@@ -237,12 +247,14 @@ model Proposal {
   estimate_id         String
   estimate_request_id String
   company_id          String
-  is_required_visit Boolean @default(false)
+  is_required_visit   Boolean @default(false)
 
-  estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
-  estimate         Estimate        @relation(fields: [estimate_id], references: [id])
-  company          Company         @relation(fields: [company_id], references: [id])
-  job              Job?
+  estimate_request          EstimateRequest           @relation(fields: [estimate_request_id], references: [id])
+  estimate                  Estimate                  @relation(fields: [estimate_id], references: [id])
+  company                   Company                   @relation(fields: [company_id], references: [id])
+  job                       Job?
+  progress_estimate_request ProgressEstimateRequest[]
+  scheduled_visit           ScheduledVisit[]
 
   @@map("proposals")
 }
