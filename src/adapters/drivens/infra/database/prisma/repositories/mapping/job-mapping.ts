@@ -26,12 +26,16 @@ export class JobMapping {
     status,
     estimate_id,
     user_id,
+    finished_company_at,
+    finished_customer_at,
   }: JobComplete) {
     return Job.create(
       {
         company_id,
         proposal_id,
         user_id,
+        finished_company_at,
+        finished_customer_at,
         created_at,
         status: status as JobStatus,
         updated_at,
@@ -99,6 +103,8 @@ export class JobMapping {
       status: job.status,
       created_at: job.created_at,
       updated_at: job.updated_at,
+      finished_company_at: job.finished_company_at,
+      finished_customer_at: job.finished_customer_at,
     };
   }
 }

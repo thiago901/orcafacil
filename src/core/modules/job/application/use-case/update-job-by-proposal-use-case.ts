@@ -9,11 +9,13 @@ import { Notification } from '@core/modules/notification/entities/notification';
 import { UserRepository } from '@core/modules/user/application/ports/repositories/user-repository';
 import * as path from 'node:path';
 import { EnvService } from '@adapters/drivens/infra/envs/env.service';
+import { ProgressEstimateRequestProvider } from '@core/modules/estimate-request/application/ports/provider/progress-estimate-request';
 
 interface RequestProps {
-  id: string;
+  proposal_id: string;
   finished_company_at?: Date;
   finished_customer_at?: Date;
+  is_customer: boolean;
 }
 
 type ResponseProps = Either<
@@ -24,21 +26,23 @@ type ResponseProps = Either<
 >;
 
 @Injectable()
-export class UpdateStatusJobUseCase {
+export class UpdateJobByProposalUseCase {
   constructor(
     private readonly jobRepository: JobRepository,
     private readonly emailProvider: EmailProvider,
     private readonly notificationRepository: NotificationRepository,
     private readonly userRepository: UserRepository,
     private readonly env: EnvService,
+    private readonly progressEstimateRequestProvider: ProgressEstimateRequestProvider,
   ) {}
 
   async execute({
-    id,
+    proposal_id,
     finished_company_at,
     finished_customer_at,
+    is_customer,
   }: RequestProps): Promise<ResponseProps> {
-    const job = await this.jobRepository.findById(id);
+    const job = await this.jobRepository.findByProposalId(proposal_id);
     if (!job) {
       return left(new ResourceNotFoundError());
     }
@@ -79,6 +83,16 @@ export class UpdateStatusJobUseCase {
           reviewLink: `${this.env.get('WEB_APPLICATION_URL')}/review/${job.id.toString()}`,
           clientName: customer.name,
         },
+      });
+    }
+    if (is_customer) {
+      await this.progressEstimateRequestProvider.execute({
+        type: 'FINISHED',
+        estimate_request_id: job.estimate_request_id,
+        title: 'Serviço finalizado',
+        description: `Serviço finalizado, que tal availiar o prestador?`,
+        proposal_id: job.proposal_id,
+        props: {},
       });
     }
 

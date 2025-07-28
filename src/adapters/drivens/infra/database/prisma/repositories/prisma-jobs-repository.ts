@@ -8,6 +8,18 @@ import { JobMapping } from './mapping/job-mapping';
 @Injectable()
 export class PrismaJobsRepository implements JobRepository {
   constructor(private readonly prisma: PrismaService) {}
+  async findByProposalId(proposal_id: string): Promise<Job | null> {
+    const job = await this.prisma.job.findFirst({
+      where: {
+        proposal_id,
+      },
+    });
+    if (!job) {
+      return null;
+    }
+
+    return JobMapping.toDomain(job);
+  }
   async save(job: Job): Promise<void> {
     const data = JobMapping.toPrisma(job);
     await this.prisma.job.update({

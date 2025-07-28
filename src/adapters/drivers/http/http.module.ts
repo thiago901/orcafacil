@@ -138,6 +138,14 @@ import { ProgressEstimateRequestProvider } from '@core/modules/estimate-request/
           provide: NotificationRepository,
           useClass: PrismaNotificationRepository,
         },
+        {
+          provide: ProgressEstimateRequestRepository,
+          useClass: PrismaProgressEstimateRequestRepository,
+        },
+        {
+          provide: ProgressEstimateRequestProvider,
+          useClass: CreateProgressEstimateUseCase,
+        },
       ],
     },
     {

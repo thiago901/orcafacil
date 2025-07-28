@@ -62,7 +62,7 @@ model ScheduledVisit {
   customer_id         String
   company_id          String
   estimate_request_id String
-  proposal_id         String     
+  proposal_id         String
   scheduled_at        DateTime
   status              VisitStatus @default(PENDING)
   suggested_at        DateTime?
@@ -484,9 +484,11 @@ model Job {
   estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
   estimate         Estimate        @relation(fields: [estimate_id], references: [id])
 
-  created_at     DateTime        @map("created_at")
-  updated_at     DateTime?       @map("updated_at")
-  company_review CompanyReview[]
+  finished_customer_at DateTime?
+  finished_company_at  DateTime?
+  created_at           DateTime        @map("created_at")
+  updated_at           DateTime?       @map("updated_at")
+  company_review       CompanyReview[]
 
   @@map("jobs")
 }

@@ -14,6 +14,8 @@ export interface JobProps {
   user_id: string;
   created_at: Date;
   updated_at: Date | null;
+  finished_customer_at: Date | null;
+  finished_company_at: Date | null;
   proposal?: Proposal;
   estimate_request?: EstimateRequest;
   estimate?: Estimate;
@@ -71,5 +73,18 @@ export class Job extends Entity<JobProps> {
   }
   get estimate() {
     return this.props.estimate_request;
+  }
+  get finished_customer_at() {
+    return this.props.finished_customer_at;
+  }
+  set finished_customer_at(finished_customer_at: Date | null) {
+    this.props.finished_customer_at = finished_customer_at;
+  }
+  get finished_company_at() {
+    return this.props.finished_company_at;
+  }
+
+  set finished_company_at(finished_company_at: Date | null) {
+    this.props.finished_company_at = finished_company_at;
   }
 }

@@ -1174,20 +1174,12 @@
         ]
       }
     },
-    "/jobs/status/{id}/{status}": {
-      "patch": {
-        "operationId": "JobsController_updateStatus",
+    "/jobs/proposal/{proposal_id}": {
+      "put": {
+        "operationId": "JobsController_finishedByCustomer",
         "parameters": [
           {
-            "name": "status",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
+            "name": "proposal_id",
             "required": true,
             "in": "path",
             "schema": {
@@ -1195,6 +1187,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateJobProps"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
@@ -2756,6 +2758,13 @@
           "estimate_id",
           "customer_id"
         ]
+      },
+      "UpdateJobProps": {
+        "type": "object",
+        "properties": {
+          "finished_company_at": {},
+          "finished_customer_at": {}
+        }
       },
       "CreateEstimateRequestMessageProps": {
         "type": "object",

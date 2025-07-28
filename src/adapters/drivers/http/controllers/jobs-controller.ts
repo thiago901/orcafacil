@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
@@ -25,6 +26,11 @@ import {
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 import { GetJobByIdUseCase } from '@core/modules/job/application/use-case/get-jobs-by-id-use-case';
 import { UpdateStatusJobUseCase } from '@core/modules/job/application/use-case/update-status-job-use-case';
+import {
+  UpdateJobProps,
+  updateJobSchema,
+} from './validations/update-job.validate';
+import { UpdateJobByProposalUseCase } from '@core/modules/job/application/use-case/update-job-by-proposal-use-case';
 
 @ApiTags('Jobs')
 @ApiBearerAuth()
@@ -36,6 +42,7 @@ export class JobsController {
     private readonly createJobUseCase: CreateJobUseCase,
     private readonly getJobByIdUseCase: GetJobByIdUseCase,
     private readonly updateStatusJobUseCase: UpdateStatusJobUseCase,
+    private readonly updateJobByProposalUseCase: UpdateJobByProposalUseCase,
   ) {}
 
   @Get('/company/:company_id')
@@ -83,12 +90,19 @@ export class JobsController {
       result: JobMapping.toView(result.value.job),
     };
   }
-  @Patch('/status/:id/:status')
-  @UsePipes(new ZodValidationPipe(createJobSchema))
-  async updateStatus(@Param('status') status: string, @Param('id') id: string) {
-    const result = await this.updateStatusJobUseCase.execute({
-      id,
-      status,
+
+  @Put('/proposal/:proposal_id')
+  @UsePipes(new ZodValidationPipe(updateJobSchema))
+  async finishedByCustomer(
+    @Param('proposal_id') proposal_id: string,
+    @Body() body: UpdateJobProps,
+  ) {
+    const { finished_company_at, finished_customer_at } = body;
+    const result = await this.updateJobByProposalUseCase.execute({
+      proposal_id,
+      finished_company_at,
+      finished_customer_at,
+      is_customer: true,
     });
     if (result.isLeft()) {
       throw new HttpException('result.value', HttpStatus.BAD_REQUEST);

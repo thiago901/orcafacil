@@ -12,6 +12,8 @@ export class JobMapping {
     estimate_request_id,
     estimate_id,
     status,
+    finished_company_at,
+    finished_customer_at,
   }: Job) {
     return {
       id: id.toString(),
@@ -21,6 +23,8 @@ export class JobMapping {
       proposal_id,
       updated_at,
       estimate_id,
+      finished_company_at,
+      finished_customer_at,
       status,
       proposal: proposal
         ? {
