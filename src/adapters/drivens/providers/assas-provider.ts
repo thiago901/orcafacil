@@ -17,11 +17,13 @@ export class AsaasProvider implements PaymentsCustomerProvider {
   async createPayment({
     amount,
     customer_id,
+    externalReference,
   }: CreatePaymentProps): Promise<CreatePaymentResponse> {
     const { data } = await axios.post(
       `${this.API_URL}/payments`,
       {
         customer: customer_id,
+        externalReference: externalReference,
         billingType: 'CREDIT_CARD',
         value: amount,
         callbackUrl: 'https://seu-backend.com/asaas/webhook',

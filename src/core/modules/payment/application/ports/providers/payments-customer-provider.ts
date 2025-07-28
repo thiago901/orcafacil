@@ -11,6 +11,7 @@ export type CreateCustomerProps = {
 export type CreatePaymentProps = {
   amount: number;
   customer_id: string;
+  externalReference?: string;
 };
 export type CreatePaymentResponse = {
   session_url: string;

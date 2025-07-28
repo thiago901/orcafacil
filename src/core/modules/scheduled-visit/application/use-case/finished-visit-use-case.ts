@@ -23,7 +23,7 @@ export class FinishedVisitUseCase {
   }: FinishedVisitUseCaseRequest): Promise<FinishedVisitUseCaseResponse> {
     const visit = await this.repository.findById(visit_id);
 
-    if (!visit || !visit.suggested_at) {
+    if (!visit) {
       return left(new ResourceNotFoundError());
     }
     visit.status = 'COMPLETED';
@@ -36,7 +36,7 @@ export class FinishedVisitUseCase {
       title: 'Visita Completa',
       description: `A visita foi finalizada`,
       props: {},
-      proposal_id: '',
+      proposal_id: visit.proposal_id,
     });
     await this.progressEstimateRequestProvider.execute({
       type: 'PAYMENT_REQUESTED',
@@ -44,7 +44,7 @@ export class FinishedVisitUseCase {
       title: 'Aguardamos Pagamento',
       description: `Estamos aguardando pagamento para prosseguir`,
       props: {},
-      proposal_id: '',
+      proposal_id: visit.proposal_id,
     });
     return right({ visit });
   }
