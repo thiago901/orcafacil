@@ -16,6 +16,7 @@ export type ProgressEstimateRequestType =
   | 'PAYMENT_REQUESTED'
   | 'PAYMENT_COMPLETED'
   | 'WAITING'
+  | 'IS_JOB_FINISHED'
   | 'FINISHED';
 
 export interface EstimateRequestProps {

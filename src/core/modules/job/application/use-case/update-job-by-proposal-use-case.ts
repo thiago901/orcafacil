@@ -94,6 +94,15 @@ export class UpdateJobByProposalUseCase {
         proposal_id: job.proposal_id,
         props: {},
       });
+    } else {
+      await this.progressEstimateRequestProvider.execute({
+        type: 'IS_JOB_FINISHED',
+        estimate_request_id: job.estimate_request_id,
+        title: 'Serviço finalizado',
+        description: `Prestador informa que o serviço foi finalizado`,
+        proposal_id: job.proposal_id,
+        props: {},
+      });
     }
 
     return right({ job });

@@ -111,4 +111,24 @@ export class JobsController {
       result: JobMapping.toView(result.value.job),
     };
   }
+  @Put('/proposal/:proposal_id/company')
+  @UsePipes(new ZodValidationPipe(updateJobSchema))
+  async finishedByCompany(
+    @Param('proposal_id') proposal_id: string,
+    @Body() body: UpdateJobProps,
+  ) {
+    const { finished_company_at, finished_customer_at } = body;
+    const result = await this.updateJobByProposalUseCase.execute({
+      proposal_id,
+      finished_company_at,
+      finished_customer_at,
+      is_customer: false,
+    });
+    if (result.isLeft()) {
+      throw new HttpException('result.value', HttpStatus.BAD_REQUEST);
+    }
+    return {
+      result: JobMapping.toView(result.value.job),
+    };
+  }
 }

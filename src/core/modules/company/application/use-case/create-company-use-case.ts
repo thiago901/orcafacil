@@ -6,6 +6,9 @@ import { CompanyAddress } from '../../entities/company-address';
 import { AddressFinderProvider } from '@core/common/application/ports/providers/address-finder';
 import { UsagePlanProvider } from '@core/common/application/ports/providers/usage-plan-provider';
 import { ResourceExceededError } from '@core/modules/plan/application/errors/resource-exceeded-error';
+import { UseCaseValidationError } from '@core/common/errors/common/use-case-validation-error';
+import { CompanyServiceRepository } from '../ports/repositories/company-service-repository';
+import { CompanyService } from '../../entities/company-service';
 
 type RequestProps = {
   name: string;
@@ -22,6 +25,11 @@ type RequestProps = {
     zip: string;
     address: string;
   };
+  categories: {
+    name: string;
+    category_id: string;
+    category_name: string;
+  }[];
 };
 type ResponseProps = Either<
   ResourceExceededError,
@@ -36,6 +44,7 @@ export class CreateCompanyUseCase {
     private readonly companyRepository: CompanyRepository,
     private readonly addressFinderProvider: AddressFinderProvider,
     private readonly usagePlanProvider: UsagePlanProvider,
+    private readonly companyServiceRepository: CompanyServiceRepository,
   ) {}
 
   async execute({
@@ -46,6 +55,7 @@ export class CreateCompanyUseCase {
     website,
     about,
     address,
+    categories,
   }: RequestProps): Promise<ResponseProps> {
     const isAllowed = await this.usagePlanProvider.checkAndConsumeFixed({
       resource: 'multiCompanySupport',
@@ -53,6 +63,9 @@ export class CreateCompanyUseCase {
     });
     if (!isAllowed) {
       return left(new ResourceExceededError('multiCompanySupport'));
+    }
+    if (!categories.length) {
+      return left(new UseCaseValidationError('Category is required'));
     }
     const addressData = await this.addressFinderProvider.find({
       city: address.city,
@@ -86,6 +99,15 @@ export class CreateCompanyUseCase {
     });
 
     await this.companyRepository.create(company);
+    for (const category of categories) {
+      const cat = CompanyService.create({
+        category_id: category.category_id,
+        category_name: category.category_name,
+        company_id: company.id.toString(),
+        name: category.name,
+      });
+      await this.companyServiceRepository.create(cat);
+    }
 
     return right({ company });
   }
