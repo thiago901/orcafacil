@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-import { LoggingInterceptor } from '../interceptors/custom-logger-routes';
+import { LoggingInterceptor } from '../Interceptors/custom-logger-routes';
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe';
 
 import {
