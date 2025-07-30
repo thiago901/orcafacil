@@ -22,10 +22,14 @@ import {
   EstimateItemsTypeUnitProps,
 } from '@core/modules/estimate-request/entities/estimate-item';
 import { WatchedEstimateItem } from '@core/modules/estimate-request/entities/watched-estimate-item';
+import { ProgressEstimateRequestProvider } from '@core/modules/estimate-request/application/ports/provider/progress-estimate-request';
+import { ProgressEstimateRequestRepository } from '@core/modules/estimate-request/application/ports/repositories/progress-estimate-request-repository';
+
 interface RequestProps {
   user_id: string;
   description: string;
   company_id: string;
+  is_required_visit: boolean;
   customer: {
     name: string;
     phone: string;
@@ -59,12 +63,13 @@ export class CreateProposalUseCase {
     private readonly env: EnvService,
     private readonly estimateRequestRepository: EstimateRequestRepository,
     private readonly estimateRepository: EstimateRepository,
-
     private readonly companyRepository: CompanyRepository,
     private readonly emailProvider: EmailProvider,
     private readonly proposalNotificationProvider: NotificationEmitter,
     private readonly notificationRepository: NotificationRepository,
     private readonly usagePlanProvider: UsagePlanProvider,
+    private readonly progressEstimateRequestProvider: ProgressEstimateRequestProvider,
+    private readonly progressEstimateRequestRepository: ProgressEstimateRequestRepository,
   ) {}
 
   async execute({
@@ -75,6 +80,7 @@ export class CreateProposalUseCase {
     expire_at,
     customer,
     items,
+    is_required_visit,
   }: RequestProps): Promise<ResponseProps> {
     await this.usagePlanProvider.checkAndConsumeFixed({
       resource: 'proposalsPerMonth',
@@ -150,8 +156,32 @@ export class CreateProposalUseCase {
       company_id,
       description,
       estimate_request_id,
+      is_required_visit,
     });
     await this.proposalRepository.create(proposal);
+    const hasProgresses =
+      await this.progressEstimateRequestRepository.findByEstimateRequest(
+        estimate_request_id,
+      );
+
+    const proposalsReceived = hasProgresses.find(
+      (p) => p.type === 'PROPOSALS_RECEIVED',
+    );
+    if (!!proposalsReceived) {
+      proposalsReceived.description = `Você recebeu uma proposta`;
+      proposalsReceived.title = 'Propostas Recebidas';
+      await this.progressEstimateRequestRepository.save(proposalsReceived);
+    } else {
+      await this.progressEstimateRequestProvider.execute({
+        type: 'PROPOSALS_RECEIVED',
+        estimate_request_id,
+        description: `Você recebeu uma proposta`,
+        title: 'Proposta Recebida',
+        props: {},
+        proposal_id: proposal.id.toString(),
+      });
+    }
+
     await this.emailProvider.send({
       to: estimate_request.email,
       subject: 'Proposta recebida',

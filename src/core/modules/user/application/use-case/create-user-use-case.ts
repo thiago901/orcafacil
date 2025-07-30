@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Either, right, left } from '@core/common/entities/either';
 import { User } from '../../entities/user';
 import { UserRepository } from '../ports/repositories/user-repository';
@@ -15,6 +15,9 @@ import { UserPlanRepository } from '@core/modules/plan/application/ports/reposit
 import { UserPlan } from '@core/modules/plan/entities/user-plan';
 
 import { PaymentsProvider } from '@core/modules/payment/application/ports/providers/payments-provider';
+import { CustomerRepository } from '../ports/repositories/customers-repository';
+import { Customer } from '../../entities/customer';
+import { PaymentsCustomerProvider } from '@core/modules/payment/application/ports/providers/payments-customer-provider';
 
 interface RequestProps {
   name: string;
@@ -23,6 +26,7 @@ interface RequestProps {
   avatar?: string;
   password: string;
   role: string;
+  document: string;
 }
 
 type ResponseProps = Either<ResourceAlreadyExistsError, { user: User }>;
@@ -36,6 +40,8 @@ export class CreateUserUseCase {
     private readonly userPlanRepository: UserPlanRepository,
     private readonly emailProvider: EmailProvider,
     private readonly paymentsProvider: PaymentsProvider,
+    private readonly customerRepository: CustomerRepository,
+    private readonly paymentsCustomerProvider: PaymentsCustomerProvider,
 
     private readonly env: EnvService,
   ) {}
@@ -47,6 +53,7 @@ export class CreateUserUseCase {
     password,
     avatar,
     role,
+    document,
   }: RequestProps): Promise<ResponseProps> {
     const user = User.create({
       name,
@@ -66,6 +73,16 @@ export class CreateUserUseCase {
       }
 
       await this.userRepository.save(user);
+
+      const customer = Customer.create({
+        document,
+        email,
+        name,
+        phone,
+        user_id: user.id.toString(),
+      });
+      await this.customerRepository.create(customer);
+
       const user_plan = UserPlan.create({
         status: 'active',
         user_id: user.id.toString(),
@@ -84,12 +101,12 @@ export class CreateUserUseCase {
         used: false,
         user_id: user.id.toString(),
       });
-      if (user.role === 'company') {
-        const result = await this.paymentsProvider.createCustomer(email);
+      // if (user.role === 'company') {
+      //   const result = await this.paymentsProvider.createCustomer(email);
 
-        user.customer_id_from_payment_provider = result.id;
-        await this.userRepository.save(user);
-      }
+      //   user.customer_id_from_payment_provider = result.id;
+      //   await this.userRepository.save(user);
+      // }
       await this.userTokenRepository.create(user_token);
       await this.emailProvider.send({
         to: user.email,
@@ -103,6 +120,20 @@ export class CreateUserUseCase {
           verificationLink: `${this.env.get('WEB_APPLICATION_URL')}/user/activation/${user_token.token}`,
         },
       });
+
+      const hasCustomer =
+        await this.paymentsCustomerProvider.findCustomer(document);
+      if (!hasCustomer) {
+        this.paymentsCustomerProvider
+          .createCustomer({
+            document: customer.document,
+            email: customer.email,
+            name: customer.name,
+            phone: customer.phone,
+            customer_id: customer.id.toString(),
+          })
+          .catch((err) => Logger.error(err));
+      }
 
       return right({ user });
     } catch (error: any) {

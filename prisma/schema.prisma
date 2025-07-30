@@ -51,9 +51,41 @@ model Customer {
   created_at DateTime  @default(now()) @map("created_at")
   updated_at DateTime? @map("updated_at")
 
-  user User @relation(fields: [user_id], references: [id])
+  user            User             @relation(fields: [user_id], references: [id])
+  scheduled_visit ScheduledVisit[]
 
   @@map("customers")
+}
+
+model ScheduledVisit {
+  id                  String      @id @default(uuid())
+  customer_id         String
+  company_id          String
+  estimate_request_id String
+  proposal_id         String
+  scheduled_at        DateTime
+  status              VisitStatus @default(PENDING)
+  suggested_at        DateTime?
+  notes               String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  customer         Customer        @relation(fields: [customer_id], references: [id])
+  estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
+  company          Company         @relation(fields: [company_id], references: [id])
+  proposal         Proposal        @relation(fields: [proposal_id], references: [id])
+
+  @@map("scheduled_visits")
+}
+
+enum VisitStatus {
+  PENDING // Aguardando confirmação do prestador
+  CONFIRMED // Prestador aceitou
+  SUGGESTED // Prestador sugeriu novo horário
+  RESCHEDULED // Cliente aceitou sugestão
+  CANCELED
+  COMPLETED
 }
 
 model Plan {
@@ -151,19 +183,55 @@ model EstimateRequest {
   address_city         String
   latitude             Float
   longitude            Float
-  category             String                                @default("Pintor")
+  category             String
+  urgency              Int @default(0)
+  created_at           DateTime                              @map("created_at")
+  updated_at           DateTime?                             @map("updated_at")
+  finished_at          DateTime?                             @map("finished_at")
 
-  created_at  DateTime  @map("created_at")
-  updated_at  DateTime? @map("updated_at")
-  finished_at DateTime? @map("finished_at")
-
-  user      User?                 @relation(fields: [user_id], references: [id])
-  files     EstimateRequestFile[]
-  proposals Proposal[]
-  messages  Message[]
-  job       Job[]
+  user                      User?                     @relation(fields: [user_id], references: [id])
+  files                     EstimateRequestFile[]
+  proposals                 Proposal[]
+  messages                  Message[]
+  job                       Job[]
+  scheduled_visit           ScheduledVisit[]
+  progress_estimate_request ProgressEstimateRequest[]
 
   @@map("estimate_request")
+}
+
+model ProgressEstimateRequest {
+  id                  String                      @id @default(uuid())
+  estimate_request_id String
+  type                ProgressEstimateRequestType
+  title               String
+  description         String
+  props               Json?
+  created_at          DateTime                    @map("created_at")
+  proposal_id         String?
+
+  estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
+  proposal         Proposal?        @relation(fields: [proposal_id], references: [id])
+
+  @@map("progress_estimate_request")
+}
+
+enum ProgressEstimateRequestType {
+  CREATED
+  PROPOSALS_WAITING
+  PROPOSALS_RECEIVED
+  PROPOSALS_ACCEPTED
+  VISIT_CREATED
+  VISIT_REQUESTED
+  VISIT_CONFIRMED
+  VISIT_SUGGESTED
+  VISIT_WAITING
+  VISIT_COMPLETED
+  PAYMENT_REQUESTED
+  PAYMENT_COMPLETED
+  WAITING
+  IS_JOB_FINISHED
+  FINISHED
 }
 
 model Proposal {
@@ -180,11 +248,14 @@ model Proposal {
   estimate_id         String
   estimate_request_id String
   company_id          String
+  is_required_visit   Boolean @default(false)
 
-  estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
-  estimate         Estimate        @relation(fields: [estimate_id], references: [id])
-  company          Company         @relation(fields: [company_id], references: [id])
-  job              Job?
+  estimate_request          EstimateRequest           @relation(fields: [estimate_request_id], references: [id])
+  estimate                  Estimate                  @relation(fields: [estimate_id], references: [id])
+  company                   Company                   @relation(fields: [company_id], references: [id])
+  job                       Job?
+  progress_estimate_request ProgressEstimateRequest[]
+  scheduled_visit           ScheduledVisit[]
 
   @@map("proposals")
 }
@@ -361,9 +432,10 @@ model Company {
 
   address CompanyAddress @relation(fields: [address_id], references: [id])
 
-  created_at DateTime        @map("created_at")
-  updated_at DateTime?       @map("updated_at")
-  reviews    CompanyReview[]
+  created_at      DateTime         @map("created_at")
+  updated_at      DateTime?        @map("updated_at")
+  reviews         CompanyReview[]
+  scheduled_visit ScheduledVisit[]
 
   @@map("company")
 }
@@ -413,9 +485,11 @@ model Job {
   estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
   estimate         Estimate        @relation(fields: [estimate_id], references: [id])
 
-  created_at     DateTime        @map("created_at")
-  updated_at     DateTime?       @map("updated_at")
-  company_review CompanyReview[]
+  finished_customer_at DateTime?
+  finished_company_at  DateTime?
+  created_at           DateTime        @map("created_at")
+  updated_at           DateTime?       @map("updated_at")
+  company_review       CompanyReview[]
 
   @@map("jobs")
 }

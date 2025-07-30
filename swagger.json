@@ -1174,20 +1174,12 @@
         ]
       }
     },
-    "/jobs/status/{id}/{status}": {
-      "patch": {
-        "operationId": "JobsController_updateStatus",
+    "/jobs/proposal/{proposal_id}": {
+      "put": {
+        "operationId": "JobsController_finishedByCustomer",
         "parameters": [
           {
-            "name": "status",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "id",
+            "name": "proposal_id",
             "required": true,
             "in": "path",
             "schema": {
@@ -1195,6 +1187,54 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateJobProps"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Jobs"
+        ]
+      }
+    },
+    "/jobs/proposal/{proposal_id}/company": {
+      "put": {
+        "operationId": "JobsController_finishedByCompany",
+        "parameters": [
+          {
+            "name": "proposal_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateJobProps"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": ""
@@ -1688,6 +1728,20 @@
         ]
       }
     },
+    "/payments/customer/asaas/webhook": {
+      "post": {
+        "operationId": "PaymentController_asaaswebhook",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Payment"
+        ]
+      }
+    },
     "/plans/{plan_id}": {
       "get": {
         "operationId": "PlanController_getById",
@@ -1894,6 +1948,301 @@
           "Subscriptions"
         ]
       }
+    },
+    "/scheduled-visits": {
+      "post": {
+        "operationId": "ScheduledVisitController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateScheduledVisitDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
+    "/scheduled-visits/{id}": {
+      "get": {
+        "operationId": "ScheduledVisitController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
+    "/scheduled-visits/company/{company_id}": {
+      "get": {
+        "operationId": "ScheduledVisitController_listPending",
+        "parameters": [
+          {
+            "name": "company_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
+    "/scheduled-visits/customer/{customer_id}/suggestions": {
+      "get": {
+        "operationId": "ScheduledVisitController_listSuggestions",
+        "parameters": [
+          {
+            "name": "customer_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
+    "/scheduled-visits/{id}/confirm": {
+      "patch": {
+        "operationId": "ScheduledVisitController_confirm",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
+    "/scheduled-visits/{id}/suggest-new-date/{date}": {
+      "patch": {
+        "operationId": "ScheduledVisitController_suggestNewDate",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
+    "/scheduled-visits/{id}/suggest-new-date/{date}/customer": {
+      "patch": {
+        "operationId": "ScheduledVisitController_suggestNewDateCustomer",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "date",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
+    "/scheduled-visits/{id}/complete": {
+      "post": {
+        "operationId": "ScheduledVisitController_finisedVisit",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "ScheduledVisits"
+        ]
+      }
+    },
+    "/progress-estimate-requests/estimate_request/{id}": {
+      "get": {
+        "operationId": "ProgressEstimateRequestController_findAllByEstimateReques",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Progress Estimate Request"
+        ]
+      },
+      "post": {
+        "operationId": "ProgressEstimateRequestController_create",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Progress Estimate Request"
+        ]
+      }
     }
   },
   "info": {
@@ -2002,6 +2351,10 @@
               ]
             }
           },
+          "is_required_visit": {
+            "type": "boolean",
+            "default": false
+          },
           "estimate_request_id": {
             "type": "string"
           },
@@ -2020,6 +2373,10 @@
         "type": "object",
         "properties": {
           "name": {
+            "type": "string",
+            "minLength": 2
+          },
+          "document": {
             "type": "string",
             "minLength": 2
           },
@@ -2048,6 +2405,7 @@
         },
         "required": [
           "name",
+          "document",
           "email",
           "password",
           "phone",
@@ -2162,6 +2520,29 @@
               "zip",
               "address"
             ]
+          },
+          "categories": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "category_id": {
+                  "type": "string"
+                },
+                "category_name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "category_id",
+                "category_name"
+              ]
+            }
           }
         },
         "required": [
@@ -2171,7 +2552,8 @@
           "email",
           "phone",
           "website",
-          "address"
+          "address",
+          "categories"
         ]
       },
       "UpdateCompanyProps": {
@@ -2363,6 +2745,9 @@
           "address_street": {
             "type": "string"
           },
+          "urgency": {
+            "type": "number"
+          },
           "category": {
             "type": "string"
           }
@@ -2380,6 +2765,7 @@
           "address_postal_code",
           "address_state",
           "address_street",
+          "urgency",
           "category"
         ]
       },
@@ -2438,6 +2824,13 @@
           "estimate_id",
           "customer_id"
         ]
+      },
+      "UpdateJobProps": {
+        "type": "object",
+        "properties": {
+          "finished_company_at": {},
+          "finished_customer_at": {}
+        }
       },
       "CreateEstimateRequestMessageProps": {
         "type": "object",
@@ -2535,16 +2928,13 @@
       "CreateUserPaymentSessionProps": {
         "type": "object",
         "properties": {
-          "customer_id": {
-            "type": "string"
-          },
-          "amount": {
-            "type": "number"
+          "proposal_id": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "required": [
-          "customer_id",
-          "amount"
+          "proposal_id"
         ]
       },
       "CreateUserPaymentCustomerProps": {
@@ -2561,13 +2951,18 @@
           },
           "name": {
             "type": "string"
+          },
+          "customer_id": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "required": [
           "doc",
           "email",
           "phone",
-          "name"
+          "name",
+          "customer_id"
         ]
       },
       "SubscribePlanProps": {
@@ -2583,6 +2978,38 @@
         },
         "required": [
           "plan_type"
+        ]
+      },
+      "CreateScheduledVisitDto": {
+        "type": "object",
+        "properties": {
+          "estimate_request_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "company_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "customer_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "proposal_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scheduled_at": {},
+          "notes": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "estimate_request_id",
+          "company_id",
+          "customer_id",
+          "proposal_id",
+          "scheduled_at"
         ]
       }
     }

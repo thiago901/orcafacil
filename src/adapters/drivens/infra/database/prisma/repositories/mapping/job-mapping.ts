@@ -26,12 +26,16 @@ export class JobMapping {
     status,
     estimate_id,
     user_id,
+    finished_company_at,
+    finished_customer_at,
   }: JobComplete) {
     return Job.create(
       {
         company_id,
         proposal_id,
         user_id,
+        finished_company_at,
+        finished_customer_at,
         created_at,
         status: status as JobStatus,
         updated_at,
@@ -53,6 +57,7 @@ export class JobMapping {
                 street: estimate_request.address_street,
               },
               category: estimate_request.category,
+              urgency: estimate_request.urgency,
               description: estimate_request.description,
               email: estimate_request.email,
               footage: estimate_request.footage,
@@ -79,6 +84,7 @@ export class JobMapping {
               created_at: proposal.created_at,
               reject_at: proposal.reject_at,
               updated_at: proposal.updated_at,
+              is_required_visit: proposal.is_required_visit,
             },
             new UniqueEntityID(proposal_id),
           ),
@@ -98,6 +104,8 @@ export class JobMapping {
       status: job.status,
       created_at: job.created_at,
       updated_at: job.updated_at,
+      finished_company_at: job.finished_company_at,
+      finished_customer_at: job.finished_customer_at,
     };
   }
 }

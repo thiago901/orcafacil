@@ -36,6 +36,8 @@ export class CreateJobUseCase {
       estimate_request_id,
       estimate_id,
       status: 'BACKLOG',
+      finished_company_at: null,
+      finished_customer_at: null,
     });
 
     await this.jobRepository.create(job);

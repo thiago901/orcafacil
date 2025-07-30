@@ -45,6 +45,9 @@ import {
   CreateUserPaymentCustomerProps,
   createUserPaymentCustomerSchema,
 } from './validations/create-user-payment-customer.validate';
+import { CurrentUser } from '@adapters/drivens/infra/auth/current-user-decorator';
+import { TokenPayload } from '@adapters/drivens/infra/auth/jwt.strategy';
+import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-05-28.basil',
@@ -225,12 +228,38 @@ export class PaymentController {
 
   @Post('/customer/session')
   @HttpCode(200)
-  @Public()
   @UsePipes(new ZodValidationPipe(createUserPaymentSessionSchema))
-  async createUserSession(@Body() body: CreateUserPaymentSessionProps) {
+  async createUserSession(
+    @CurrentUser() user: TokenPayload,
+    @Body() body: CreateUserPaymentSessionProps,
+  ) {
+    const proposal = await this.prismaService.proposal.findFirst({
+      where: {
+        id: body.proposal_id,
+      },
+    });
+
+    if (!proposal || !proposal.approved_at) {
+      throw new BadRequestException('Proposal not found');
+    }
+    const customer = await this.prismaService.customer.findFirst({
+      where: {
+        user_id: user.sub,
+      },
+    });
+    if (!customer) {
+      throw new BadRequestException('Customer not found');
+    }
+    const customerPayment = await this.paymentsCustomerProvider.findCustomer(
+      customer.document,
+    );
+    if (!customerPayment) {
+      throw new BadRequestException('Customer not found');
+    }
     const session = await this.paymentsCustomerProvider.createPayment({
-      amount: body.amount,
-      customer_id: body.customer_id,
+      amount: proposal.amount,
+      customer_id: customerPayment.id,
+      externalReference: `PROPOSAL:${proposal.id}`,
     });
 
     return {
@@ -242,16 +271,55 @@ export class PaymentController {
   @Public()
   @UsePipes(new ZodValidationPipe(createUserPaymentCustomerSchema))
   async createUserCustomer(@Body() body: CreateUserPaymentCustomerProps) {
-    const { doc, email, phone, name } = body;
+    const { doc, email, phone, name, customer_id } = body;
     const session = await this.paymentsCustomerProvider.createCustomer({
-      doc,
+      document: doc,
       email,
       phone,
       name,
+      customer_id,
     });
 
     return {
       result: session,
+    };
+  }
+  @Post('/customer/asaas/webhook')
+  @HttpCode(200)
+  @Public()
+  async asaaswebhook(@Body() body: any) {
+    console.log('body', body);
+    const { event, payment } = body;
+
+    if (event === 'PAYMENT_CONFIRMED') {
+      console.log('eee', event);
+    }
+    const [type, id] = String(payment.externalReference).split(':');
+    const proposal = await this.prismaService.proposal.findFirst({
+      where: {
+        id,
+      },
+    });
+    if (!proposal) {
+      return;
+    }
+    if (event === 'PAYMENT_CONFIRMED') {
+      await this.prismaService.progressEstimateRequest.create({
+        data: {
+          id: new UniqueEntityID().toString(),
+          title: 'Pagamento Recebido',
+          description: 'Seu pagamento foi confirmado',
+          type: 'PAYMENT_COMPLETED',
+          created_at: new Date(),
+          proposal_id: proposal.id,
+          estimate_request_id: proposal.estimate_request_id,
+          props: {},
+        },
+      });
+    }
+
+    return {
+      result: true,
     };
   }
 }

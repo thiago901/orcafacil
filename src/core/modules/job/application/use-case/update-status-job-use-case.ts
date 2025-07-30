@@ -1,4 +1,4 @@
-import { Job, JobStatus } from '@core/modules/job/entities/job';
+import { Job } from '@core/modules/job/entities/job';
 import { JobRepository } from '../ports/repositories/job-repository';
 import { Injectable } from '@nestjs/common';
 import { Either, left, right } from '@core/common/entities/either';
@@ -12,7 +12,8 @@ import { EnvService } from '@adapters/drivens/infra/envs/env.service';
 
 interface RequestProps {
   id: string;
-  status: string;
+  finished_company_at?: Date;
+  finished_customer_at?: Date;
 }
 
 type ResponseProps = Either<
@@ -32,13 +33,21 @@ export class UpdateStatusJobUseCase {
     private readonly env: EnvService,
   ) {}
 
-  async execute({ id, status }: RequestProps): Promise<ResponseProps> {
+  async execute({
+    id,
+    finished_company_at,
+    finished_customer_at,
+  }: RequestProps): Promise<ResponseProps> {
     const job = await this.jobRepository.findById(id);
     if (!job) {
       return left(new ResourceNotFoundError());
     }
-    job.status = status as JobStatus;
 
+    job.finished_company_at = finished_company_at ?? job.finished_company_at;
+    job.finished_customer_at = finished_customer_at ?? job.finished_customer_at;
+    if (!!job.finished_customer_at && !!job.finished_company_at) {
+      job.status = 'FINISHED';
+    }
     await this.jobRepository.save(job);
 
     if (job.status === 'FINISHED') {

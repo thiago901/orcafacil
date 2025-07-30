@@ -1,17 +1,20 @@
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { Company } from '@core/modules/company/entities/company';
 import { EstimateRequest } from '@core/modules/estimate-request/entities/estimate-request';
+import { ProgressEstimateRequest } from '@core/modules/estimate-request/entities/progress-estimate-request';
 import { Proposal } from '@core/modules/proposal/entities/proposal';
 
 import {
   Proposal as ProposalPrisma,
   Company as PrismaCompany,
   EstimateRequest as PrismaEstimateRequest,
+  ProgressEstimateRequest as PrismaProgressEstimateRequest,
 } from '@prisma/client';
 
 type ProposalComplete = ProposalPrisma & {
   company?: PrismaCompany;
   estimate_request?: PrismaEstimateRequest;
+  progress_estimate_request?: PrismaProgressEstimateRequest[];
 };
 export class ProposalMapping {
   static toDomain({
@@ -29,6 +32,8 @@ export class ProposalMapping {
     estimate_request,
     estimate_id,
     expire_at,
+    is_required_visit,
+    progress_estimate_request,
   }: ProposalComplete) {
     return Proposal.create(
       {
@@ -43,7 +48,23 @@ export class ProposalMapping {
         reject_at,
         estimate_id,
         expire_at,
-
+        is_required_visit,
+        progress_estimate_requests: !!progress_estimate_request
+          ? progress_estimate_request.map((item) =>
+              ProgressEstimateRequest.create(
+                {
+                  description: item.description,
+                  estimate_request_id: item.estimate_request_id,
+                  props: item.props as any,
+                  title: item.title,
+                  type: item.type,
+                  created_at: item.created_at,
+                  proposal_id: item.proposal_id,
+                },
+                new UniqueEntityID(item.id),
+              ),
+            )
+          : null,
         estimate_request: !estimate_request
           ? null
           : EstimateRequest.create(
@@ -56,6 +77,7 @@ export class ProposalMapping {
                 user_id: estimate_request.user_id,
                 category: estimate_request.category,
                 finished_at: estimate_request.finished_at,
+                urgency: estimate_request.urgency,
                 address: {
                   latitude: estimate_request.latitude,
                   longitude: estimate_request.longitude,
@@ -105,6 +127,7 @@ export class ProposalMapping {
       reject_at: proposal.reject_at,
       estimate_id: proposal.estimate_id,
       expire_at: proposal.expire_at,
+      is_required_visit: proposal.is_required_visit,
     };
   }
 }

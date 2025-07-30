@@ -38,6 +38,7 @@ export class EstimateRequestMapping {
     files,
     finished_at,
     user,
+    urgency,
   }: EstimateRequestComplete) {
     return EstimateRequest.create(
       {
@@ -49,6 +50,7 @@ export class EstimateRequestMapping {
         user_id,
         category,
         finished_at,
+        urgency,
         user: !user
           ? null
           : User.create(
@@ -89,6 +91,7 @@ export class EstimateRequestMapping {
               approved_at: proposal.approved_at,
               created_at: proposal.created_at,
               updated_at: proposal.updated_at,
+              is_required_visit: proposal.is_required_visit,
             },
             new UniqueEntityID(proposal.id),
           ),
@@ -125,6 +128,7 @@ export class EstimateRequestMapping {
       address_state: estimateRequest.address.state,
       address_street: estimateRequest.address.street,
       user_id: estimateRequest.user_id,
+      urgency: estimateRequest.urgency,
       id: estimateRequest.id.toString(),
       created_at: estimateRequest.created_at,
       updated_at: estimateRequest.updated_at,

@@ -17,6 +17,15 @@ export const createCompanySchema = z.object({
     zip: z.string().min(2),
     address: z.string().min(2),
   }),
+  categories: z
+    .array(
+      z.object({
+        name: z.string(),
+        category_id: z.string(),
+        category_name: z.string(),
+      }),
+    )
+    .min(1),
 });
 
 export class CreateCompanyProps extends createZodDto(createCompanySchema) {}

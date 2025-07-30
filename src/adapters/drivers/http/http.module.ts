@@ -79,6 +79,15 @@ import { SupportProvider } from '@core/common/application/ports/providers/suport
 import { GitHubIssuesSuportProvider } from '@adapters/drivens/providers/github-issues-suport-provider';
 import { CustomerRepository } from '@core/modules/user/application/ports/repositories/customers-repository';
 import { PrismaCustomerRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-customer-repository';
+import { ScheduledVisitModule } from '@core/modules/scheduled-visit/scheduled-visit.module';
+import { ScheduledVisitRepository } from '@core/modules/scheduled-visit/application/ports/repositories/schedule-visit.repository';
+import { PrismaScheduledVisitRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-scheduled-visit.repository';
+import { ScheduledVisitController } from './controllers/scheduled-visit-controller';
+import { ProgressEstimateRequestRepository } from '@core/modules/estimate-request/application/ports/repositories/progress-estimate-request-repository';
+import { PrismaProgressEstimateRequestRepository } from '@adapters/drivens/infra/database/prisma/repositories/prisma-progress-estimate-request-repository';
+import { ProgressEstimateRequestController } from './controllers/progress-estimate-request-controller';
+import { CreateProgressEstimateUseCase } from '@core/modules/estimate-request/application/use-case/create-progress-estimate-use-case';
+import { ProgressEstimateRequestProvider } from '@core/modules/estimate-request/application/ports/provider/progress-estimate-request';
 
 @Module({
   imports: [
@@ -128,6 +137,14 @@ import { PrismaCustomerRepository } from '@adapters/drivens/infra/database/prism
         {
           provide: NotificationRepository,
           useClass: PrismaNotificationRepository,
+        },
+        {
+          provide: ProgressEstimateRequestRepository,
+          useClass: PrismaProgressEstimateRequestRepository,
+        },
+        {
+          provide: ProgressEstimateRequestProvider,
+          useClass: CreateProgressEstimateUseCase,
         },
       ],
     },
@@ -203,6 +220,10 @@ import { PrismaCustomerRepository } from '@adapters/drivens/infra/database/prism
           provide: PublishMessagingProvider,
           useClass: RabbitMqPublishMessagingProvider,
         },
+        {
+          provide: ProgressEstimateRequestRepository,
+          useClass: PrismaProgressEstimateRequestRepository,
+        },
       ],
     },
     {
@@ -235,6 +256,14 @@ import { PrismaCustomerRepository } from '@adapters/drivens/infra/database/prism
         {
           provide: EstimateRepository,
           useClass: PrismaEstimateRepository,
+        },
+        {
+          provide: ProgressEstimateRequestProvider,
+          useClass: CreateProgressEstimateUseCase,
+        },
+        {
+          provide: ProgressEstimateRequestRepository,
+          useClass: PrismaProgressEstimateRequestRepository,
         },
       ],
     },
@@ -298,6 +327,23 @@ import { PrismaCustomerRepository } from '@adapters/drivens/infra/database/prism
         },
       ],
     },
+    {
+      module: ScheduledVisitModule,
+      providers: [
+        {
+          provide: ScheduledVisitRepository,
+          useClass: PrismaScheduledVisitRepository,
+        },
+        {
+          provide: ProgressEstimateRequestProvider,
+          useClass: CreateProgressEstimateUseCase,
+        },
+        {
+          provide: ProgressEstimateRequestRepository,
+          useClass: PrismaProgressEstimateRequestRepository,
+        },
+      ],
+    },
   ],
 
   controllers: [
@@ -318,6 +364,8 @@ import { PrismaCustomerRepository } from '@adapters/drivens/infra/database/prism
     PlanController,
     EstimateController,
     SubscriptionsController,
+    ScheduledVisitController,
+    ProgressEstimateRequestController,
   ],
 })
 export class HTTPModule {}

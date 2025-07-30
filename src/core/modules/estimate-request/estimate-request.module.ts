@@ -16,6 +16,8 @@ import { GetAllEstimateByCompanyUseCase } from './application/use-case/get-all-e
 import { GetAllEstimateByEstimateRequestUseCase } from './application/use-case/get-all-estimate-by-estimate-request-use-case';
 import { GetAllEstimateByIdUseCase } from './application/use-case/get-all-estimate-by-id-use-case';
 import { GetAllMessagesGroupByEstimateIdCompanyIdUseCase } from './application/use-case/get-all-messages-group-by-estimate-id-and-company-id-use-case';
+import { CreateProgressEstimateUseCase } from './application/use-case/create-progress-estimate-use-case';
+import { GetAllProgressEstimateByEstimateRequestUseCase } from './application/use-case/get-all-progress-estimate-by-estimate-request-use-case';
 
 @Module({
   imports: [WebSocketModule],
@@ -37,6 +39,8 @@ import { GetAllMessagesGroupByEstimateIdCompanyIdUseCase } from './application/u
     GetAllEstimateByEstimateRequestUseCase,
     GetAllEstimateByIdUseCase,
     GetAllMessagesGroupByEstimateIdCompanyIdUseCase,
+    CreateProgressEstimateUseCase,
+    GetAllProgressEstimateByEstimateRequestUseCase,
   ],
   exports: [
     ListEstimateRequestsByUserUseCase,
@@ -55,6 +59,8 @@ import { GetAllMessagesGroupByEstimateIdCompanyIdUseCase } from './application/u
     GetAllEstimateByEstimateRequestUseCase,
     GetAllEstimateByIdUseCase,
     GetAllMessagesGroupByEstimateIdCompanyIdUseCase,
+    CreateProgressEstimateUseCase,
+    GetAllProgressEstimateByEstimateRequestUseCase,
   ],
 })
 export class EstimateRequestModule {}

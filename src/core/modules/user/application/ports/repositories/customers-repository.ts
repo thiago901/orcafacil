@@ -11,6 +11,10 @@ export abstract class CustomerRepository {
     id: string,
     options?: CustomerRepositoryOptions,
   ): Promise<Customer | null>;
+  abstract findByUserId(
+    user_id: string,
+    options?: CustomerRepositoryOptions,
+  ): Promise<Customer | null>;
   abstract findByEmail(
     email: string,
     options?: CustomerRepositoryOptions,

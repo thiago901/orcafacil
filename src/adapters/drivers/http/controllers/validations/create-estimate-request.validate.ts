@@ -14,6 +14,7 @@ export const createEstimateRequestSchema = z.object({
   address_postal_code: z.string(),
   address_state: z.string(),
   address_street: z.string(),
+  urgency: z.coerce.number(),
   category: z.string(),
 });
 

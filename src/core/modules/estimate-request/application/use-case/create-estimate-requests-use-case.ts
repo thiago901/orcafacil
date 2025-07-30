@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { Either, right } from '@core/common/entities/either';
 import { AddressFinderProvider } from '@core/common/application/ports/providers/address-finder';
 import { PublishMessagingProvider } from '@core/common/application/ports/providers/publish-messaging.provider';
+import { CreateProgressEstimateUseCase } from './create-progress-estimate-use-case';
 
 interface RequestProps {
   user_id: string;
@@ -19,6 +20,7 @@ interface RequestProps {
   address_state: string;
   address_city: string;
   category: string;
+  urgency: number;
 }
 
 type ResponseProps = Either<
@@ -34,6 +36,7 @@ export class CreateEstimateRequestUseCase {
     private readonly estimateRequestRepository: EstimateRequestRepository,
     private readonly addressFinderProvider: AddressFinderProvider,
     private readonly publishMessagingProvider: PublishMessagingProvider,
+    private readonly createProgressEstimateUseCase: CreateProgressEstimateUseCase,
   ) {}
 
   async execute({
@@ -50,6 +53,7 @@ export class CreateEstimateRequestUseCase {
     address_state,
     address_street,
     category,
+    urgency,
   }: RequestProps): Promise<ResponseProps> {
     const addressData = await this.addressFinderProvider.find({
       city: address_city,
@@ -66,6 +70,7 @@ export class CreateEstimateRequestUseCase {
       phone,
       user_id: user_id,
       category: category,
+      urgency,
       finished_at: null,
       address: {
         city: address_city,
@@ -80,6 +85,23 @@ export class CreateEstimateRequestUseCase {
     });
 
     await this.estimateRequestRepository.save(estimateRequest);
+
+    await this.createProgressEstimateUseCase.execute({
+      type: 'CREATED',
+      estimate_request_id: estimateRequest.id.toString(),
+      description: `Solicitação de orçamento de ${estimateRequest.category} criada`,
+      title: 'Orçamento Criado',
+      props: {},
+      proposal_id: null,
+    });
+    await this.createProgressEstimateUseCase.execute({
+      type: 'PROPOSALS_WAITING',
+      estimate_request_id: estimateRequest.id.toString(),
+      description: 'Estamos contatando os prestadores',
+      title: 'Aguardando Propostas',
+      props: {},
+      proposal_id: null,
+    });
 
     await this.publishMessagingProvider.publish({
       data: {
@@ -99,6 +121,14 @@ export class CreateEstimateRequestUseCase {
         routingKey: 'estimate_request:created',
       },
     });
+    // await this.createProgressEstimateUseCase.execute({
+    //   description: `Solicitação de orçamento de ${estimateRequest.category} criada`,
+    //   estimate_request_id: estimateRequest.id.toString(),
+    //   title: 'Orçamento Criado',
+    //   type: 'CREATED',
+
+    //   props: {},
+    // });
     return right({ estimateRequest });
   }
 }

@@ -28,7 +28,7 @@ export async function planSeed() {
         },
         multiCompanySupport: {
           label: 'Sem múltiplas empresas',
-          active: false,
+          active: true,
           limit: 1,
         },
         visualizeCustomerContacts: {
