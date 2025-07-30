@@ -184,7 +184,7 @@ model EstimateRequest {
   latitude             Float
   longitude            Float
   category             String
-  urgency              Int @default(0)
+  urgency              Int                                   @default(0)
   created_at           DateTime                              @map("created_at")
   updated_at           DateTime?                             @map("updated_at")
   finished_at          DateTime?                             @map("finished_at")
@@ -211,7 +211,7 @@ model ProgressEstimateRequest {
   proposal_id         String?
 
   estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
-  proposal         Proposal?        @relation(fields: [proposal_id], references: [id])
+  proposal         Proposal?       @relation(fields: [proposal_id], references: [id])
 
   @@map("progress_estimate_request")
 }
@@ -256,6 +256,7 @@ model Proposal {
   job                       Job?
   progress_estimate_request ProgressEstimateRequest[]
   scheduled_visit           ScheduledVisit[]
+  messages                  Message[]
 
   @@map("proposals")
 }
@@ -303,6 +304,7 @@ model Message {
   type                String
   estimate_request_id String
   company_id          String
+  proposal_id         String
   user_id             String
   company_name        String
   user_name           String
@@ -311,6 +313,7 @@ model Message {
   updated_at          DateTime   @default(now())
 
   estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
+  proposal         Proposal        @relation(fields: [proposal_id], references: [id])
 
   @@map("messages")
 }

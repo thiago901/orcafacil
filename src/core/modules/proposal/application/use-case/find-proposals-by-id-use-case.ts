@@ -21,7 +21,9 @@ export class FindProposalsByIdUseCase {
   constructor(private readonly proposalRepository: ProposalRepository) {}
 
   async execute({ id }: RequestProps): Promise<ResponseProps> {
-    const proposal = await this.proposalRepository.findById(id);
+    const proposal = await this.proposalRepository.findById(id, {
+      relations: { messages: true, company: true },
+    });
     if (!proposal) {
       throw new ResourceNotFoundError();
     }

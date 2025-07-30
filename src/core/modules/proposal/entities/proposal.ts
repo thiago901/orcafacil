@@ -4,6 +4,7 @@ import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { Company } from '@core/modules/company/entities/company';
 import { Estimate } from '@core/modules/estimate-request/entities/estimate';
 import { EstimateRequest } from '@core/modules/estimate-request/entities/estimate-request';
+import { EstimateRequestMessage } from '@core/modules/estimate-request/entities/estimate-request-message';
 import { ProgressEstimateRequest } from '@core/modules/estimate-request/entities/progress-estimate-request';
 
 export interface ProposalProps {
@@ -20,7 +21,7 @@ export interface ProposalProps {
   estimate_id: string;
   company_id: string;
   is_required_visit: boolean;
-
+  messages?: EstimateRequestMessage[];
   company?: Company;
   estimate_request?: EstimateRequest | null;
   estimate?: Estimate | null;
@@ -111,6 +112,9 @@ export class Proposal extends Entity<ProposalProps> {
   }
   get progress_estimate_requests() {
     return this.props.progress_estimate_requests;
+  }
+  get messages() {
+    return this.props.messages;
   }
 
   private touch() {

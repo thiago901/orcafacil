@@ -8,11 +8,16 @@ import {
   PaymentsCustomerProvider,
 } from '@core/modules/payment/application/ports/providers/payments-customer-provider';
 import axios from 'axios';
+import { EnvService } from '../infra/envs/env.service';
 
 @Injectable()
 export class AsaasProvider implements PaymentsCustomerProvider {
   private readonly API_URL = 'https://api-sandbox.asaas.com/v3';
-  private readonly API_KEY = process.env.ASAAS_API_KEY; // coloque no .env
+  private API_KEY: string;
+
+  constructor(private readonly env: EnvService) {
+    this.API_KEY = this.env.get('ASAAS_API_KEY');
+  }
 
   async createPayment({
     amount,

@@ -1,6 +1,7 @@
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { Company } from '@core/modules/company/entities/company';
 import { EstimateRequest } from '@core/modules/estimate-request/entities/estimate-request';
+import { EstimateRequestMessage } from '@core/modules/estimate-request/entities/estimate-request-message';
 import { ProgressEstimateRequest } from '@core/modules/estimate-request/entities/progress-estimate-request';
 import { Proposal } from '@core/modules/proposal/entities/proposal';
 
@@ -9,12 +10,14 @@ import {
   Company as PrismaCompany,
   EstimateRequest as PrismaEstimateRequest,
   ProgressEstimateRequest as PrismaProgressEstimateRequest,
+  Message as PrismaMessage,
 } from '@prisma/client';
 
 type ProposalComplete = ProposalPrisma & {
   company?: PrismaCompany;
   estimate_request?: PrismaEstimateRequest;
   progress_estimate_request?: PrismaProgressEstimateRequest[];
+  messages?: PrismaMessage[];
 };
 export class ProposalMapping {
   static toDomain({
@@ -34,6 +37,7 @@ export class ProposalMapping {
     expire_at,
     is_required_visit,
     progress_estimate_request,
+    messages,
   }: ProposalComplete) {
     return Proposal.create(
       {
@@ -49,6 +53,25 @@ export class ProposalMapping {
         estimate_id,
         expire_at,
         is_required_visit,
+        messages: messages?.map((item) =>
+          EstimateRequestMessage.create(
+            {
+              company_id: item.company_id,
+              company_name: item.company_name,
+              content: item.content,
+              estimate_request_id: item.estimate_request_id,
+              proposal_id: item.proposal_id,
+              sender: item.sender,
+              type: item.type,
+              user_id: item.user_id,
+              user_name: item.user_name,
+              created_at: item.created_at,
+              read: item.read || false,
+              updated_at: item.updated_at,
+            },
+            new UniqueEntityID(item.id),
+          ),
+        ),
         progress_estimate_requests: !!progress_estimate_request
           ? progress_estimate_request.map((item) =>
               ProgressEstimateRequest.create(

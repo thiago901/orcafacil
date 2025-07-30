@@ -31,6 +31,7 @@ export const schemaEnv = z.object({
   }),
   AMQP_URL: z.string(),
   GIT_HUB_KEY: z.string(),
+  ASAAS_API_KEY: z.string(),
 });
 
 export type Env = z.infer<typeof schemaEnv>;

@@ -16,6 +16,10 @@ export class ProposalMapping {
     estimate,
     estimate_id,
     progress_estimate_requests,
+    messages,
+    is_required_visit,
+    expire_at,
+    name,
   }: Proposal) {
     return {
       id: id.toString(),
@@ -29,6 +33,26 @@ export class ProposalMapping {
       reject_at,
       estimate,
       estimate_id,
+      messages: !messages
+        ? []
+        : messages.map((item) => ({
+            company_id: item.company_id,
+            company_name: item.company_name,
+            content: item.content,
+            created_at: item.created_at,
+            estimate_request_id: item.estimate_request_id,
+            id: item.id.toString(),
+            proposal_id: item.proposal_id,
+            read: item.read,
+            sender: item.sender,
+            type: item.type,
+            updated_at: item.updated_at,
+            user_id: item.user_id,
+            user_name: item.user_name,
+          })),
+      is_required_visit,
+      expire_at,
+      name,
       estimate_request: estimate_request
         ? {
             id: estimate_request.id.toString(),

@@ -47,12 +47,20 @@ export class EstimateRequestMessageController {
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createEstimateRequestMessageSchema))
   async create(@Body() body: CreateEstimateRequestMessageProps) {
-    const { company_id, content, estimate_request_id, sender, type } = body;
+    const {
+      company_id,
+      content,
+      estimate_request_id,
+      sender,
+      type,
+      proposal_id,
+    } = body;
 
     const result = await this.createEstimateRequestMessageUseCase.execute({
       company_id,
       content,
       estimate_request_id,
+      proposal_id,
       sender,
       type,
     });

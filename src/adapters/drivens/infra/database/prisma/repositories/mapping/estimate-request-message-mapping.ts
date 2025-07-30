@@ -19,6 +19,7 @@ export class EstimateRequestMessageMapping {
     user_id,
     read,
     updated_at,
+    proposal_id,
   }: EstimateRequestComplete) {
     return EstimateRequestMessage.create(
       {
@@ -28,6 +29,7 @@ export class EstimateRequestMessageMapping {
         type,
         company_id,
         company_name,
+        proposal_id,
         user_name,
         user_id,
         read: read ?? false,
@@ -52,6 +54,7 @@ export class EstimateRequestMessageMapping {
       user_id: estimateRequestMessage.user_id,
       created_at: estimateRequestMessage.created_at,
       updated_at: estimateRequestMessage.updated_at,
+      proposal_id: estimateRequestMessage.proposal_id,
     };
   }
 }

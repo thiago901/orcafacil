@@ -19,6 +19,7 @@ interface RequestProps {
   sender: SenderType;
   type: string;
   company_id: string;
+  proposal_id: string;
 }
 
 type ResponseProps = Either<
@@ -44,6 +45,7 @@ export class CreateEstimateRequestMessageUseCase {
     sender,
     company_id,
     type,
+    proposal_id,
   }: RequestProps): Promise<ResponseProps> {
     const estimateRequest =
       await this.estimateRequestRepository.findById(estimate_request_id);
@@ -64,12 +66,13 @@ export class CreateEstimateRequestMessageUseCase {
       company_name: company.name,
       sender,
       user_id: user.id.toString(),
+      proposal_id,
       type,
     });
 
     await this.estimateRequestMessageRepository.create(message);
     await this.realtimeMessageNotificationProvider.sendMessage(
-      estimate_request_id,
+      proposal_id,
       'message:recieve',
       {
         message: {
