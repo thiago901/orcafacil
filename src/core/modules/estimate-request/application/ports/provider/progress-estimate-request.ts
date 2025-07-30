@@ -10,7 +10,7 @@ export interface RequestProps {
   title: string;
   type: ProgressEstimateRequestType;
   props: any;
-  proposal_id: string;
+  proposal_id?: string | null;
 }
 
 export type ResponseProps = Either<

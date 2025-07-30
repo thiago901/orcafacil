@@ -184,10 +184,10 @@ model EstimateRequest {
   latitude             Float
   longitude            Float
   category             String
-
-  created_at  DateTime  @map("created_at")
-  updated_at  DateTime? @map("updated_at")
-  finished_at DateTime? @map("finished_at")
+  urgency              Int @default(0)
+  created_at           DateTime                              @map("created_at")
+  updated_at           DateTime?                             @map("updated_at")
+  finished_at          DateTime?                             @map("finished_at")
 
   user                      User?                     @relation(fields: [user_id], references: [id])
   files                     EstimateRequestFile[]
@@ -208,10 +208,10 @@ model ProgressEstimateRequest {
   description         String
   props               Json?
   created_at          DateTime                    @map("created_at")
-  proposal_id         String
+  proposal_id         String?
 
   estimate_request EstimateRequest @relation(fields: [estimate_request_id], references: [id])
-  proposal         Proposal        @relation(fields: [proposal_id], references: [id])
+  proposal         Proposal?        @relation(fields: [proposal_id], references: [id])
 
   @@map("progress_estimate_request")
 }

@@ -9,6 +9,7 @@ export class ProgressEstimateRequestMapping {
     title,
     type,
     proporties,
+    proposal_id,
   }: ProgressEstimateRequest) {
     return {
       id: id.toString(),
@@ -18,6 +19,7 @@ export class ProgressEstimateRequestMapping {
       title,
       type,
       props: proporties,
+      proposal_id,
     };
   }
 }

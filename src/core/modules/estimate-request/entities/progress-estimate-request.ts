@@ -22,7 +22,7 @@ export type ProgressEstimateRequestType =
 export interface EstimateRequestProps {
   estimate_request_id: string;
   title: string;
-  proposal_id: string;
+  proposal_id?: string | null;
   description: string;
   type: ProgressEstimateRequestType;
   props: object | null;

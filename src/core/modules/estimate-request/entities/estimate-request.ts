@@ -24,6 +24,7 @@ export interface EstimateRequestProps {
   description: string;
   category: string;
   user_id: string;
+  urgency: number;
   address: AddressProp;
   proposals?: Proposal[];
   messages?: EstimateRequestMessage[];
@@ -65,6 +66,9 @@ export class EstimateRequest extends Entity<EstimateRequestProps> {
   }
   get email() {
     return this.props.email;
+  }
+  get urgency() {
+    return this.props.urgency;
   }
 
   get description() {

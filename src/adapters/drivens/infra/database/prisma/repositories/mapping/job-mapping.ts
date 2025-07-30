@@ -57,6 +57,7 @@ export class JobMapping {
                 street: estimate_request.address_street,
               },
               category: estimate_request.category,
+              urgency: estimate_request.urgency,
               description: estimate_request.description,
               email: estimate_request.email,
               footage: estimate_request.footage,

@@ -20,6 +20,7 @@ interface RequestProps {
   address_state: string;
   address_city: string;
   category: string;
+  urgency: number;
 }
 
 type ResponseProps = Either<
@@ -52,6 +53,7 @@ export class CreateEstimateRequestUseCase {
     address_state,
     address_street,
     category,
+    urgency,
   }: RequestProps): Promise<ResponseProps> {
     const addressData = await this.addressFinderProvider.find({
       city: address_city,
@@ -68,6 +70,7 @@ export class CreateEstimateRequestUseCase {
       phone,
       user_id: user_id,
       category: category,
+      urgency,
       finished_at: null,
       address: {
         city: address_city,
@@ -83,21 +86,22 @@ export class CreateEstimateRequestUseCase {
 
     await this.estimateRequestRepository.save(estimateRequest);
 
-    // await this.createProgressEstimateUseCase.execute({
-    //   type: 'CREATED',
-    //   estimate_request_id: estimateRequest.id.toString(),
-    //   description: `Solicitação de orçamento de ${estimateRequest.category} criada`,
-    //   title: 'Orçamento Criado',
-    //   props: {},
-    //   proposal_id
-    // });
-    // await this.createProgressEstimateUseCase.execute({
-    //   type: 'PROPOSALS_WAITING',
-    //   estimate_request_id: estimateRequest.id.toString(),
-    //   description: 'Estamos contatando os prestadores',
-    //   title: 'Aguardando Propostas',
-    //   props: {},
-    // });
+    await this.createProgressEstimateUseCase.execute({
+      type: 'CREATED',
+      estimate_request_id: estimateRequest.id.toString(),
+      description: `Solicitação de orçamento de ${estimateRequest.category} criada`,
+      title: 'Orçamento Criado',
+      props: {},
+      proposal_id: null,
+    });
+    await this.createProgressEstimateUseCase.execute({
+      type: 'PROPOSALS_WAITING',
+      estimate_request_id: estimateRequest.id.toString(),
+      description: 'Estamos contatando os prestadores',
+      title: 'Aguardando Propostas',
+      props: {},
+      proposal_id: null,
+    });
 
     await this.publishMessagingProvider.publish({
       data: {

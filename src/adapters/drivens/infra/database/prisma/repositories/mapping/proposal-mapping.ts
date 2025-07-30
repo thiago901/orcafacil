@@ -77,6 +77,7 @@ export class ProposalMapping {
                 user_id: estimate_request.user_id,
                 category: estimate_request.category,
                 finished_at: estimate_request.finished_at,
+                urgency: estimate_request.urgency,
                 address: {
                   latitude: estimate_request.latitude,
                   longitude: estimate_request.longitude,

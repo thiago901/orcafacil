@@ -2745,6 +2745,9 @@
           "address_street": {
             "type": "string"
           },
+          "urgency": {
+            "type": "number"
+          },
           "category": {
             "type": "string"
           }
@@ -2762,6 +2765,7 @@
           "address_postal_code",
           "address_state",
           "address_street",
+          "urgency",
           "category"
         ]
       },
