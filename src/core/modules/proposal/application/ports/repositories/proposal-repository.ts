@@ -7,6 +7,10 @@ export abstract class ProposalRepository {
   abstract findByEstimateRequestId(
     estimateRequestId: string,
   ): Promise<Proposal[]>;
+  abstract findByEstimateRequestAndCompany(
+    estimate_request_id: string,
+    company_id: string,
+  ): Promise<Proposal[]>;
   abstract findByCompanyId(company_id: string): Promise<Proposal[]>;
   abstract findById(
     id: string,

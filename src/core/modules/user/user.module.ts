@@ -10,6 +10,8 @@ import { UploadProfileImageUseCase } from './application/use-case/upload-profile
 import { RefreshSessionUseCase } from './application/use-case/refresh-session-use-case';
 import { ActivateUserUseCase } from './application/use-case/acivate-user-use-case';
 import { SendMessageSupportUseCase } from './application/use-case/send-message-support-use-case';
+import { CustomerFindByIdUseCase } from './application/use-case/customer-find-by-id-use-case';
+import { CustomerFindByUserIdUseCase } from './application/use-case/customer-find-by-user-id-use-case';
 
 @Module({
   imports: [],
@@ -27,6 +29,8 @@ import { SendMessageSupportUseCase } from './application/use-case/send-message-s
     RefreshSessionUseCase,
     ActivateUserUseCase,
     SendMessageSupportUseCase,
+    CustomerFindByIdUseCase,
+    CustomerFindByUserIdUseCase,
   ],
   exports: [
     CreateSessionUseCase,
@@ -40,6 +44,8 @@ import { SendMessageSupportUseCase } from './application/use-case/send-message-s
     RefreshSessionUseCase,
     ActivateUserUseCase,
     SendMessageSupportUseCase,
+    CustomerFindByIdUseCase,
+    CustomerFindByUserIdUseCase,
   ],
 })
 export class UserModule {}

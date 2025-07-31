@@ -13,11 +13,28 @@ import { EstimateMapping } from './mapping/estimate-mapping';
 @Injectable()
 export class PrismaProposalRepository implements ProposalRepository {
   constructor(private readonly prisma: PrismaService) {}
+
   async findByEstimateRequestId(
     estimate_request_id: string,
   ): Promise<Proposal[]> {
     const proposals = await this.prisma.proposal.findMany({
       where: { estimate_request_id },
+      include: {
+        company: true,
+        progress_estimate_request: true,
+      },
+    });
+
+    return proposals.map((proposal) =>
+      ProposalMapping.toDomain(proposal as any),
+    );
+  }
+  async findByEstimateRequestAndCompany(
+    estimate_request_id: string,
+    company_id: string,
+  ): Promise<Proposal[]> {
+    const proposals = await this.prisma.proposal.findMany({
+      where: { estimate_request_id, company_id },
       include: {
         company: true,
         progress_estimate_request: true,

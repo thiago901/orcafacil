@@ -30,6 +30,7 @@ import { RejectProposalUseCase } from '@core/modules/proposal/application/use-ca
 import { ApproveProposalUseCase } from '@core/modules/proposal/application/use-case/approve-proposal-use-case ';
 import { CurrentUser } from '@adapters/drivens/infra/auth/current-user-decorator';
 import { TokenPayload } from '@adapters/drivens/infra/auth/jwt.strategy';
+import { ListProposalsByEstimateRequestCompanyUseCase } from '@core/modules/proposal/application/use-case/list-proposals-by-estimate-request-and-company-use-case';
 
 @ApiTags('Proposal')
 @ApiBearerAuth()
@@ -43,6 +44,7 @@ export class ProposalController {
     private readonly createProposalUseCase: CreateProposalUseCase,
     private readonly rejectProposalUseCase: RejectProposalUseCase,
     private readonly approveProposalUseCase: ApproveProposalUseCase,
+    private readonly listProposalsByEstimateRequestCompanyUseCase: ListProposalsByEstimateRequestCompanyUseCase,
   ) {}
 
   @Post()
@@ -92,6 +94,25 @@ export class ProposalController {
     const result = await this.listProposalsByEstimateUseCase.execute({
       estimate_requestid: estimate_id,
     });
+    if (result.isLeft()) {
+      throw new HttpException(
+        'Internal Server Error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+    return { result: result.value.proposals.map(ProposalMapping.toView) };
+  }
+  @Get('/estimate_request/:estimate_request_id/company/:company_id')
+  @HttpCode(200)
+  async listProposalsByEstimateRequestAndCompanyId(
+    @Param('estimate_request_id') estimate_request_id: string,
+    @Param('company_id') company_id: string,
+  ) {
+    const result =
+      await this.listProposalsByEstimateRequestCompanyUseCase.execute({
+        estimate_request_id,
+        company_id,
+      });
     if (result.isLeft()) {
       throw new HttpException(
         'Internal Server Error',

@@ -260,6 +260,42 @@
         ]
       }
     },
+    "/proposals/estimate_request/{estimate_request_id}/company/{company_id}": {
+      "get": {
+        "operationId": "ProposalController_listProposalsByEstimateRequestAndCompanyId",
+        "parameters": [
+          {
+            "name": "estimate_request_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "company_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Proposal"
+        ]
+      }
+    },
     "/proposals/{id}/reject": {
       "patch": {
         "operationId": "ProposalController_rejectProposal",
@@ -2241,6 +2277,62 @@
         ],
         "tags": [
           "Progress Estimate Request"
+        ]
+      }
+    },
+    "/customers/{id}": {
+      "get": {
+        "operationId": "CustomerController_findById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Customer"
+        ]
+      }
+    },
+    "/customers/user/{user_id}": {
+      "get": {
+        "operationId": "CustomerController_findByUserId",
+        "parameters": [
+          {
+            "name": "user_id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Customer"
         ]
       }
     }

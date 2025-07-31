@@ -88,6 +88,7 @@ import { PrismaProgressEstimateRequestRepository } from '@adapters/drivens/infra
 import { ProgressEstimateRequestController } from './controllers/progress-estimate-request-controller';
 import { CreateProgressEstimateUseCase } from '@core/modules/estimate-request/application/use-case/create-progress-estimate-use-case';
 import { ProgressEstimateRequestProvider } from '@core/modules/estimate-request/application/ports/provider/progress-estimate-request';
+import { CustomerController } from './controllers/customer-controller';
 
 @Module({
   imports: [
@@ -366,6 +367,7 @@ import { ProgressEstimateRequestProvider } from '@core/modules/estimate-request/
     SubscriptionsController,
     ScheduledVisitController,
     ProgressEstimateRequestController,
+    CustomerController,
   ],
 })
 export class HTTPModule {}

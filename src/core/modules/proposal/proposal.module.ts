@@ -6,6 +6,7 @@ import { CreateProposalUseCase } from './application/use-case/create-proposals-u
 import { ApproveProposalUseCase } from './application/use-case/approve-proposal-use-case ';
 import { RejectProposalUseCase } from './application/use-case/reject-proposal-use-case';
 import { WebSocketModule } from '@adapters/drivers/web-socket/web-socket.module';
+import { ListProposalsByEstimateRequestCompanyUseCase } from './application/use-case/list-proposals-by-estimate-request-and-company-use-case';
 
 @Module({
   imports: [WebSocketModule],
@@ -17,6 +18,7 @@ import { WebSocketModule } from '@adapters/drivers/web-socket/web-socket.module'
     CreateProposalUseCase,
     ApproveProposalUseCase,
     RejectProposalUseCase,
+    ListProposalsByEstimateRequestCompanyUseCase,
   ],
   exports: [
     ListProposalsByEstimateUseCase,
@@ -25,6 +27,7 @@ import { WebSocketModule } from '@adapters/drivers/web-socket/web-socket.module'
     CreateProposalUseCase,
     ApproveProposalUseCase,
     RejectProposalUseCase,
+    ListProposalsByEstimateRequestCompanyUseCase,
   ],
 })
 export class ProposalModule {}
