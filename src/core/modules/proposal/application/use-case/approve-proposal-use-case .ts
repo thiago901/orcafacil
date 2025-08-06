@@ -49,12 +49,26 @@ export class ApproveProposalUseCase {
       },
     });
 
-    if (true) {
+    if (proposal.is_required_visit) {
       await this.progressEstimateRequestProvider.execute({
         type: 'VISIT_REQUESTED',
         estimate_request_id: proposal.estimate_request_id,
         title: 'Agendamento de Visita',
         description: `Para esse serviço é necessario uma visíta em loco`,
+        proposal_id: proposal.id.toString(),
+        props: {
+          company: {
+            id: proposal.company_id,
+            name: proposal.company?.name || null,
+          },
+        },
+      });
+    } else {
+      await this.progressEstimateRequestProvider.execute({
+        type: 'VISIT_REQUESTED',
+        estimate_request_id: proposal.estimate_request_id,
+        title: 'Agendamento de Serviço',
+        description: `Escolha uma data para execução do serviço`,
         proposal_id: proposal.id.toString(),
         props: {
           company: {

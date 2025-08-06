@@ -20,7 +20,11 @@ export class ListPendingVisitsByCompanyUseCase {
   async execute({
     company_id,
   }: ListPendingVisitsByCompanyRequest): Promise<ListPendingVisitsByCompanyResponse> {
-    const visits = await this.repository.findAllByCompany(company_id);
+    const visits = await this.repository.findAllByCompany(company_id, {
+      relations: {
+        customer: true,
+      },
+    });
     return right({ visits });
   }
 }

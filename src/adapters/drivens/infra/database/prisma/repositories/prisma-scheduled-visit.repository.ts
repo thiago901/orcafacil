@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import {
   FindConflictingVisitProps,
+  RepositoryOptions,
   ScheduledVisitRepository,
 } from '@core/modules/scheduled-visit/application/ports/repositories/schedule-visit.repository';
 import { ScheduledVisit } from '@core/modules/scheduled-visit/entities/scheduled-visit';
@@ -57,12 +58,20 @@ export class PrismaScheduledVisitRepository
     return visit ? ScheduledVisitMapping.toDomain(visit) : null;
   }
 
-  async findAllByCompany(company_id: string): Promise<ScheduledVisit[]> {
+  async findAllByCompany(
+    company_id: string,
+    options?: RepositoryOptions,
+  ): Promise<ScheduledVisit[]> {
     const visits = await this.prisma.scheduledVisit.findMany({
       where: {
         company_id,
         // status: 'PENDING',
       },
+      include: options?.relations
+        ? {
+            ...options.relations,
+          }
+        : {},
     });
 
     return visits.map(ScheduledVisitMapping.toDomain);

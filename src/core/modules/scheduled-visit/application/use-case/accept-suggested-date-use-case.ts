@@ -48,6 +48,7 @@ export class AcceptSuggestedDateUseCase {
       description: `O prestador já finalizou`,
       props: {
         scheduled_date: visit.suggested_at || visit.scheduled_at,
+        visit_id,
       },
       proposal_id: visit.proposal_id,
     });

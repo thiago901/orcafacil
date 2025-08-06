@@ -4,6 +4,9 @@ export type FindConflictingVisitProps = {
   company_id: string;
   date: Date;
 };
+export type RepositoryOptions = {
+  relations?: any;
+};
 export abstract class ScheduledVisitRepository {
   abstract create(visit: ScheduledVisit): Promise<void>;
   abstract findById(id: string): Promise<ScheduledVisit | null>;
@@ -12,7 +15,10 @@ export abstract class ScheduledVisitRepository {
   abstract findConflictingVisit(
     data: FindConflictingVisitProps,
   ): Promise<ScheduledVisit | null>;
-  abstract findAllByCompany(company_id: string): Promise<ScheduledVisit[]>;
+  abstract findAllByCompany(
+    company_id: string,
+    options?: RepositoryOptions,
+  ): Promise<ScheduledVisit[]>;
   abstract findSuggestedByCustomer(
     customer_id: string,
   ): Promise<ScheduledVisit[]>;

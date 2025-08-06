@@ -1,9 +1,16 @@
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { ScheduledVisit } from '@core/modules/scheduled-visit/entities/scheduled-visit';
-import { ScheduledVisit as PrismaScheduledVisit } from '@prisma/client';
+import { Customer } from '@core/modules/user/entities/customer';
+import {
+  ScheduledVisit as PrismaScheduledVisit,
+  Customer as PrismaCustomer,
+} from '@prisma/client';
 
+type PrismaAll = PrismaScheduledVisit & {
+  customer?: PrismaCustomer;
+};
 export class ScheduledVisitMapping {
-  static toDomain(raw: PrismaScheduledVisit): ScheduledVisit {
+  static toDomain(raw: PrismaAll): ScheduledVisit {
     return ScheduledVisit.create(
       {
         customer_id: raw.customer_id,
@@ -16,6 +23,17 @@ export class ScheduledVisitMapping {
         proposal_id: raw.proposal_id,
         created_at: raw.created_at,
         updated_at: raw.updated_at,
+        customer: raw.customer
+          ? Customer.create({
+              document: raw.customer.document,
+              email: raw.customer.email,
+              name: raw.customer.name,
+              phone: raw.customer.phone,
+              user_id: raw.customer.user_id,
+              created_at: raw.customer.created_at,
+              updated_at: raw.customer.updated_at,
+            })
+          : null,
       },
       new UniqueEntityID(raw.id),
     );

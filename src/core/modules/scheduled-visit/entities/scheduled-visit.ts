@@ -1,6 +1,7 @@
 import { Entity } from '@core/common/entities/entity';
 import { UniqueEntityID } from '@core/common/entities/unique-entity-id';
 import { Optional } from '@core/common/entities/optional';
+import { Customer } from '@core/modules/user/entities/customer';
 
 export interface ScheduledVisitProps {
   customer_id: string;
@@ -10,6 +11,7 @@ export interface ScheduledVisitProps {
   suggested_at?: Date | null;
   notes?: string | null;
   proposal_id: string;
+  customer?: Customer | null;
   status:
     | 'PENDING'
     | 'CONFIRMED'
@@ -90,6 +92,9 @@ export class ScheduledVisit extends Entity<ScheduledVisitProps> {
 
   get updated_at() {
     return this.props.updated_at;
+  }
+  get customer() {
+    return this.props.customer;
   }
 
   private touch() {
